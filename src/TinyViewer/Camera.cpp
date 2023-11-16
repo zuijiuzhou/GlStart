@@ -21,7 +21,7 @@ void Camera::transform(const glm::mat4x4& mat)
     m_mat = mat * m_mat;
 }
 
-glm::mat4x4 Camera::matrix() const
+glm::mat4x4 Camera::getMatrix() const
 {
     return m_mat;
 }

@@ -1,9 +1,11 @@
 #include "Shader.h"
 #include <fstream>
+#include <iostream>
+#include <sstream>
 
 using namespace TinyViewer;
 
-Shader::Shader(const GLchar* vs_path, const GLchar* fs_path)
+Shader::Shader(const GLchar *vs_path, const GLchar *fs_path)
 {
     unsigned int vs_id, fs_id;
     int status;
@@ -18,18 +20,42 @@ Shader::Shader(const GLchar* vs_path, const GLchar* fs_path)
     glLinkProgram(app_id);
     glGetProgramiv(app_id, GL_LINK_STATUS, &status);
 
-    if( 0== status)
+    if (0 == status)
     {
         glGetProgramInfoLog(app_id, sizeof(msg), NULL, msg);
-        std::cerr << "ERROR: failed to link the shaders"  << msg << std::endl;
+        std::cerr << "ERROR: failed to link the shaders" << msg << std::endl;
+        throw std::exception("Link shaders failed.");
     }
     glDeleteShader(vs_id);
     glDeleteShader(fs_id);
     m_glProgramId = app_id;
 }
 
-   unsigned int Shader::createShader(const GLchar* path, int type)
-   {
+Shader::Shader(const std::string &vs_code, const std::string &fs_code)
+{
+
+}
+
+Shader::~Shader()
+{
+    if (m_glProgramId)
+    {
+        glDeleteProgram(m_glProgramId);
+    }
+}
+
+void Shader::use()
+{
+    glUseProgram(m_glProgramId);
+}
+
+void Shader::unuse()
+{
+    glUseProgram(0);
+}
+
+unsigned int Shader::createShader(const GLchar *path, int type)
+{
     std::string shader_str;
     std::ifstream shader_fs;
 
@@ -46,25 +72,27 @@ Shader::Shader(const GLchar* vs_path, const GLchar* fs_path)
 
         shader_str = shader_ss.str();
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
 
-    const char* shader_sz = shader_str.data();
-    
+    const char *shader_sz = shader_str.data();
+
     unsigned int shader_id;
     shader_id = glCreateShader(type);
     glShaderSource(shader_id, 1, &shader_sz, NULL);
     glCompileShader(shader_id);
 
-    int  status;
+    int status;
     char msg[512];
 
     glGetShaderiv(shader_id, GL_COMPILE_STATUS, &status);
-    if(0 == status){
+    if (0 == status)
+    {
         glGetShaderInfoLog(shader_id, sizeof(msg), NULL, msg);
         std::cerr << "ERROR: failed to compile the shader" << msg << std::endl;
-        return;
+        throw std::exception("Compile shader failed.");
     }
-   }
+    return shader_id;
+}

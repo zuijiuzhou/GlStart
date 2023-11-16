@@ -5,30 +5,29 @@
 
 namespace TinyViewer
 {
-    class CameraManipulator{
-        private:
-            Camera* m_cameraPtr;
-            GLFWwindow* m_wndPtr;
+    class CameraManipulator
+    {
+    public:
+        CameraManipulator(Camera *cameraPtr, GLFWwindow *wndPtr);
 
-            bool m_isRotationStarted = false;
-            bool m_isPanStarted = false;
-            bool m_isCusorMoveStarted = false;
+    private:
+        void init();
 
-            glm::vec2 m_prevCursorPt;
+        void mouse_button_callback(GLFWwindow *wnd, int button, int action, int mods);
+        void cursor_position_callback(GLFWwindow *wnd, double x, double y);
+        void scroll_callback(GLFWwindow *wnd, double x, double y);
 
-        private:
-            void init();
+    private:
+        Camera *m_cameraPtr;
+        GLFWwindow *m_wndPtr;
 
-            void mouse_button_callback(GLFWwindow* wnd, int button, int action, int mods);
-            void cursor_position_callback(GLFWwindow* wnd, double x, double y);
-            void scroll_callback(GLFWwindow* wnd, double x, double y);
+        bool m_isRotationStarted = false;
+        bool m_isPanStarted = false;
+        bool m_isCusorMoveStarted = false;
 
-        public:
-            CameraManipulator(Camera* cameraPtr, GLFWwindow* wndPtr);
+        glm::vec2 m_prevCursorPt;
     };
 
 } // namespace TinyViewer
 
 #endif
-
-

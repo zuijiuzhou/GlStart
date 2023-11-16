@@ -1,18 +1,9 @@
-#ifndef _SHADER_H_
-#define _SHADER_H_
-
-#include <iostream>
-#include <gl/glew.h>
+#pragma once
+#include "tinyviewer_global.h"
 #include <string>
-#include <sstream>
-
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-
-
 
 namespace TinyViewer
 {
@@ -22,12 +13,14 @@ namespace TinyViewer
           unsigned int m_glProgramId = 0;
 
      private:
-     unsigned int createShader(const GLchar* path, int type);
+          unsigned int createShader(const GLchar *path, int type);
 
      public:
-          Shader(const GLchar* vs_path, const GLchar* fs_path);
+          Shader(const GLchar *vs_path, const GLchar *fs_path);
+          Shader(const std::string& vs_code, const std::string& fs_code);
           virtual ~Shader();
 
+     public:
           void use();
           void unuse();
 
@@ -58,7 +51,6 @@ namespace TinyViewer
                {
                     static_assert("type not supported");
                }
-        }
+          }
      };
 }
-#endif

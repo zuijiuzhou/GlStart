@@ -1,20 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/dist)
-set(CMAKE_INSTALL_BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
-set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
-set(CMAKE_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include)
-
-
-SET(LIB_GLEW_DIR "D:/pkgs/glew-2.2.0")
-SET(LIB_GLFW_DIR "D:/pkgs/glfw-3.3.8")
-SET(LIB_GLM_DIR ${THIRD_DIR}/glm)
-SET(LIB_STB_DIR ${THIRD_DIR}/stb)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 link_directories(${LIBRARY_OUTPUT_PATH})
 
+add_subdirectory(GlHelper)
 add_subdirectory(TinyViewer)

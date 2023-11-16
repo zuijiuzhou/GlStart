@@ -1,34 +1,36 @@
 #pragma once
 
 #include "tinyviewer_global.h"
+#include <vector>
 #include "CameraManipulator.h"
 
 namespace TinyViewer
 {
-    class Renderer{
+    class Shape;
+    class Renderer
+    {
+    private:
+        Camera *m_cameraPtr;
+        CameraManipulator *m_cmPtr;
+        GLFWwindow *m_wndPtr;
+        std::vector<Shape*> m_shapes;
 
-        private:
-        Camera* m_cameraPtr;
-        CameraManipulator* m_cmPtr;
-        GLFWwindow* m_wndPtr;
-        Shader* m_shaderPtr;
-
-        GLuint m_texture1 = 0;
-        GLuint m_texture2 = 0;
-
-        private:
+    private:
         void init();
 
-        void error_callback(int error, const char* desc);
-        void key_callback(GLFWwindow* wnd, int key, int scancode, int action, int mods);
+        static void error_callback(int error, const char *desc);
+        static void key_callback(GLFWwindow *wnd, int key, int scancode, int action, int mods);
+        static void framebuffer_size_callback(GLFWwindow *wnd, int w, int h);
 
-        void framebuffer_size_callback(GLFWwindow* wnd, int w, int h);
-
-        public:
+    public:
         Renderer();
+        virtual ~Renderer();
+        
+    public:
 
-        void Render();
+        void run();
+
+        void addShape(Shape* shape);
     };
-    
-} // namespace TinyViewer
 
+} // namespace TinyViewer
