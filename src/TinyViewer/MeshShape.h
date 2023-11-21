@@ -5,7 +5,7 @@
 namespace TinyViewer
 {
     class Shader;
-    class MeshShape : public Shape
+    class MeshShape final : public Shape
     {
     public:
         MeshShape();
@@ -13,13 +13,14 @@ namespace TinyViewer
 
     public:
         void draw() override;
-        void setData(std::vector<glm::vec3> vertices, std::vector<glm::vec3> colors);
-
+        void setData(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals);
+        void setColor(const glm::vec4& color);
+        glm::vec4 getColor() const;
     private:
-        GLuint m_vao_id = 0;
-        GLuint m_vbo_id = 0;
-        std::vector<glm::vec3> m_vertices;
-        std::vector<glm::vec3> m_colors;
-        static Shader* s_shader;
+        GLuint vao_ = 0;
+        GLuint vbos_[2] = {0, 0};
+        std::vector<glm::vec3> vertices_;
+        std::vector<glm::vec3> normals_;
+        glm::vec4 color_;
     };
 }

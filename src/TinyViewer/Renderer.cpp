@@ -3,6 +3,8 @@
 #include <functional>
 #include <stb_image.h>
 #include "Shape.h"
+#include "MeshShape.h"
+#include "Shader.h"
 
 using namespace TinyViewer;
 
@@ -13,7 +15,7 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-    for (auto s : m_shapes)
+    for (auto s : shapes_)
     {
         delete s;
     }
@@ -44,19 +46,34 @@ void Renderer::init()
     }
 
     glViewport(0, 0, 800, 600);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
     glClearDepth(1);
     glClearStencil(1);
+    using GLFWFrameBufferSizeCallback = std::function<void(GLFWwindow *, int, int)>;
+    using GLFWKeyCallback = std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)>;
+    static GLFWFrameBufferSizeCallback framebuffer_size_callback;
+    static GLFWKeyCallback key_callback;
 
-    glfwSetFramebufferSizeCallback(wnd, framebuffer_size_callback);
-    glfwSetKeyCallback(wnd, key_callback);
+    framebuffer_size_callback = [this](GLFWwindow *wnd, int w, int h){ this->framebuffer_size_callback(wnd, w, h); };
+    key_callback = [this](GLFWwindow *wnd, int key, int scancode, int action, int mods){ this->key_callback(wnd, key, scancode, action, mods); };
+    glfwSetFramebufferSizeCallback(wnd, [](GLFWwindow *wnd, int w, int h){
+        static auto callback = framebuffer_size_callback;
+        callback(wnd, w, h);
+    });
+    glfwSetKeyCallback(wnd, [](GLFWwindow *wnd, int key, int scancode, int action, int mods){
+        static auto callback = key_callback;
+        callback(wnd, key, scancode, action, mods);
+    });
 
     auto cameraPtr = new Camera();
     auto cmPtr = new CameraManipulator(cameraPtr, wnd);
+    auto mesh_shape_shader = Shader::create("res/mesh_shape.vs.glsl", "res/mesh_shape.fs.glsl");
 
-    m_cameraPtr = cameraPtr;
-    m_cmPtr = cmPtr;
-    m_wndPtr = wnd;
+    proj_matrix_ = glm::perspective(glm::radians(45.f), 800.f / 600.f, 0.1f, 1000.f);
+    camera_ = cameraPtr;
+    cm_ = cmPtr;
+    wnd_ = wnd;
+    shader_mesh_shape_ = mesh_shape_shader;
 }
 
 void Renderer::error_callback(int error, const char *desc)
@@ -86,6 +103,7 @@ void Renderer::framebuffer_size_callback(GLFWwindow *wnd, int w, int h)
 {
     glfwMakeContextCurrent(wnd);
     glViewport(0, 0, w, h);
+    proj_matrix_ = glm::perspective(glm::radians(45.f), (float)w / (float)h, 0.1f, 1000.f);
 }
 
 void Renderer::run()
@@ -94,26 +112,34 @@ void Renderer::run()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    while (!glfwWindowShouldClose(m_wndPtr))
+    while (!glfwWindowShouldClose(wnd_))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-        for (auto shape : m_shapes)
+        auto mvp = proj_matrix_ * camera_->getMatrix();
+        for (auto shape : shapes_)
         {
-            shape->draw();
+            auto mesh_shape = dynamic_cast<MeshShape*>(shape);
+            if (mesh_shape)
+            {
+                shader_mesh_shape_->use();
+                shader_mesh_shape_->set("mvp", mvp);
+                shader_mesh_shape_->set("rgba", mesh_shape->getColor());
+                shape->draw();
+                shader_mesh_shape_->unuse();
+            }
         }
 
         glfwPollEvents();
-        glfwSwapBuffers(m_wndPtr);
+        glfwSwapBuffers(wnd_);
     }
     glfwTerminate();
 }
 
 void Renderer::addShape(Shape *shape)
 {
-    if (std::find(m_shapes.begin(), m_shapes.end(), shape) == m_shapes.end())
+    if (std::find(shapes_.begin(), shapes_.end(), shape) == shapes_.end())
     {
-        m_shapes.push_back(shape);
+        shapes_.push_back(shape);
     }
 }
 

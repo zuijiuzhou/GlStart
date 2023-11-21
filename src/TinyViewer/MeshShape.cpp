@@ -8,19 +8,20 @@ MeshShape::MeshShape()
 }
 MeshShape::~MeshShape()
 {
-    if(m_vao_id){
-        glDeleteVertexArrays(1, &m_vao_id);
-    }
-    if(m_vbo_id)
+    if (vao_)
     {
-        glDeleteBuffers(1, &m_vbo_id);
+        glDeleteVertexArrays(1, &vao_);
+    }
+    if (vbos_)
+    {
+        glDeleteBuffers(2, vbos_);
     }
 }
 
-void MeshShape::setData(std::vector<glm::vec3> vertices, std::vector<glm::vec3> colors)
+void MeshShape::setData(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals)
 {
-    m_vertices = std::move(vertices);
-    m_colors = std::move(colors);
+    vertices_ = std::move(vertices);
+    normals_ = std::move(normals);
 }
 
 void MeshShape::draw()
@@ -35,26 +36,37 @@ void MeshShape::draw()
     // glVertex3f(1.0, -1.0, 0.0);
     // glEnd();
 #else
-    if (m_vao_id == 0)
+    if (vao_ == 0)
     {
-        glGenVertexArrays(1, &m_vao_id);
-        glBindVertexArray(m_vao_id);
-
-        glGenBuffers(1, &m_vbo_id);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertices.size()), (void *)m_vertices.data(), GL_STATIC_DRAW);
+        glGenVertexArrays(1, &vao_);
+        glBindVertexArray(vao_);
+        glGenBuffers(2, vbos_);
+        glBindBuffer(GL_ARRAY_BUFFER, vbos_[0]);
+        glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), (void *)vertices_.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-        // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (const GLvoid *)(3 * sizeof(float)));
-        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbos_[1]);
+        glBufferData(GL_ARRAY_BUFFER, normals_.size() * sizeof(glm::vec3), (void *)normals_.data(), GL_STATIC_DRAW);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     else
     {
-        glBindVertexArray(m_vao_id);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id);
-    }
-    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(m_vertices.size() / 3));
+        glBindVertexArray(vao_);
+        glEnableVertexAttribArray(0);    
+        glEnableVertexAttribArray(1);
+    }    
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_.size()));
     glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 #endif
+}
+
+void MeshShape::setColor(const glm::vec4 &color)
+{
+    color_ = color;
+}
+
+glm::vec4 MeshShape::getColor() const{
+    return color_;
 }

@@ -6,4 +6,4 @@ file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR} *.cpp *.h)
 
 add_executable(${CURRENT_PROJ_ANME} ${SRC_FILES} ${GLAD_SRC_FILES})
 
-target_link_libraries(${CURRENT_PROJ_ANME} glm::glm)
+target_link_libraries(${CURRENT_PROJ_ANME} glm::glm opengl32.lib)

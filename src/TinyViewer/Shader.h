@@ -10,14 +10,13 @@ namespace TinyViewer
      class Shader
      {
      private:
-          unsigned int m_glProgramId = 0;
+          unsigned int program_id_ = 0;
 
      private:
           unsigned int createShader(const GLchar *path, int type);
 
      public:
-          Shader(const GLchar *vs_path, const GLchar *fs_path);
-          Shader(const std::string& vs_code, const std::string& fs_code);
+          Shader(const GLchar *vs_code, const GLchar *fs_code);
           virtual ~Shader();
 
      public:
@@ -25,32 +24,39 @@ namespace TinyViewer
           void unuse();
 
           template <typename T>
-          void set(const GLchar *szName, const T &val)
+          void set(const GLchar *name, const T &val)
           {
                if constexpr (std::is_same<T, bool>::value)
                {
-                    glUniformli(glGetUniformLocation(m_glProgramId), szName, (int)val);
+                    glUniformli(glGetUniformLocation(program_id_, name), (int)val);
                }
                else if constexpr (std::is_same<T, int>::value)
                {
-                    glUniformli(glGetUniformLocation(m_glProgramId), szName, val);
+                    glUniformli(glGetUniformLocation(program_id_, name), val);
                }
                else if constexpr (std::is_same<T, float>::value)
                {
-                    glUniformlf(glGetUniformLocation(m_glProgramId), szName, val);
+                    glUniformlf(glGetUniformLocation(program_id_, name), val);
                }
                else if constexpr (std::is_same<T, glm::vec3>::value)
                {
-                    glUniform3f(glGetUniformLocation(m_glProgramId, szName), val.x, val.y, val.z);
+                    glUniform3f(glGetUniformLocation(program_id_, name), val.x, val.y, val.z);
+               }               
+               else if constexpr (std::is_same<T, glm::vec4>::value)
+               {
+                    glUniform4f(glGetUniformLocation(program_id_, name), val.r, val.g, val.b, val.a);
                }
                else if constexpr (std::is_same<T, glm::mat4>::value)
                {
-                    glUniformMatrix4fv(glGetUniformLocation(m_glProgramId, szName), 1, GL_FALSE, glm::value_ptr(val));
+                    glUniformMatrix4fv(glGetUniformLocation(program_id_, name), 1, GL_FALSE, glm::value_ptr(val));
                }
                else
                {
                     static_assert("type not supported");
                }
           }
+
+     public:
+          static Shader *create(const GLchar *vs_path, const GLchar *fs_path);
      };
 }

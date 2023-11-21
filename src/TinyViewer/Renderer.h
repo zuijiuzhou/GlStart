@@ -6,21 +6,23 @@
 
 namespace TinyViewer
 {
+    class Shader;
     class Shape;
     class Renderer
     {
     private:
-        Camera *m_cameraPtr;
-        CameraManipulator *m_cmPtr;
-        GLFWwindow *m_wndPtr;
-        std::vector<Shape*> m_shapes;
-
+        Camera *camera_ = nullptr;
+        CameraManipulator *cm_ = nullptr;
+        GLFWwindow *wnd_ = nullptr;
+        std::vector<Shape*> shapes_;
+        Shader* shader_mesh_shape_ = nullptr;
+        glm::mat4x4 proj_matrix_;
     private:
         void init();
 
-        static void error_callback(int error, const char *desc);
-        static void key_callback(GLFWwindow *wnd, int key, int scancode, int action, int mods);
-        static void framebuffer_size_callback(GLFWwindow *wnd, int w, int h);
+        void error_callback(int error, const char *desc);
+        void key_callback(GLFWwindow *wnd, int key, int scancode, int action, int mods);
+        void framebuffer_size_callback(GLFWwindow *wnd, int w, int h);
 
     public:
         Renderer();

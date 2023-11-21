@@ -5,14 +5,37 @@
 
 using namespace TinyViewer;
 
-Shader::Shader(const GLchar *vs_path, const GLchar *fs_path)
+namespace{
+    std::string readCode(const GLchar* path){
+        std::string code;
+        std::ifstream fs;
+
+        fs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+        try
+        {
+            fs.open(path);
+            std::stringstream ss;
+            ss << fs.rdbuf();
+            fs.close();
+            code = ss.str();
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        return code;
+    }
+}
+
+Shader::Shader(const GLchar *vs_code, const GLchar *fs_code)
 {
     unsigned int vs_id, fs_id;
     int status;
     char msg[512];
 
-    vs_id = createShader(vs_path, GL_VERTEX_SHADER);
-    fs_id = createShader(fs_path, GL_FRAGMENT_SHADER);
+    vs_id = createShader(vs_code, GL_VERTEX_SHADER);
+    fs_id = createShader(fs_code, GL_FRAGMENT_SHADER);
 
     unsigned int app_id = glCreateProgram();
     glAttachShader(app_id, vs_id);
@@ -26,27 +49,24 @@ Shader::Shader(const GLchar *vs_path, const GLchar *fs_path)
         std::cerr << "ERROR: failed to link the shaders" << msg << std::endl;
         throw std::exception("Link shaders failed.");
     }
+    glDetachShader(app_id, vs_id);
     glDeleteShader(vs_id);
+    glDetachShader(app_id, fs_id);
     glDeleteShader(fs_id);
-    m_glProgramId = app_id;
-}
-
-Shader::Shader(const std::string &vs_code, const std::string &fs_code)
-{
-
+    program_id_ = app_id;
 }
 
 Shader::~Shader()
 {
-    if (m_glProgramId)
+    if (program_id_)
     {
-        glDeleteProgram(m_glProgramId);
+        glDeleteProgram(program_id_);
     }
 }
 
 void Shader::use()
 {
-    glUseProgram(m_glProgramId);
+    glUseProgram(program_id_);
 }
 
 void Shader::unuse()
@@ -54,34 +74,11 @@ void Shader::unuse()
     glUseProgram(0);
 }
 
-unsigned int Shader::createShader(const GLchar *path, int type)
+unsigned int Shader::createShader(const GLchar *code, int type)
 {
-    std::string shader_str;
-    std::ifstream shader_fs;
-
-    shader_fs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
-    try
-    {
-        shader_fs.open(shader_str);
-
-        std::stringstream shader_ss;
-        shader_ss << shader_fs.rdbuf();
-
-        shader_fs.close();
-
-        shader_str = shader_ss.str();
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-
-    const char *shader_sz = shader_str.data();
-
     unsigned int shader_id;
     shader_id = glCreateShader(type);
-    glShaderSource(shader_id, 1, &shader_sz, NULL);
+    glShaderSource(shader_id, 1, &code, NULL);
     glCompileShader(shader_id);
 
     int status;
@@ -95,4 +92,10 @@ unsigned int Shader::createShader(const GLchar *path, int type)
         throw std::exception("Compile shader failed.");
     }
     return shader_id;
+}
+
+Shader *Shader::create(const GLchar *vs_path, const GLchar *fs_path){
+    auto vs_code = readCode(vs_path);
+    auto fs_code = readCode(fs_path);
+    return new Shader(vs_code.data(), fs_code.data());
 }

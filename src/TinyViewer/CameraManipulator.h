@@ -18,14 +18,14 @@ namespace TinyViewer
         void scroll_callback(GLFWwindow *wnd, double x, double y);
 
     private:
-        Camera *m_cameraPtr;
-        GLFWwindow *m_wndPtr;
+        Camera *camera_;
+        GLFWwindow *wnd_;
 
-        bool m_isRotationStarted = false;
-        bool m_isPanStarted = false;
-        bool m_isCusorMoveStarted = false;
+        bool is_rotation_started_ = false;
+        bool is_pan_started_ = false;
+        bool is_cursor_move_started_ = false;
 
-        glm::vec2 m_prevCursorPt;
+        glm::vec2 prev_cursor_pt_;
     };
 
 } // namespace TinyViewer
