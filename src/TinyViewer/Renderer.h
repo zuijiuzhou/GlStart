@@ -16,7 +16,10 @@ namespace TinyViewer
         GLFWwindow *wnd_ = nullptr;
         std::vector<Shape*> shapes_;
         Shader* shader_mesh_shape_ = nullptr;
+        Shader* shader_point_cloud_ = nullptr;
         glm::mat4x4 proj_matrix_;
+        glm::vec3 bg_;
+        bool is_initialized = false;
     private:
         void init();
 
@@ -33,6 +36,8 @@ namespace TinyViewer
         void run();
 
         void addShape(Shape* shape);
+
+        void setBackgroundColor(const glm::vec3& color);
     };
 
 } // namespace TinyViewer

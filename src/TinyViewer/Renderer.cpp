@@ -4,6 +4,7 @@
 #include <stb_image.h>
 #include "Shape.h"
 #include "MeshShape.h"
+#include "PointCloud.h"
 #include "Shader.h"
 
 using namespace TinyViewer;
@@ -46,7 +47,7 @@ void Renderer::init()
     }
 
     glViewport(0, 0, 800, 600);
-    glClearColor(0.0f, 0.3f, 0.0f, 1.0f);
+    glClearColor(bg_.x, bg_.y, bg_.z, 1.0f);
     glClearDepth(1);
     glClearStencil(1);
     using GLFWFrameBufferSizeCallback = std::function<void(GLFWwindow *, int, int)>;
@@ -68,12 +69,15 @@ void Renderer::init()
     auto cameraPtr = new Camera();
     auto cmPtr = new CameraManipulator(cameraPtr, wnd);
     auto mesh_shape_shader = Shader::create("res/mesh_shape.vs.glsl", "res/mesh_shape.fs.glsl");
+    auto point_cloud_shader = Shader::create("res/point_cloud.vs.glsl", "res/point_cloud.fs.glsl");
 
     proj_matrix_ = glm::perspective(glm::radians(45.f), 800.f / 600.f, 0.1f, 1000.f);
     camera_ = cameraPtr;
     cm_ = cmPtr;
     wnd_ = wnd;
     shader_mesh_shape_ = mesh_shape_shader;
+    shader_point_cloud_ = point_cloud_shader;
+    is_initialized = true;
 }
 
 void Renderer::error_callback(int error, const char *desc)
@@ -126,6 +130,15 @@ void Renderer::run()
                 shader_mesh_shape_->set("rgba", mesh_shape->getColor());
                 shape->draw();
                 shader_mesh_shape_->unuse();
+                continue;
+            }
+            auto point_cloud = dynamic_cast<PointCloud*>(shape);
+            if(shape){
+                shader_point_cloud_->use();
+                shader_point_cloud_->set("mvp", mvp);
+                shape->draw();
+                shader_point_cloud_->unuse();
+                continue;
             }
         }
 
@@ -141,6 +154,12 @@ void Renderer::addShape(Shape *shape)
     {
         shapes_.push_back(shape);
     }
+}
+
+void Renderer::setBackgroundColor(const glm::vec3& color){
+    bg_ = color;
+    if(is_initialized)
+        glClearColor(bg_.x, bg_.y, bg_.z, 1.0);
 }
 
 // stbi_set_flip_vertically_on_load(true);

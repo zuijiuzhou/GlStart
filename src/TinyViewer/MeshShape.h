@@ -4,7 +4,6 @@
 
 namespace TinyViewer
 {
-    class Shader;
     class MeshShape final : public Shape
     {
     public:
