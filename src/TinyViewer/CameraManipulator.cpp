@@ -11,6 +11,7 @@ namespace
 CameraManipulator::CameraManipulator(Camera *cameraPtr, GLFWwindow *wndPtr)
     : camera_(cameraPtr), wnd_(wndPtr)
 {
+    init();
 }
 
 void CameraManipulator::init()
@@ -26,20 +27,17 @@ void CameraManipulator::init()
     {
         this->mouse_button_callback(wnd, button, action, mods);
     };
-    glfwSetMouseButtonCallback(
-        wnd_, (GLFWmousebuttonfun)[](GLFWwindow * wnd, int button, int action, int mods) { auto callback = mouse_button_callback; callback(wnd, button, action, mods); });
+    glfwSetMouseButtonCallback(wnd_, (GLFWmousebuttonfun)[](GLFWwindow * wnd, int button, int action, int mods) { auto callback = mouse_button_callback; callback(wnd, button, action, mods); });
     cursor_pos_callback = [this](GLFWwindow *wnd, double x, double y)
     {
         this->cursor_position_callback(wnd, x, y);
     };
-    glfwSetCursorPosCallback(
-        wnd_, (GLFWcursorposfun)[](GLFWwindow * wnd, double x, double y) { auto callback = cursor_pos_callback; callback(wnd, x, y); });
+    glfwSetCursorPosCallback(wnd_, (GLFWcursorposfun)[](GLFWwindow * wnd, double x, double y) { auto callback = cursor_pos_callback; callback(wnd, x, y); });
     scroll_callback = [this](GLFWwindow *wnd, double x, double y)
     {
         this->scroll_callback(wnd, x, y);
     };
-    glfwSetScrollCallback(
-        wnd_, (GLFWscrollfun)[](GLFWwindow * wnd, double x, double y) { auto callback = scroll_callback; callback(wnd, x, y); });
+    glfwSetScrollCallback(wnd_, (GLFWscrollfun)[](GLFWwindow * wnd, double x, double y) { auto callback = scroll_callback; callback(wnd, x, y); });
 }
 
 void CameraManipulator::mouse_button_callback(GLFWwindow *wnd, int button, int action, int mods)
@@ -86,15 +84,16 @@ void CameraManipulator::cursor_position_callback(GLFWwindow *wnd, double x, doub
         {
             auto m = glm::mat4(1.0f);
             m = glm::translate(m, glm::vec3(delta_x / 500, -delta_y / 500, 0));
-            camera_->transform(m);
+            camera_->setMatrix(m * camera_->getMatrix());
+            // camera_->transform(m);
         }
         if (is_rotation_started_)
         {
             glm::mat4 mx(1.0f);
             glm::mat4 my(1.0f);
 
-            mx = glm::rotate(mx, glm::radians(delta_x), glm::vec3(0.0f, 1.0f, 0.0f));
-            my = glm::rotate(my, glm::radians(delta_y), glm::vec3(1.0f, 0.0f, 0.0f));
+            mx = glm::rotate(mx, glm::radians(delta_x / 10), glm::vec3(0.0f, 1.0f, 0.0f));
+            my = glm::rotate(my, glm::radians(delta_y / 10), glm::vec3(1.0f, 0.0f, 0.0f));
 
             camera_->transform(mx);
             camera_->transform(my);
@@ -111,4 +110,15 @@ void CameraManipulator::cursor_position_callback(GLFWwindow *wnd, double x, doub
 }
 void CameraManipulator::scroll_callback(GLFWwindow *wnd, double x, double y)
 {
+    // printf("\nx:%f, y:%f", x, y);
+    
+    auto delta = y;
+    glm::vec3 p, t, u;
+    camera_->get(p, t, u);
+    glm::vec3 dir = t - p;
+    dir = dir * static_cast<float>(-y);
+    glm::mat4 m(1.0);
+    m = glm::translate(m, dir);
+    camera_->transform(m);
+
 }

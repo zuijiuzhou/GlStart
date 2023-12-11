@@ -3,8 +3,11 @@
 #include "Renderer.h"
 #include "MeshShape.h"
 #include "PointCloud.h"
+#include "PointCloudLoader.h"
 
-int main(int argc, char **argv)
+using namespace TinyViewer;
+
+void CreateSampleShapes(Renderer *renderer)
 {
     std::vector<glm::vec3> vertices{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(1, 1, 0)};
     std::vector<glm::vec3> normals{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)};
@@ -25,10 +28,24 @@ int main(int argc, char **argv)
     }
     auto pc = new TinyViewer::PointCloud();
     pc->setData(pts, colors);
-
-    auto renderer = new TinyViewer::Renderer();
     renderer->addShape(ms);
     renderer->addShape(pc);
+}
+
+int main(int argc, char **argv)
+{
+
+    auto renderer = new TinyViewer::Renderer();
+    if (argc > 1)
+    {
+        auto file = argv[1];
+        auto pcl = new PointCloudLoader(file);
+        renderer->addShape(pcl->getData());
+    }
+    else
+    {
+        CreateSampleShapes(renderer);
+    }
     renderer->run();
 
     return 0;

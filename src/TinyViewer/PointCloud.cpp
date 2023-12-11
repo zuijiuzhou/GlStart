@@ -39,6 +39,10 @@ void PointCloud::draw()
     // glVertex3f(1.0, -1.0, 0.0);
     // glEnd();
 #else
+    glEnable(GL_BLEND);
+    glEnable(GL_POINT_SMOOTH);
+    static GLfloat x = 0.2f;
+    glPointParameterfv(GL_POINT_FADE_THRESHOLD_SIZE, &x);
     if (vao_ == 0)
     {
         glGenVertexArrays(1, &vao_);

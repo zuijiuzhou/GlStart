@@ -66,14 +66,14 @@ void Renderer::init()
         callback(wnd, key, scancode, action, mods);
     });
 
-    auto cameraPtr = new Camera();
-    auto cmPtr = new CameraManipulator(cameraPtr, wnd);
-    auto mesh_shape_shader = Shader::create("res/mesh_shape.vs.glsl", "res/mesh_shape.fs.glsl");
-    auto point_cloud_shader = Shader::create("res/point_cloud.vs.glsl", "res/point_cloud.fs.glsl");
+    auto camera = new Camera();
+    auto cm = new CameraManipulator(camera, wnd);
+    auto mesh_shape_shader = Shader::create("res/mesh_shape.vs.glsl", nullptr, "res/mesh_shape.fs.glsl");
+    auto point_cloud_shader = Shader::create("res/point_cloud.vs.glsl", nullptr, "res/point_cloud.fs.glsl");
 
     proj_matrix_ = glm::perspective(glm::radians(45.f), 800.f / 600.f, 0.1f, 1000.f);
-    camera_ = cameraPtr;
-    cm_ = cmPtr;
+    camera_ = camera;
+    cm_ = cm;
     wnd_ = wnd;
     shader_mesh_shape_ = mesh_shape_shader;
     shader_point_cloud_ = point_cloud_shader;
@@ -105,6 +105,8 @@ void Renderer::key_callback(GLFWwindow *wnd, int key, int scancode, int action, 
 
 void Renderer::framebuffer_size_callback(GLFWwindow *wnd, int w, int h)
 {
+    if( w == 0 || h == 0)
+        return;
     glfwMakeContextCurrent(wnd);
     glViewport(0, 0, w, h);
     proj_matrix_ = glm::perspective(glm::radians(45.f), (float)w / (float)h, 0.1f, 1000.f);

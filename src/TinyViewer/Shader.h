@@ -12,11 +12,8 @@ namespace TinyViewer
      private:
           unsigned int program_id_ = 0;
 
-     private:
-          unsigned int createShader(const GLchar *path, int type);
-
      public:
-          Shader(const GLchar *vs_code, const GLchar *fs_code);
+          Shader(const GLchar *vs_code, const GLchar* gs_code, const GLchar *fs_code);
           virtual ~Shader();
 
      public:
@@ -57,6 +54,6 @@ namespace TinyViewer
           }
 
      public:
-          static Shader *create(const GLchar *vs_path, const GLchar *fs_path);
+          static Shader *create(const GLchar *vs_path, const GLchar* gs_path, const GLchar *fs_path);
      };
 }
