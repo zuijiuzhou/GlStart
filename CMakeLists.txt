@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 
-project(OpenGlStart 
+project(GlStart 
     VERSION 1.0.0
     )
 
@@ -31,6 +31,8 @@ set(THIRD_PARTY_LIBS
     glm
     stb
  )
+
+add_compile_options("/EHa")
 
 foreach(lib_name ${THIRD_PARTY_LIBS})
     list(APPEND CMAKE_PREFIX_PATH "${THIRD_PARTY_DIR}/${lib_name}")

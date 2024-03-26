@@ -6,6 +6,7 @@ using namespace TinyViewer;
 MeshShape::MeshShape()
 {
 }
+
 MeshShape::~MeshShape()
 {
     if (vao_)

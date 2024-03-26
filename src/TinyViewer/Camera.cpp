@@ -4,7 +4,7 @@ using namespace TinyViewer;
 
 Camera::Camera()
 {
-    m_mat = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    m_mat = glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
 void Camera::set(const glm::vec3 &posi, const glm::vec3 &target, const glm::vec3 &up)

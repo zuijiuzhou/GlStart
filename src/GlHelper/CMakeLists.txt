@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.9)
 
 SET(CURRENT_PROJ_ANME GlHelper)
 
-file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR} *.cpp *.h)
+file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
+file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.h)
 
-add_executable(${CURRENT_PROJ_ANME} ${SRC_FILES} ${GLAD_SRC_FILES})
+add_executable(${CURRENT_PROJ_ANME} ${SRC_FILES} ${HEADER_FILES} ${GLAD_SRC_FILES})
 
 target_link_libraries(${CURRENT_PROJ_ANME} glm::glm opengl32.lib)

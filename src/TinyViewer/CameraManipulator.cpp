@@ -116,7 +116,7 @@ void CameraManipulator::scroll_callback(GLFWwindow *wnd, double x, double y)
     glm::vec3 p, t, u;
     camera_->get(p, t, u);
     glm::vec3 dir = t - p;
-    dir = dir * static_cast<float>(-y);
+    dir = dir * static_cast<float>(-y / 10);
     glm::mat4 m(1.0);
     m = glm::translate(m, dir);
     camera_->transform(m);

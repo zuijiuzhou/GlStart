@@ -4,3 +4,4 @@ link_directories(${LIBRARY_OUTPUT_PATH})
 
 add_subdirectory(GlHelper)
 add_subdirectory(TinyViewer)
+add_subdirectory(ModelViewer)

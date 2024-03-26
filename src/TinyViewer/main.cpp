@@ -1,9 +1,10 @@
 #include "tinyviewer_global.h"
-
+#include <iostream>
 #include "Renderer.h"
 #include "MeshShape.h"
 #include "PointCloud.h"
 #include "PointCloudLoader.h"
+#include <Windows.h>
 
 using namespace TinyViewer;
 
@@ -32,9 +33,54 @@ void CreateSampleShapes(Renderer *renderer)
     renderer->addShape(pc);
 }
 
+class A{
+    public:
+    ~A(){
+        std::cout << "A析构" << std::endl;
+    }
+};
+
+void ThrowCPPEX(){
+    A obj2;
+    try
+    {
+        throw std::exception("123");
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << "CPP CATCH:" << e.what() << std::endl;
+    }
+    
+}
+
+void ThrowSEHEX(){
+    A obj;
+    try
+    { A obj2;
+        auto a = 1, b = 0;
+        std::cout << a / b;
+    }
+    catch(...)
+    {
+        std::cerr << "Cpp Catch: 除0" << '\n';
+    }
+}
+
+void TestThrow(){
+    __try{
+        ThrowSEHEX();
+    }
+    __except(EXCEPTION_EXECUTE_HANDLER){
+        std::cout << "SEH Catch:" << std::endl;
+    }
+    // A a;
+    // throw std::exception("TestThrow throw a exception\n");
+}
+
 int main(int argc, char **argv)
 {
-
+    TestThrow();
+    return 0;
     auto renderer = new TinyViewer::Renderer();
     if (argc > 1)
     {
