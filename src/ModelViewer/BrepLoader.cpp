@@ -1,4 +1,4 @@
-#include "BrepLoader.h"
+﻿#include "BrepLoader.h"
 #include <osg/MatrixTransform>
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -20,6 +20,8 @@
 #include <TopoDS_Edge.hxx>
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Compound.hxx>
+
+#include "ModelDefs.h"
 
 namespace ModelViewer{
     osg::MatrixTransform* BrepLoader::loadStpFile(const std::string& file){
@@ -63,7 +65,7 @@ namespace ModelViewer{
         auto face_colors = new osg::Vec4Array();
         auto edge_colors = new osg::Vec4Array();
         face_colors->push_back(osg::Vec4(0.88f, 0.88f, 0.88f, 1.f));
-        edge_colors->push_back(osg::Vec4(0.44f, 0.44f, 0.44f, 1.f));
+        edge_colors->push_back(osg::Vec4(0.36f, 0.36f, 0.36f, 1.f));
 
         IMeshTools_Parameters params;
         params.Angle = 0.52;
@@ -89,12 +91,12 @@ namespace ModelViewer{
             auto vertices = new osg::Vec3Array();
             auto indices = new osg::DrawElementsUInt(GL_TRIANGLES);
 
-            for(auto i = 1; i < mesh->NbNodes(); i++){
+            for(auto i = 1; i <= mesh->NbNodes(); i++){
                 auto pnt = mesh->Node(i);
                 pnt.Transform(loc.Transformation());
                 vertices->push_back(osg::Vec3(pnt.X(), pnt.Y(), pnt.Z()));
             }
-            for(auto i = 1; i < mesh->NbTriangles(); i++){
+            for(auto i = 1; i <= mesh->NbTriangles(); i++){
                 Standard_Integer v1, v2, v3;
                 const auto& tri = mesh->Triangle(i);
                 tri.Get(v1, v2, v3);
@@ -122,25 +124,44 @@ namespace ModelViewer{
                 auto polygon = BRep_Tool::PolygonOnTriangulation(edge, mesh, loc);
                 if(polygon.IsNull()) 
                     continue;
-                auto indices = polygon->Nodes();
+                auto& nodes = polygon->Nodes();
+                auto edge_geom = new osg::Geometry();
+
+                #if true
                 vertices = new osg::Vec3Array();
-                for(int i = indices.Lower(); i <= indices.Upper(); i++){
-                    auto pnt = mesh->Node(indices(i));
+                for(int i = nodes.Lower(); i <= nodes.Upper(); i++){
+                    auto pnt = mesh->Node(nodes(i));
                     pnt.Transform(loc.Transformation());
                     vertices->push_back(osg::Vec3(pnt.X(), pnt.Y(), pnt.Z()));
                 }
-                auto edge_geom = new osg::Geometry();
-                edge_geom->setColorArray(edge_colors, osg::Array::BIND_OVERALL);
-                edge_geom->setVertexArray(vertices);
                 edge_geom->addPrimitiveSet(new osg::DrawArrays(GL_LINE_STRIP, 0, vertices->size()));
+                #else
+                // 有问题
+                indices = new osg::DrawElementsUInt(GL_LINE_STRIP);
+                for(auto i : nodes){
+                    indices->push_back(i);
+                }
+                edge_geom->addPrimitiveSet(indices);
+                #endif
+                
+                edge_geom->setVertexArray(vertices);
+                edge_geom->setColorArray(edge_colors, osg::Array::BIND_OVERALL);
                 edge_geod->addDrawable(edge_geom);
             }
         }
+        
+        edge_geod->getOrCreateStateSet()->setAttributeAndModes(new osg::LineWidth(1.0f), 1);
+        edge_geod->getOrCreateStateSet()->setMode(GL_LIGHTING, 0);
+        face_geod->getOrCreateStateSet()->setAttributeAndModes(new osg::PolygonOffset(2.f, 2.f), 1);
+
         auto root = new osg::MatrixTransform();
         root->addChild(face_geod);
         root->addChild(edge_geod);
-        root->getOrCreateStateSet()->setAttributeAndModes(new osg::LineWidth(4.0f), 1);
-        root->getOrCreateStateSet()->setAttributeAndModes(new osg::PolygonOffset(2.f, 2.f), 1);
+
+        setPipelineMask(edge_geod, PM_FixedShading);
+        setPipelineMask(face_geod, PM_DeferredScene);
+        // setPipelineMask(root, PM_DeferredScene);
+
         return root;
     }
 }
