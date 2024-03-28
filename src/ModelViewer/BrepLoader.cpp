@@ -160,7 +160,6 @@ namespace ModelViewer{
 
         setPipelineMask(edge_geod, PM_FixedShading);
         setPipelineMask(face_geod, PM_DeferredScene);
-        // setPipelineMask(root, PM_DeferredScene);
 
         return root;
     }

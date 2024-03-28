@@ -1,4 +1,4 @@
-SET(CURRENT_PROJ_NAME TinyViewer)
+SET(CURRENT_TARGET_NAME TinyViewer)
 
 find_package(PCL REQUIRED)
 find_package(opencv REQUIRED)
@@ -6,6 +6,6 @@ find_package(opencv REQUIRED)
 file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.h)
 
-add_executable(${CURRENT_PROJ_NAME} ${SRC_FILES} ${HEADER_FILES} ${GLAD_SRC_FILES})
+add_executable(${CURRENT_TARGET_NAME} ${SRC_FILES} ${HEADER_FILES} ${GLAD_SRC_FILES})
 
-target_link_libraries(${CURRENT_PROJ_NAME} glfw glm::glm ${PCL_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(${CURRENT_TARGET_NAME} glfw glm::glm ${PCL_LIBRARIES} ${OpenCV_LIBS})

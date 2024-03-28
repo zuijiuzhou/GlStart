@@ -10,7 +10,7 @@ namespace Utilities
         {
         public:
             codecvt_gbk()
-#ifdef WINDOWS
+#ifdef _WIN32
                 : codecvt_byname("zh_CN")
 #else
                 : codecvt_byname("zh_CN.GBK")

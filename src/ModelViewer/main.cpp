@@ -17,8 +17,7 @@ int main(int argc, char **argv)
     using namespace ModelViewer;
 
     namespace fs = std::filesystem;
-    fs::current_path("G:\\projs\\GlStart\\vsc_build\\bin\\Release");
-
+    fs::current_path(Utilities::getApplicationDir());
     // convet to utf-8
     auto u8path = Utilities::gbkToUtf8(argv[1]);
     auto model = BrepLoader::loadStpFile(u8path);

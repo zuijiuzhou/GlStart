@@ -11,7 +11,7 @@ namespace Utilities
 #ifdef _WIN32
         HMODULE hModule = GetModuleHandle(NULL);
         char path[MAX_PATH];
-        GetModuleFileName(hModule, path, MAX_PATH);
+        GetModuleFileNameA(hModule, path, MAX_PATH);
         std::string fullPath(path);
         size_t pos = fullPath.find_last_of("\\/");
         return fullPath.substr(0, pos);

@@ -51,3 +51,5 @@ include_directories(${GLAD_INCLUDE_DIR})
 include_directories(${STB_INCLUDE_DIR})
 
 add_subdirectory(src)
+enable_testing()
+add_subdirectory(tests)

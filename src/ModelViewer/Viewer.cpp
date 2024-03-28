@@ -81,13 +81,44 @@ namespace ModelViewer
 
         // Main light
         auto light0 = new osgVerse::LightDrawable;
-        light0->setColor(osg::Vec3(1.5f, 1.5f, 1.2f));
+        light0->setColor(osg::Vec3(1.0f, 1.0f, 1.0f));
         light0->setDirection(osg::Vec3(0.02f, 0.1f, -1.0f));
         light0->setDirectional(true);
+        light0->setEyeSpace(false);
+
+        auto light1 = new osgVerse::LightDrawable;
+        light1->setColor(osg::Vec3(1.5f, 1.5f, 1.5f));
+        light1->setDirection(osg::Vec3(1.f, 0.1f, 0.0f));
+        light1->setDirectional(true);
+        light1->setEyeSpace(false);
 
         auto lightGeode = new osg::Geode;
         lightGeode->addDrawable(light0);
+        // lightGeode->addDrawable(light1);
         addNode(lightGeode);
+
+        class ViewerEventCallback : public osgGA::GUIEventHandler{
+        public:
+            ViewerEventCallback(osgVerse::LightDrawable* light0)
+                : light0_(light0){
+                
+            }
+            virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa, osg::Object*, osg::NodeVisitor*) override {
+                if(ea.getEventType() == osgGA::GUIEventAdapter::FRAME){
+                    osg::Vec3 eye, center, up, dir;
+                    aa.asView()->getCamera()->getViewMatrixAsLookAt(eye, center, up);
+                    // dir = center - eye;
+                    dir = -eye;
+                    dir.normalize();
+                    light0_->setDirection(dir);
+                }
+                return false;
+            }
+        private:
+            osgVerse::LightDrawable* light0_;
+        };
+
+        rep_->viewer_impl->addEventHandler(new ViewerEventCallback(light0));
 
         osgVerse::StandardPipelineParameters params(SHADER_DIR, SKYBOX_DIR "barcelona.hdr");
         params.enablePostEffects = true;
