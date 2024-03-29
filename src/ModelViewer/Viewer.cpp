@@ -58,7 +58,7 @@ namespace ModelViewer
         traits->supportsResize = true;
         traits->doubleBuffer = true;
         traits->depth = 24;
-        traits->samples = 4;
+        traits->samples = 8;
         traits->screenNum = 1;
         auto gc = osg::GraphicsContext::createGraphicsContext(traits);
 
@@ -142,6 +142,8 @@ namespace ModelViewer
     }
 
     void Viewer::addNode(osg::Node* node){
+        osgVerse::TangentSpaceVisitor tsv;
+        node->accept(tsv);
         rep_->root->addChild(node);
     }
 

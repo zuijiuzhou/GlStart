@@ -9,6 +9,8 @@ namespace ModelViewer{
 
 class BrepLoader{
 public:
-    static osg::MatrixTransform* loadStpFile(const std::string& path);    
+    osg::MatrixTransform* loadFile(const std::string& path);
+
+    static bool isSupported(const std::string& path);
 };
 }
