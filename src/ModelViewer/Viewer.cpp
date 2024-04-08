@@ -58,7 +58,7 @@ namespace ModelViewer
         traits->supportsResize = true;
         traits->doubleBuffer = true;
         traits->depth = 24;
-        traits->samples = 8;
+        traits->samples = 4;
         traits->screenNum = 1;
         auto gc = osg::GraphicsContext::createGraphicsContext(traits);
 
@@ -110,6 +110,7 @@ namespace ModelViewer
                     // dir = center - eye;
                     dir = -eye;
                     dir.normalize();
+                    // dir = dir * osg::Matrix::rotate(osg::PI_4 / 4, up);
                     light0_->setDirection(dir);
                 }
                 return false;
@@ -120,17 +121,17 @@ namespace ModelViewer
 
         rep_->viewer_impl->addEventHandler(new ViewerEventCallback(light0));
 
-        osgVerse::StandardPipelineParameters params(SHADER_DIR, SKYBOX_DIR "barcelona.hdr");
+        osgVerse::StandardPipelineParameters params(SHADER_DIR, SKYBOX_DIR "monoLake.hdr");
         params.enablePostEffects = true;
-        params.enableAO = true;
+        params.enableAO = false;
         osgVerse::setupStandardPipeline(pipeline, rep_->viewer_impl.get(), params);
 
-        // Post pipeline settings
-        auto shadow = static_cast<osgVerse::ShadowModule*>(pipeline->getModule("Shadow"));
-        if (shadow && shadow->getFrustumGeode())
-        {
-            addNode(shadow->getFrustumGeode(), PM_ForwardScene);
-        }
+        // // Post pipeline settings
+        // auto shadow = static_cast<osgVerse::ShadowModule*>(pipeline->getModule("Shadow"));
+        // if (shadow && shadow->getFrustumGeode())
+        // {
+        //     addNode(shadow->getFrustumGeode(), PM_ForwardScene);
+        // }
 
         auto light = static_cast<osgVerse::LightModule*>(pipeline->getModule("Light"));
         if (light) light->setMainLight(light0, "Shadow");

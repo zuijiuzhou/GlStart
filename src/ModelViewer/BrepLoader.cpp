@@ -24,6 +24,8 @@
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Compound.hxx>
 
+#include "Utilities/Text.h"
+
 #include "ModelDefs.h"
 
 namespace ModelViewer
@@ -85,8 +87,8 @@ namespace ModelViewer
         }
         if (!reader)
             return nullptr;
-
-        auto status = reader->ReadFile(file.data());
+        auto u8path = Utilities::gbkToUtf8(file);
+        auto status = reader->ReadFile(u8path.data());
         if (status != IFSelect_RetDone)
             return nullptr;
 
@@ -136,11 +138,12 @@ namespace ModelViewer
         auto edge_geod = new osg::Geode();
         auto face_colors = new osg::Vec4Array();
         auto edge_colors = new osg::Vec4Array();
-        face_colors->push_back(osg::Vec4(0.93f, 0.93f, 0.93f, 1.f));
-        edge_colors->push_back(osg::Vec4(0.28f, 0.28, 0.28f, 1.f));
+        face_colors->push_back(osg::Vec4(220.f/255, 223.f/255, 227.f/255, 1.f));
+        edge_colors->push_back(osg::Vec4(0.2f, 0.2f, 0.2f, 1.f));
 
         IMeshTools_Parameters params;
-        params.Angle = 0.52;
+        params.Angle = 0.1;
+        params.Deflection = 1;
         params.MinSize = 1e-4;
         params.InParallel = true;
         params.Relative = true;
@@ -148,7 +151,7 @@ namespace ModelViewer
         params.ControlSurfaceDeflection = true;
         params.ForceFaceDeflection = false;
         params.CleanModel = true;
-        params.AllowQualityDecrease = true;
+        params.AllowQualityDecrease = false;
         params.AdjustMinSize = true;
 
         BRepMesh_IncrementalMesh im(shape, params);
@@ -182,7 +185,7 @@ namespace ModelViewer
                 indices->push_back(v2 - 1);
                 indices->push_back(v3 - 1);
             }
-
+            
             auto face_geom = new osg::Geometry();
             face_geom->setColorArray(face_colors, osg::Array::BIND_OVERALL);
             face_geom->setVertexArray(vertices);
@@ -225,6 +228,7 @@ namespace ModelViewer
 
                 edge_geom->setVertexArray(vertices);
                 edge_geom->setColorArray(edge_colors, osg::Array::BIND_OVERALL);
+                edge_geom->setUseDisplayList(false);
                 edge_geod->addDrawable(edge_geom);
             }
         }
@@ -232,12 +236,13 @@ namespace ModelViewer
         edge_geod->getOrCreateStateSet()->setAttributeAndModes(new osg::LineWidth(1.0f), 1);
         edge_geod->getOrCreateStateSet()->setMode(GL_LIGHTING, 0);
         face_geod->getOrCreateStateSet()->setAttributeAndModes(new osg::PolygonOffset(2.f, 2.f), 1);
+        // face_geod->getOrCreateStateSet()->setAttributeAndModes(new osg::PolygonMode(osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE));
 
         auto root = new osg::MatrixTransform();
         root->addChild(face_geod);
         root->addChild(edge_geod);
 
-        setPipelineMask(edge_geod, PM_FixedShading);
+        setPipelineMask(edge_geod, PM_ForwardScene);
         setPipelineMask(face_geod, PM_DeferredScene);
 
         return root;

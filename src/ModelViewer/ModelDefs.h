@@ -14,8 +14,8 @@ namespace ModelViewer
 
     enum PipelineMask{
         PM_None,
-        PM_DeferredScene = 0xffff0000,
-        PM_ForwardScene = 0x0000ffff,
+        PM_DeferredScene = 0xff000000,
+        PM_ForwardScene = 0x000000ff,
         PM_FixedShading = 0x00001000,
         PM_ShadowCaster = 0x10000000
     };

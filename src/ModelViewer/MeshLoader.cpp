@@ -8,6 +8,7 @@
 #include <osg/MatrixTransform>
 #include <osg/Geometry>
 #include <osg/Material>
+#include "ModelDefs.h"
 
 namespace ModelViewer
 {
@@ -131,6 +132,10 @@ namespace ModelViewer
         if (scene)
         {
             aiProcessNode(&root, scene, scene->mRootNode);
+            if(root)
+            {
+                setPipelineMask(root, PM_DeferredScene);
+            }
             return root;
         }
         return root;

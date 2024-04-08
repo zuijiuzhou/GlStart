@@ -27,8 +27,7 @@ int main(int argc, char **argv)
     }
     else if(BrepLoader::isSupported(file)){
         // convet to utf-8
-        auto u8path = Utilities::gbkToUtf8(file);
-        model = BrepLoader().loadFile(u8path);
+        model = BrepLoader().loadFile(file);
     }
     else{
         std::cout << std::endl << "Not supported." <<std::endl;
