@@ -52,14 +52,14 @@ namespace ModelViewer
         auto traits = new osg::GraphicsContext::Traits();
         traits->x = 100;
         traits->y = 100;
-        traits->width = 1440;
-        traits->height = 900;
+        traits->width = 2560;
+        traits->height = 1440;
         traits->windowDecoration = true;
         traits->supportsResize = true;
         traits->doubleBuffer = true;
         traits->depth = 24;
         traits->samples = 4;
-        traits->screenNum = 1;
+        traits->screenNum = 0;
         auto gc = osg::GraphicsContext::createGraphicsContext(traits);
 
         auto cam = rep_->viewer_impl->getCamera();
