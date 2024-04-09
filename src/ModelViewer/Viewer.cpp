@@ -121,7 +121,7 @@ namespace ModelViewer
 
         rep_->viewer_impl->addEventHandler(new ViewerEventCallback(light0));
 
-        osgVerse::StandardPipelineParameters params(SHADER_DIR, SKYBOX_DIR "monoLake.hdr");
+        osgVerse::StandardPipelineParameters params(SHADER_DIR, SKYBOX_DIR "barcelona.hdr");
         params.enablePostEffects = true;
         params.enableAO = false;
         osgVerse::setupStandardPipeline(pipeline, rep_->viewer_impl.get(), params);
