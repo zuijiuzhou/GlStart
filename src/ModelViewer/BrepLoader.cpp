@@ -112,23 +112,13 @@ namespace ModelViewer
 
         delete reader;
 
-        std::set<int> face_edge_hashes;
         std::set<int> all_edge_indices;
-
         TopTools_IndexedMapOfShape face_map;
         TopTools_IndexedMapOfShape edge_map;
 
         TopExp::MapShapes(shape, TopAbs_FACE, face_map);
         TopExp::MapShapes(shape, TopAbs_EDGE, edge_map);
 
-        for (int i = 1; i <= face_map.Extent(); i++)
-        {
-            TopExp_Explorer exp;
-            for (exp.Init(face_map(i), TopAbs_EDGE); exp.More(); exp.Next())
-            {
-                face_edge_hashes.insert(exp.Current().HashCode(INT_MAX));
-            }
-        }
         for (int i = 1; i <= edge_map.Extent(); i++)
         {
             all_edge_indices.insert(i);

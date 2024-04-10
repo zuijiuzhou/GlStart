@@ -21,4 +21,6 @@ namespace ModelViewer
     };
 
     void setPipelineMask(osg::Node* node, PipelineMask mask);
+
+    void applyDefaultMaterial(osg::Node* node);
 }
