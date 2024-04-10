@@ -42,7 +42,7 @@ namespace AnyRenderer
 
     private:
         GLuint vao_ = 0;
-        GLuint vbos_[4] = {0, 0, 0};
+        GLuint vbos_[4] = {0, 0, 0, 0};
 
         std::vector<glm::vec3> vertices_;
         std::vector<glm::vec3> normals_;

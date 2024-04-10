@@ -134,14 +134,14 @@ namespace ModelViewer
         IMeshTools_Parameters params;
         params.Angle = 0.1;
         params.Deflection = 1;
-        params.MinSize = 1e-4;
+        params.MinSize = 1e-2;
         params.InParallel = true;
         params.Relative = true;
         params.InternalVerticesMode = true;
         params.ControlSurfaceDeflection = true;
-        params.ForceFaceDeflection = false;
+        params.ForceFaceDeflection = true;
         params.CleanModel = true;
-        params.AllowQualityDecrease = false;
+        params.AllowQualityDecrease = true;
         params.AdjustMinSize = true;
 
         BRepMesh_IncrementalMesh im(shape, params);
