@@ -1,5 +1,6 @@
 #include "PointCloud.h"
 #include "Shader.h"
+#include "ResourceManager.h"
 
 namespace AnyRenderer
 {
@@ -25,19 +26,17 @@ namespace AnyRenderer
         colors_ = std::move(colors);
     }
 
-    void PointCloud::draw()
+    Shader *PointCloud::getShader() const
+    {
+        auto shader = Shape::getShader();
+        if (!shader)
+            shader = ResourceManager::instance()->getInternalShader(ResourceManager::IS_PointCloud);
+        return shader;
+    }
+
+    void PointCloud::draw(const RenderContext &ctx)
     {
         glEnable(GL_PROGRAM_POINT_SIZE);
-#ifdef __GL_FIXED_PIPLINE__
-        // glBegin(GL_TRIANGLES);
-        // glColor3f(1.0, 0.0, 0.0);
-        // glVertex3f(1.0, 0.0, 0.0);
-        // glColor3f(0.0, 1.0, 0.0);
-        // glVertex3f(-1.0, -1.0, 0.0);
-        // glColor3f(0.0, 0.0, 1.0);
-        // glVertex3f(1.0, -1.0, 0.0);
-        // glEnd();
-#else
         glEnable(GL_BLEND);
         glEnable(GL_POINT_SMOOTH);
         static GLfloat x = 0.2f;
@@ -64,7 +63,5 @@ namespace AnyRenderer
         }
         glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(vertices_.size()));
         glBindVertexArray(0);
-
-#endif
     }
 }

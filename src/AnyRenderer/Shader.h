@@ -9,11 +9,8 @@ namespace AnyRenderer
 {
      class Shader
      {
-     private:
-          unsigned int program_id_ = 0;
-
      public:
-          Shader(const GLchar *vs_code, const GLchar* gs_code, const GLchar *fs_code);
+          Shader(const std::string& vs_code, const std::string& gs_code, const std::string& fs_code);
           virtual ~Shader();
 
      public:
@@ -25,27 +22,33 @@ namespace AnyRenderer
           {
                if constexpr (std::is_same<T, bool>::value)
                {
-                    glUniformli(glGetUniformLocation(program_id_, name), (int)val);
+                    auto loc = glGetUniformLocation(program_id_, name);
+                    if(loc >= 0) glUniformli(loc, (int)val);
                }
                else if constexpr (std::is_same<T, int>::value)
                {
-                    glUniformli(glGetUniformLocation(program_id_, name), val);
+                    auto loc = glGetUniformLocation(program_id_, name);
+                    if(loc >= 0) glUniformli(loc, val);
                }
                else if constexpr (std::is_same<T, float>::value)
                {
-                    glUniformlf(glGetUniformLocation(program_id_, name), val);
+                    auto loc = glGetUniformLocation(program_id_, name);
+                    if(loc >= 0) glUniformlf(loc, val);
                }
                else if constexpr (std::is_same<T, glm::vec3>::value)
                {
-                    glUniform3f(glGetUniformLocation(program_id_, name), val.x, val.y, val.z);
+                    auto loc = glGetUniformLocation(program_id_, name);
+                    if(loc >= 0) glUniform3f(loc, val.x, val.y, val.z);
                }               
                else if constexpr (std::is_same<T, glm::vec4>::value)
                {
-                    glUniform4f(glGetUniformLocation(program_id_, name), val.r, val.g, val.b, val.a);
+                    auto loc = glGetUniformLocation(program_id_, name);
+                    if(loc >= 0) glUniform4f(loc, val.r, val.g, val.b, val.a);
                }
                else if constexpr (std::is_same<T, glm::mat4>::value)
                {
-                    glUniformMatrix4fv(glGetUniformLocation(program_id_, name), 1, GL_FALSE, glm::value_ptr(val));
+                    auto loc = glGetUniformLocation(program_id_, name);
+                    if(loc >= 0) glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(val));
                }
                else
                {
@@ -53,7 +56,17 @@ namespace AnyRenderer
                }
           }
 
+          bool isCreated() const;
      public:
-          static Shader *create(const GLchar *vs_path, const GLchar* gs_path, const GLchar *fs_path);
+          static Shader *create(const std::string& vs_path, const std::string& gs_path, const std::string& fs_path);
+
+     private:
+          void create();
+
+     private:
+          GLuint program_id_ = 0;
+          std::string vs_code_ = nullptr;
+          std::string gs_code_ = nullptr;
+          std::string fs_code_ = nullptr;
      };
 }

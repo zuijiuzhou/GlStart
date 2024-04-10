@@ -14,8 +14,8 @@ void CreateSampleShapes(Renderer *renderer)
     std::vector<glm::vec3> normals{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)};
 
     auto ms = new AnyRenderer::MeshShape();
-    ms->setData(vertices, normals);
-    ms->setColor(glm::vec4(1, 0, 1, 1));
+    ms->setVertices(vertices);
+    ms->setNormals(normals);
 
     std::vector<glm::vec3> pts;
     std::vector<glm::vec3> colors;

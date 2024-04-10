@@ -7,9 +7,9 @@ namespace AnyRenderer
 {
     namespace
     {
-        std::string readCode(const GLchar *path)
+        std::string readCode(const std::string& path)
         {
-            if (!path || !strlen(path))
+            if (path.empty())
                 return {};
             std::string code;
             std::ifstream fs;
@@ -52,26 +52,54 @@ namespace AnyRenderer
         }
     }
 
-    Shader::Shader(const GLchar *vs_code, const GLchar *gs_code, const GLchar *fs_code)
+    Shader::Shader(const std::string& vs_code, const std::string& gs_code, const std::string& fs_code) : vs_code_(vs_code), gs_code_(gs_code), fs_code_(fs_code)
     {
+        
+    }
+
+    Shader::~Shader()
+    {
+        if (program_id_)
+        {
+            glDeleteProgram(program_id_);
+        }
+    }
+
+    void Shader::use()
+    {
+        if(!isCreated())
+            create();
+        if(!isCreated())
+            return;
+        glUseProgram(program_id_);
+    }
+
+    void Shader::unuse()
+    {
+        glUseProgram(0);
+    }
+
+    void Shader::create(){
+        if(isCreated())
+            return;
         unsigned int vs_id, gs_id, fs_id;
         char msg[512];
         auto status = 0;
         auto app_id = glCreateProgram();
 
-        if (vs_code)
+        if (!vs_code_.empty())
         {
-            vs_id = createShader(vs_code, GL_VERTEX_SHADER);
+            vs_id = createShader(vs_code_.data(), GL_VERTEX_SHADER);
             glAttachShader(app_id, vs_id);
         }
-        if (gs_code)
+        if (!gs_code_.empty())
         {
-            gs_id = createShader(gs_code, GL_GEOMETRY_SHADER);
+            gs_id = createShader(gs_code_.data(), GL_GEOMETRY_SHADER);
             glAttachShader(app_id, gs_id);
         }
-        if (fs_code)
+        if (!fs_code_.empty())
         {
-            fs_id = createShader(fs_code, GL_FRAGMENT_SHADER);
+            fs_id = createShader(fs_code_.data(), GL_FRAGMENT_SHADER);
             glAttachShader(app_id, fs_id);
         }
         glLinkProgram(app_id);
@@ -101,29 +129,19 @@ namespace AnyRenderer
         program_id_ = app_id;
     }
 
-    Shader::~Shader()
-    {
-        if (program_id_)
-        {
-            glDeleteProgram(program_id_);
-        }
+    bool Shader::isCreated() const{
+        return program_id_ > 0;
     }
 
-    void Shader::use()
-    {
-        glUseProgram(program_id_);
-    }
-
-    void Shader::unuse()
-    {
-        glUseProgram(0);
-    }
-
-    Shader *Shader::create(const GLchar *vs_path, const GLchar *gs_path, const GLchar *fs_path)
+    Shader *Shader::create(const std::string& vs_path, const std::string& gs_path, const std::string& fs_path)
     {
         auto vs_code = readCode(vs_path);
         auto gs_code = readCode(gs_path);
         auto fs_code = readCode(fs_path);
-        return new Shader(vs_code.data(), gs_code.data(), fs_code.data());
+
+        if(vs_code.empty() || fs_code.empty())
+            return nullptr;
+
+        return new Shader(vs_code, gs_code, fs_code);
     }
 }

@@ -6,6 +6,7 @@
 #include "MeshShape.h"
 #include "PointCloud.h"
 #include "Shader.h"
+#include "RenderContext.h"
 #include "Utilities/Resources.h"
 
 namespace AnyRenderer
@@ -71,20 +72,19 @@ namespace AnyRenderer
 
         auto camera = new Camera();
         auto cm = new CameraManipulator(camera, wnd);
-        auto mesh_shape_shader = Shader::create(__RES(mesh_shape.vs.glsl), nullptr, __RES(mesh_shape.fs.glsl));
-        auto point_cloud_shader = Shader::create(__RES(point_cloud.vs.glsl), nullptr, __RES(point_cloud.fs.glsl));
 
         proj_matrix_ = glm::perspective(glm::radians(45.f), 800.f / 600.f, 0.1f, 1000.f);
         camera_ = camera;
         cm_ = cm;
         wnd_ = wnd;
-        shader_mesh_shape_ = mesh_shape_shader;
-        shader_point_cloud_ = point_cloud_shader;
         is_initialized = true;
     }
 
     void Renderer::error_callback(int error, const char *desc)
     {
+        
+        auto mesh_shape_shader = Shader::create(__RES("shaders/mesh_shape.vs.glsl"), nullptr, __RES("shaders/mesh_shape.fs.glsl"));
+        auto point_cloud_shader = Shader::create(__RES("shaders/point_cloud.vs.glsl"), nullptr, __RES("shaders/point_cloud.fs.glsl"));
     }
 
     void Renderer::key_callback(GLFWwindow *wnd, int key, int scancode, int action, int mods)
@@ -120,31 +120,21 @@ namespace AnyRenderer
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
-
+        RenderContext ctx(camera_);
         while (!glfwWindowShouldClose(wnd_))
         {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             auto mvp = proj_matrix_ * camera_->getMatrix();
             for (auto shape : shapes_)
             {
-                auto mesh_shape = dynamic_cast<MeshShape *>(shape);
-                if (mesh_shape)
-                {
-                    shader_mesh_shape_->use();
-                    shader_mesh_shape_->set("mvp", mvp);
-                    shader_mesh_shape_->set("rgba", mesh_shape->getColor());
-                    shape->draw();
-                    shader_mesh_shape_->unuse();
-                    continue;
+                auto shader = shape->getShader();
+                if(shader){
+                    shader->use();
+                    shader->set("mvp", mvp);
                 }
-                auto point_cloud = dynamic_cast<PointCloud *>(shape);
-                if (shape)
-                {
-                    shader_point_cloud_->use();
-                    shader_point_cloud_->set("mvp", mvp);
-                    shape->draw();
-                    shader_point_cloud_->unuse();
-                    continue;
+                shape->draw(ctx);
+                if(shader){
+                    shader->unuse();
                 }
             }
 
