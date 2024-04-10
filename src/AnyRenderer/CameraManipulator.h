@@ -1,9 +1,8 @@
-#ifndef _CAMERAMANIPULATOR_H_
-#define _CAMERAMANIPULATOR_H_
-#include "tinyviewer_global.h"
+#pragma once
+#include "anyrenderer_global.h"
 #include "Camera.h"
 
-namespace TinyViewer
+namespace AnyRenderer
 {
     class CameraManipulator
     {
@@ -28,6 +27,4 @@ namespace TinyViewer
         glm::vec2 prev_cursor_pt_;
     };
 
-} // namespace TinyViewer
-
-#endif
+} // namespace AnyRenderer

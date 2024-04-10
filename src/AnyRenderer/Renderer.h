@@ -1,10 +1,10 @@
 #pragma once
 
-#include "tinyviewer_global.h"
+#include "anyrenderer_global.h"
 #include <vector>
 #include "CameraManipulator.h"
 
-namespace TinyViewer
+namespace AnyRenderer
 {
     class Shader;
     class Shape;
@@ -40,4 +40,4 @@ namespace TinyViewer
         void setBackgroundColor(const glm::vec3& color);
     };
 
-} // namespace TinyViewer
+} // namespace AnyRenderer

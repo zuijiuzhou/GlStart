@@ -17,7 +17,7 @@
 
 #include "PointCloud.h"
 
-namespace TinyViewer
+namespace AnyRenderer
 {   
     using PCPtr = pcl::PointCloud<pcl::PointXYZRGBA>::Ptr;
     namespace

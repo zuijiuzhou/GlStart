@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace TinyViewer
+namespace AnyRenderer
 {
     class Camera
     {

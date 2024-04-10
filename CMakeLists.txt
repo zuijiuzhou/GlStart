@@ -23,7 +23,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+set(CONFIG_BUILD_TYPE $<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>)
+set(CONFIG_GLSTART_RES_OUTPUT_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CONFIG_BUILD_TYPE}/res)
 set(THIRD_PARTY_DIR ${CMAKE_SOURCE_DIR}/third)
+
+set(GLSTART_RES_ROOT_DIR res/)
+add_definitions(-DRES_ROOT_DIR="${GLSTART_RES_ROOT_DIR}")
 
 set(THIRD_PARTY_LIBS
     glad
@@ -32,7 +37,7 @@ set(THIRD_PARTY_LIBS
     stb
  )
 
-add_compile_options("/EHa")
+# add_compile_options("/EHa")
 
 foreach(lib_name ${THIRD_PARTY_LIBS})
     list(APPEND CMAKE_PREFIX_PATH "${THIRD_PARTY_DIR}/${lib_name}")

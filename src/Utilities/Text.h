@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+
 namespace Utilities{
     std::wstring gbkToUnicode(const std::string& str);
 

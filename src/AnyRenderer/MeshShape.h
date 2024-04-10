@@ -1,8 +1,9 @@
+#pragma once
 #include "Shape.h"
 #include <vector>
 #include <glm/glm.hpp>
 
-namespace TinyViewer
+namespace AnyRenderer
 {
     class MeshShape final : public Shape
     {

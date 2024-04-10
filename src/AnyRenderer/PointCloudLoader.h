@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace TinyViewer
+namespace AnyRenderer
 {
     class PointCloud;
     class PointCloudLoader

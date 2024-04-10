@@ -1,11 +1,11 @@
 #pragma once
-#include "tinyviewer_global.h"
+#include "anyrenderer_global.h"
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace TinyViewer
+namespace AnyRenderer
 {
      class Shader
      {

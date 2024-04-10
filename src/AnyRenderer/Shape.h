@@ -1,7 +1,7 @@
 #pragma once
-#include "tinyviewer_global.h"
+#include "anyrenderer_global.h"
 
-namespace TinyViewer
+namespace AnyRenderer
 {
     class Shape
     {
