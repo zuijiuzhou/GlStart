@@ -6,74 +6,94 @@
 #include "PointCloudLoader.h"
 #include <Windows.h>
 
-using namespace AnyRenderer;
+namespace ar = AnyRenderer;
 
-void CreateSampleShapes(Renderer *renderer)
+void CreateSampleShapes(ar::Renderer *renderer)
 {
-    std::vector<glm::vec3> vertices{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(1, 1, 0)};
-    std::vector<glm::vec3> normals{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)};
-
-    auto ms = new AnyRenderer::MeshShape();
-    ms->setVertices(vertices);
-    ms->setNormals(normals);
-
-    std::vector<glm::vec3> pts;
-    std::vector<glm::vec3> colors;
-    pts.reserve(1000);
-    colors.reserve(pts.capacity());
-    auto posi_offset = INT16_MAX / 10000.f / 2.f;
-    for (size_t i = 0; i < pts.capacity(); i++)
+    auto ms = new ar::MeshShape();
     {
-        pts.emplace_back(rand() / 10000. - posi_offset, rand() / 10000. - posi_offset, rand() / 10000.);
-        colors.emplace_back(rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX));
+        std::vector<glm::vec3> vertices{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(1, 1, 0)};
+        std::vector<glm::vec3> normals{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)};
+        std::vector<glm::vec4> colors{glm::vec4(1, 0, 0, 1), glm::vec4(0, 1, 0, 1), glm::vec4(0, 0, 1, 1)};
+
+        ms->setVertices(vertices);
+        ms->setNormals(normals);
+        ms->setColors(colors);
+        ms->setDrawType(ar::MeshShape::Triangles);
     }
-    auto pc = new AnyRenderer::PointCloud();
-    pc->setData(pts, colors);
+
+    auto cube = ar::MeshShape::createCube(0.6, true);
+    {
+
+    }
+
+    auto pc = new ar::PointCloud();
+    {
+        std::vector<glm::vec3> pts;
+        std::vector<glm::vec3> colors;
+        pts.reserve(1000);
+        colors.reserve(pts.capacity());
+        auto posi_offset = INT16_MAX / 10000.f / 2.f;
+        for (size_t i = 0; i < pts.capacity(); i++)
+        {
+            pts.emplace_back(rand() / 10000. - posi_offset, rand() / 10000. - posi_offset, rand() / 10000.);
+            colors.emplace_back(rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX));
+        }
+        pc->setData(pts, colors);
+    }
     renderer->addShape(ms);
     renderer->addShape(pc);
+    renderer->addShape(cube);
 }
 
-class A{
-    public:
+class A
+{
+public:
     int xx;
-    A(int x):xx(x){}
-    ~A(){
+    A(int x) : xx(x) {}
+    ~A()
+    {
         std::cout << "A dctor." << xx << std::endl;
     }
 };
 
-void ThrowCPPEX(){
+void ThrowCPPEX()
+{
     A obj2(1);
-    try{
-    throw std::exception("123");
+    try
+    {
+        throw std::exception("123");
     }
-    catch(...){
-
-
+    catch (...)
+    {
     }
 }
 
-void ThrowSEHEX(){
+void ThrowSEHEX()
+{
     A obj(2);
     try
-    { 
+    {
         A obj2(3);
         auto a = 1, b = 0;
         std::cout << a / b;
     }
-    catch(...)
+    catch (...)
     {
         std::cerr << "Cpp Catch:" << '\n';
         std::rethrow_exception(std::current_exception());
     }
 }
 
-void TestThrow(){
+void TestThrow()
+{
     // ThrowCPPEX();
-    __try{
+    __try
+    {
         ThrowSEHEX();
     }
-    __except(EXCEPTION_EXECUTE_HANDLER){
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
         std::cout << "SEH Catch:" << std::endl;
     }
     // A a;
@@ -82,11 +102,11 @@ void TestThrow(){
 
 int main(int argc, char **argv)
 {
-    auto renderer = new AnyRenderer::Renderer();
+    auto renderer = new ar::Renderer();
     if (argc > 1)
     {
         auto file = argv[1];
-        auto pcl = new PointCloudLoader(file);
+        auto pcl = new ar::PointCloudLoader(file);
         renderer->addShape(pcl->getData());
     }
     else

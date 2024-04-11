@@ -10,7 +10,7 @@ namespace AnyRenderer
             Texture1D = GL_TEXTURE_1D,
             Texture2D = GL_TEXTURE_2D,
             Texture3D = GL_TEXTURE_3D,
-            TextureCubeMap = GL_TEXTURE_CUBE_MAP
+            TexCubeMap = GL_TEXTURE_CUBE_MAP
         };
 
     public:

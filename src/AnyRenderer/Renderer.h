@@ -10,16 +10,16 @@ namespace AnyRenderer
     class Shape;
     class Renderer
     {
-    private:
-        Camera *camera_ = nullptr;
-        CameraManipulator *cm_ = nullptr;
-        GLFWwindow *wnd_ = nullptr;
-        std::vector<Shape*> shapes_;
-        Shader* shader_mesh_shape_ = nullptr;
-        Shader* shader_point_cloud_ = nullptr;
-        glm::mat4x4 proj_matrix_;
-        glm::vec3 bg_;
-        bool is_initialized = false;
+
+    public:
+        Renderer();
+        virtual ~Renderer();
+        
+    public:
+        void run();
+
+        void addShape(Shape* shape);
+
     private:
         void init();
 
@@ -27,17 +27,12 @@ namespace AnyRenderer
         void key_callback(GLFWwindow *wnd, int key, int scancode, int action, int mods);
         void framebuffer_size_callback(GLFWwindow *wnd, int w, int h);
 
-    public:
-        Renderer();
-        virtual ~Renderer();
-        
-    public:
-
-        void run();
-
-        void addShape(Shape* shape);
-
-        void setBackgroundColor(const glm::vec3& color);
+    private:
+        Camera *camera_ = nullptr;
+        CameraManipulator *cm_ = nullptr;
+        GLFWwindow *wnd_ = nullptr;
+        std::vector<Shape*> shapes_;
+        bool is_initialized = false;
     };
 
 } // namespace AnyRenderer

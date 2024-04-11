@@ -78,11 +78,12 @@ namespace AnyRenderer
             auto delta_x = xx - prev_cursor_pt_.x;
             auto delta_y = yy - prev_cursor_pt_.y;
 
+            auto vm = camera_->getViewMatrix();
             if (is_pan_started_)
             {
                 auto m = glm::mat4(1.0f);
                 m = glm::translate(m, glm::vec3(delta_x / 500, -delta_y / 500, 0));
-                camera_->setMatrix(m * camera_->getMatrix());
+                vm = m * vm;
                 // camera_->transform(m);
             }
             if (is_rotation_started_)
@@ -92,10 +93,10 @@ namespace AnyRenderer
 
                 mx = glm::rotate(mx, glm::radians(delta_x / 10), glm::vec3(0.0f, 1.0f, 0.0f));
                 my = glm::rotate(my, glm::radians(delta_y / 10), glm::vec3(1.0f, 0.0f, 0.0f));
-
-                camera_->transform(mx);
-                camera_->transform(my);
+                vm *= mx;
+                vm *= my;
             }
+            camera_->setViewMatrix(vm);
             prev_cursor_pt_.x = xx;
             prev_cursor_pt_.y = yy;
         }
@@ -111,12 +112,14 @@ namespace AnyRenderer
         // printf("\nx:%f, y:%f", x, y);
 
         auto delta = y;
-        glm::vec3 p, t, u;
-        camera_->get(p, t, u);
-        glm::vec3 dir = t - p;
+        auto vm = camera_->getViewMatrix();
+        glm::vec3 p, t, u, dir;
+        camera_->getViewMatrixAsLookAt(p, t, u);
+        dir = t - p;
         dir = dir * static_cast<float>(-y / 10);
         glm::mat4 m(1.0);
         m = glm::translate(m, dir);
-        camera_->transform(m);
+        vm *= m;
+        camera_->setViewMatrix(vm);
     }
 }

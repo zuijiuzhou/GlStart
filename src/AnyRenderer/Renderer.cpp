@@ -49,7 +49,6 @@ namespace AnyRenderer
         }
 
         glViewport(0, 0, 800, 600);
-        glClearColor(bg_.x, bg_.y, bg_.z, 1.0f);
         glClearDepth(1);
         glClearStencil(1);
         using GLFWFrameBufferSizeCallback = std::function<void(GLFWwindow *, int, int)>;
@@ -72,8 +71,9 @@ namespace AnyRenderer
 
         auto camera = new Camera();
         auto cm = new CameraManipulator(camera, wnd);
-
-        proj_matrix_ = glm::perspective(glm::radians(45.f), 800.f / 600.f, 0.1f, 1000.f);
+        camera->setProjectionMatrix(glm::perspective(glm::radians(45.f), 800.f / 600.f, 0.1f, 1000.f));
+        camera->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        camera->setClearColor(glm::vec4(0));
         camera_ = camera;
         cm_ = cm;
         wnd_ = wnd;
@@ -112,7 +112,7 @@ namespace AnyRenderer
             return;
         glfwMakeContextCurrent(wnd);
         glViewport(0, 0, w, h);
-        proj_matrix_ = glm::perspective(glm::radians(45.f), (float)w / (float)h, 0.1f, 1000.f);
+        camera_->setProjectionMatrix(glm::perspective(glm::radians(45.f), (float)w / (float)h, 0.1f, 1000.f));
     }
 
     void Renderer::run()
@@ -123,14 +123,15 @@ namespace AnyRenderer
         RenderContext ctx(camera_);
         while (!glfwWindowShouldClose(wnd_))
         {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-            auto mvp = proj_matrix_ * camera_->getMatrix();
+            camera_->apply();
+            auto vp = camera_->getViewProjectionMatrix();
             for (auto shape : shapes_)
             {
                 auto shader = shape->getShader();
                 if(shader){
                     shader->use();
-                    shader->set("mvp", mvp);
+                    shader->set("mvp", vp);
+                    shader->set("view_matrix", camera_->getViewMatrix());
                 }
                 shape->draw(ctx);
                 if(shader){
@@ -150,13 +151,6 @@ namespace AnyRenderer
         {
             shapes_.push_back(shape);
         }
-    }
-
-    void Renderer::setBackgroundColor(const glm::vec3 &color)
-    {
-        bg_ = color;
-        if (is_initialized)
-            glClearColor(bg_.x, bg_.y, bg_.z, 1.0);
     }
 
     // stbi_set_flip_vertically_on_load(true);

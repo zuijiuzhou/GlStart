@@ -23,17 +23,17 @@ namespace AnyRenderer
                if constexpr (std::is_same<T, bool>::value)
                {
                     auto loc = glGetUniformLocation(program_id_, name);
-                    if(loc >= 0) glUniformli(loc, (int)val);
+                    if(loc >= 0) glUniform1i(loc, (int)val);
                }
                else if constexpr (std::is_same<T, int>::value)
                {
                     auto loc = glGetUniformLocation(program_id_, name);
-                    if(loc >= 0) glUniformli(loc, val);
+                    if(loc >= 0) glUniform1i(loc, val);
                }
                else if constexpr (std::is_same<T, float>::value)
                {
                     auto loc = glGetUniformLocation(program_id_, name);
-                    if(loc >= 0) glUniformlf(loc, val);
+                    if(loc >= 0) glUniform1f(loc, val);
                }
                else if constexpr (std::is_same<T, glm::vec3>::value)
                {
