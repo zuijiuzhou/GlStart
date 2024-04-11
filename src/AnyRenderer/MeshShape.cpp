@@ -43,11 +43,12 @@ namespace AnyRenderer
 		colors_ = std::move(colors);
 	}
 
-	void MeshShape::setTexCoords(std::vector<glm::vec2> coords)
+	void MeshShape::setTexCoords(std::vector<glm::vec3> coords)
 	{
 		tex_coords_ = std::move(coords);
 	}
-	void MeshShape::setTexture(Texture2D* tex, unsigned int unit)
+    
+	void MeshShape::setTexture(Texture* tex, unsigned int unit)
 	{
 		tex_ = tex;
 		tex_unit_ = unit;
@@ -157,8 +158,8 @@ namespace AnyRenderer
 			{
 				glGenBuffers(1, &vbo_id);
 				glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-				glBufferData(GL_ARRAY_BUFFER, tex_coords_.size() * sizeof(glm::vec2), (void*)tex_coords_.data(), GL_STATIC_DRAW);
-				glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+				glBufferData(GL_ARRAY_BUFFER, tex_coords_.size() * sizeof(glm::vec3), (void*)tex_coords_.data(), GL_STATIC_DRAW);
+				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 				glEnableVertexAttribArray(3);
 				vbos_[3] = vbo_id;
 			}
@@ -298,48 +299,48 @@ namespace AnyRenderer
 		};
 
 		if (gen_tex_coords) {
-			std::vector<glm::vec2> tex_coords = {
-				glm::vec2(0.0f,  0.0f),
-				glm::vec2(1.0f,  0.0f),
-				glm::vec2(1.0f,  1.0f),
-				glm::vec2(1.0f,  1.0f),
-				glm::vec2(0.0f,  1.0f),
-				glm::vec2(0.0f,  0.0f),
-				
-				glm::vec2(0.0f,  0.0f),
-				glm::vec2(1.0f,  0.0f),
-				glm::vec2(1.0f,  1.0f),
-				glm::vec2(1.0f,  1.0f),
-				glm::vec2(0.0f,  1.0f),
-				glm::vec2(0.0f,  0.0f),
-				
-				glm::vec2(1.0f,  0.0f),
-				glm::vec2(1.0f,  1.0f),
-				glm::vec2(0.0f,  1.0f),
-				glm::vec2(0.0f,  1.0f),
-				glm::vec2(0.0f,  0.0f),
-				glm::vec2(1.0f,  0.0f),
-				
-				glm::vec2(1.0f,  0.0f),
-				glm::vec2(1.0f,  1.0f),
-				glm::vec2(0.0f,  1.0f),
-				glm::vec2(0.0f,  1.0f),
-				glm::vec2(0.0f,  0.0f),
-				glm::vec2(1.0f,  0.0f),
-				
-				glm::vec2(0.0f,  1.0f),
-				glm::vec2(1.0f,  1.0f),
-				glm::vec2(1.0f,  0.0f),
-				glm::vec2(1.0f,  0.0f),
-				glm::vec2(0.0f,  0.0f),
-				glm::vec2(0.0f,  1.0f),
-				
-				glm::vec2(0.0f,  1.0f),
-				glm::vec2(1.0f,  1.0f),
-				glm::vec2(1.0f,  0.0f),
-				glm::vec2(1.0f,  0.0f),
-				glm::vec2(0.0f,  0.0f),
-				glm::vec2(0.0f,  1.0f)
+			std::vector<glm::vec3> tex_coords = {
+				glm::vec3(0.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  1.0f, 0.f),
+				glm::vec3(1.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  0.0f, 0.f),
+                
+				glm::vec3(0.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  1.0f, 0.f),
+				glm::vec3(1.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  0.0f, 0.f),
+                
+				glm::vec3(1.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  0.0f, 0.f),
+                
+				glm::vec3(1.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  1.0f, 0.f),
+				glm::vec3(0.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  0.0f, 0.f),
+                
+				glm::vec3(0.0f,  1.0f, 0.f),
+				glm::vec3(1.0f,  1.0f, 0.f),
+				glm::vec3(1.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  0.0f, 0.f),
+				glm::vec3(0.0f,  0.0f, 0.f),
+				glm::vec3(0.0f,  1.0f, 0.f),
+                
+				glm::vec3(0.0f,  1.0f, 0.f),
+				glm::vec3(1.0f,  1.0f, 0.f),
+				glm::vec3(1.0f,  0.0f, 0.f),
+				glm::vec3(1.0f,  0.0f, 0.f),
+				glm::vec3(0.0f,  0.0f, 0.f),
+				glm::vec3(0.0f,  1.0f, 0.f)
 
 			};
 			cube->setTexCoords(tex_coords);

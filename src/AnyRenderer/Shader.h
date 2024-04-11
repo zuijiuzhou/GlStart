@@ -17,6 +17,9 @@ namespace AnyRenderer
           void use();
           void unuse();
 
+          std::string getName() const;
+          void setName(const std::string& name);
+
           template <typename T>
           void set(const GLchar *name, const T &val)
           {
@@ -64,6 +67,7 @@ namespace AnyRenderer
           void create();
 
      private:
+          std::string name_;
           GLuint program_id_ = 0;
           std::string vs_code_ = nullptr;
           std::string gs_code_ = nullptr;

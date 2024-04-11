@@ -76,7 +76,20 @@ namespace AnyRenderer
 
     void Shader::unuse()
     {
-        glUseProgram(0);
+        if(program_id_){
+            GLint current_prog;
+            glGetIntegerv(GL_CURRENT_PROGRAM, &current_prog);
+            if(current_prog == program_id_)
+                glUseProgram(0);
+        }
+    }
+
+    std::string Shader::getName() const{
+        return name_;
+    }
+
+    void Shader::setName(const std::string& name){
+        name_ = name;
     }
 
     void Shader::create(){

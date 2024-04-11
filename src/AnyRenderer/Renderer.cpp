@@ -2,12 +2,13 @@
 #include <iostream>
 #include <functional>
 #include <stb_image.h>
+#include "Utilities/Resources.h"
 #include "Shape.h"
 #include "MeshShape.h"
 #include "PointCloud.h"
 #include "Shader.h"
 #include "RenderContext.h"
-#include "Utilities/Resources.h"
+#include "CameraManipulator.h"
 
 namespace AnyRenderer
 {
@@ -31,12 +32,10 @@ namespace AnyRenderer
             throw std::exception("GLFW init failed");
         }
 
-#ifndef __GL_FIXED_PIPELINE__
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif
 
         auto wnd = glfwCreateWindow(800, 600, "AnyRenderer", NULL, NULL);
         glfwMakeContextCurrent(wnd);
@@ -153,6 +152,9 @@ namespace AnyRenderer
         }
     }
 
+    Camera* Renderer::getCamera() const{
+        return camera_;
+    }
     // stbi_set_flip_vertically_on_load(true);
     //     int w, h, nr_channels;
     //     glGenTextures(1, &m_texture1);

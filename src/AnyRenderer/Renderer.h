@@ -2,12 +2,13 @@
 
 #include "anyrenderer_global.h"
 #include <vector>
-#include "CameraManipulator.h"
 
 namespace AnyRenderer
 {
     class Shader;
     class Shape;
+    class Camera;
+    class CameraManipulator;
     class Renderer
     {
 
@@ -17,9 +18,10 @@ namespace AnyRenderer
         
     public:
         void run();
-
         void addShape(Shape* shape);
+        Camera* getCamera() const;
 
+        // int registerShader(Shader* shader);
     private:
         void init();
 
@@ -32,7 +34,9 @@ namespace AnyRenderer
         CameraManipulator *cm_ = nullptr;
         GLFWwindow *wnd_ = nullptr;
         std::vector<Shape*> shapes_;
+        std::vector<Shader*> shaders_;
         bool is_initialized = false;
+
     };
 
 } // namespace AnyRenderer

@@ -5,7 +5,7 @@
 
 namespace AnyRenderer
 {
-    class Texture2D;
+    class Texture;
     class CubeMap;
     class MeshShape final : public Shape
     {
@@ -34,14 +34,14 @@ namespace AnyRenderer
          * @brief 设置纹理坐标
          * @param coords 当纹理类型为二维纹理时，将忽略Z值
          */
-        void setTexCoords(std::vector<glm::vec2> coords);
+        void setTexCoords(std::vector<glm::vec3> coords);
         void setColors(std::vector<glm::vec4> colors);
         /**
          * @brief 设置纹理贴图
          * @param tex 目前仅支持二维纹理
          * @param unit 绑定的纹理单元
          */
-        void setTexture(Texture2D *tex, unsigned int unit);
+        void setTexture(Texture *tex, unsigned int unit);
         void setEnvMap(CubeMap *tex, unsigned int unit);
         void setDrawType(DrawMode type);
 
@@ -58,10 +58,10 @@ namespace AnyRenderer
         std::vector<glm::vec3> normals_;
         std::vector<glm::vec4> colors_;
         std::vector<glm::u32> indices_;
-        std::vector<glm::vec2> tex_coords_;
+        std::vector<glm::vec3> tex_coords_;
         std::vector<glm::vec3> envmap_coords_;
 
-        Texture2D *tex_ = nullptr;
+        Texture *tex_ = nullptr;
         CubeMap *envmap_ = nullptr;
         int tex_unit_ = 0;
         int envmap_unit_ = 1;
