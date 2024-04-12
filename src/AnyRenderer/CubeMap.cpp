@@ -5,7 +5,6 @@
 
 namespace AnyRenderer
 {
-
     CubeMap::CubeMap()
     {
     }
@@ -14,7 +13,8 @@ namespace AnyRenderer
     {
     }
 
-    Texture::Type CubeMap::getType() const{
+    Texture::Type CubeMap::getType() const
+    {
         return Type::TexCubeMap;
     }
 
@@ -23,23 +23,22 @@ namespace AnyRenderer
         imgs_ = imgs;
     }
 
-    void CubeMap::create()
+    GLuint CubeMap::onCreate()
     {
-        if (isCreated())
-            return;
         if (imgs_.size() != 6)
-            return;
+            return 0;
 
-        GLuint id = -1;
+        GLuint id = 0;
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_CUBE_MAP, id);
         stbi_set_flip_vertically_on_load(true);
         for (int i = 0; i < 6; i++)
         {
-            auto& file = imgs_[i];
+            auto &file = imgs_[i];
             int w, h, channels;
             auto data = stbi_load(file.data(), &w, &h, &channels, 0);
-            if(data){
+            if (data)
+            {
                 glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
                 stbi_image_free(data);
             }
@@ -50,14 +49,12 @@ namespace AnyRenderer
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-        id_ = id;
+        return id;
     }
 
-    void CubeMap::update()
+    bool CubeMap::onUpdate()
     {
-        if (!isCreated())
-            return;
-        is_dirty_ = false;
+        return true;
     }
 
 }

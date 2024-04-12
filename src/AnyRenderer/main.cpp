@@ -10,17 +10,17 @@ namespace ar = AnyRenderer;
 
 void CreateSampleShapes(ar::Renderer *renderer)
 {
-    auto ms = new ar::MeshShape();
-    {
-        std::vector<glm::vec3> vertices{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(1, 1, 0)};
-        std::vector<glm::vec3> normals{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)};
-        std::vector<glm::vec4> colors{glm::vec4(1, 0, 0, 1), glm::vec4(0, 1, 0, 1), glm::vec4(0, 0, 1, 1)};
+    // auto ms = new ar::MeshShape();
+    // {
+    //     std::vector<glm::vec3> vertices{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(1, 1, 0)};
+    //     std::vector<glm::vec3> normals{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)};
+    //     std::vector<glm::vec4> colors{glm::vec4(1, 0, 0, 1), glm::vec4(0, 1, 0, 1), glm::vec4(0, 0, 1, 1)};
 
-        ms->setVertices(vertices);
-        ms->setNormals(normals);
-        ms->setColors(colors);
-        ms->setDrawType(ar::MeshShape::Triangles);
-    }
+    //     ms->setVertices(vertices);
+    //     ms->setNormals(normals);
+    //     ms->setColors(colors);
+    //     ms->setDrawType(ar::MeshShape::Triangles);
+    // }
 
     auto cube = ar::MeshShape::createCube(0.6, true);
     {
@@ -41,7 +41,7 @@ void CreateSampleShapes(ar::Renderer *renderer)
         }
         pc->setData(pts, colors);
     }
-    renderer->addShape(ms);
+    // renderer->addShape(ms);
     renderer->addShape(pc);
     renderer->addShape(cube);
 }

@@ -20,14 +20,12 @@ namespace AnyRenderer
     void Texture2D::setImage(const std::string& img)
     {
         img_ = img;
+        setDirty(true);
     }
 
-    void Texture2D::create()
+    GLuint Texture2D::onCreate()
     {
-        if (isCreated())
-            return;
-
-        GLuint id = -1;
+        GLuint id = 0;
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
         stbi_set_flip_vertically_on_load(true);
@@ -42,15 +40,12 @@ namespace AnyRenderer
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-
-        id_ = id;
+        return id;
     }
 
-    void Texture2D::update()
+    bool Texture2D::onUpdate()
     {
-        if (!isCreated())
-            return;
-        is_dirty_ = false;
+        return true; 
     }
 
 }

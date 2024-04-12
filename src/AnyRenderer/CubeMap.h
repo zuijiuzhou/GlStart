@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <string>
 #include "Texture.h"
@@ -18,9 +17,9 @@ namespace AnyRenderer
         void setImages(const std::vector<std::string> &imgs);
 
     protected:
-        virtual void create() override;
+        virtual GLuint onCreate() override;
 
-        virtual void update() override;
+        virtual bool onUpdate() override;
 
     private:
         std::vector<std::string> imgs_;

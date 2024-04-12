@@ -7,7 +7,7 @@ namespace AnyRenderer
 {
     namespace
     {
-        std::string readCode(const std::string& path)
+        std::string readCode(const std::string &path)
         {
             if (path.empty())
                 return {};
@@ -52,49 +52,52 @@ namespace AnyRenderer
         }
     }
 
-    Shader::Shader(const std::string& vs_code, const std::string& gs_code, const std::string& fs_code) : vs_code_(vs_code), gs_code_(gs_code), fs_code_(fs_code)
+    Shader::Shader(const std::string &vs_code, const std::string &gs_code, const std::string &fs_code) : vs_code_(vs_code), gs_code_(gs_code), fs_code_(fs_code)
     {
-        
     }
 
     Shader::~Shader()
     {
-        if (program_id_)
+        auto id = getId();
+        if (id)
         {
-            glDeleteProgram(program_id_);
+            glDeleteProgram(id);
         }
     }
 
     void Shader::use()
     {
-        if(!isCreated())
-            create();
-        if(!isCreated())
+        if (!isCreated())
+            GLObject::create();
+        if (!isCreated())
             return;
-        glUseProgram(program_id_);
+        glUseProgram(getId());
     }
 
     void Shader::unuse()
     {
-        if(program_id_){
+        auto id = getId();
+        if (id)
+        {
             GLint current_prog;
             glGetIntegerv(GL_CURRENT_PROGRAM, &current_prog);
-            if(current_prog == program_id_)
+            if (current_prog == id)
                 glUseProgram(0);
         }
     }
 
-    std::string Shader::getName() const{
+    std::string Shader::getName() const
+    {
         return name_;
     }
 
-    void Shader::setName(const std::string& name){
+    void Shader::setName(const std::string &name)
+    {
         name_ = name;
     }
 
-    void Shader::create(){
-        if(isCreated())
-            return;
+    GLuint Shader::onCreate()
+    {
         unsigned int vs_id, gs_id, fs_id;
         char msg[512];
         auto status = 0;
@@ -139,20 +142,16 @@ namespace AnyRenderer
             glDetachShader(app_id, fs_id);
             glDeleteShader(fs_id);
         }
-        program_id_ = app_id;
+        return app_id;
     }
 
-    bool Shader::isCreated() const{
-        return program_id_ > 0;
-    }
-
-    Shader *Shader::create(const std::string& vs_path, const std::string& gs_path, const std::string& fs_path)
+    Shader *Shader::create(const std::string &vs_path, const std::string &gs_path, const std::string &fs_path)
     {
         auto vs_code = readCode(vs_path);
         auto gs_code = readCode(gs_path);
         auto fs_code = readCode(fs_path);
 
-        if(vs_code.empty() || fs_code.empty())
+        if (vs_code.empty() || fs_code.empty())
             return nullptr;
 
         return new Shader(vs_code, gs_code, fs_code);

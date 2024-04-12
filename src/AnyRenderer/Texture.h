@@ -1,8 +1,9 @@
 #pragma once
-#include "anyrenderer_global.h"
+#include "BufferData.h"
+
 namespace AnyRenderer
 {
-    class Texture
+    class Texture : public BufferData
     {
     public:
         enum Type
@@ -17,22 +18,10 @@ namespace AnyRenderer
         virtual ~Texture();
 
     public:
-        void bind();
-        void unbind();
-        unsigned int getId() const;
         virtual Type getType() const = 0;
 
-        bool isCreated() const;
-        bool isDirty() const;
-
-        void dirty();
-
     protected:
-        virtual void create() = 0;
-        virtual void update() = 0;
-
-    protected:
-        unsigned int id_ = 0;
-        bool is_dirty_ = false;
+        virtual void onBind() override;
+        virtual void onUnbind() override;
     };
 }

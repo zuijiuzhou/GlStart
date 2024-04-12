@@ -1,6 +1,5 @@
 #pragma once
-#include "anyrenderer_global.h"
-
+#include <glad/glad.h>
 namespace AnyRenderer
 {
     class RenderContext;

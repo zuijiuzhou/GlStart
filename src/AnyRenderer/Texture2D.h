@@ -18,9 +18,9 @@ namespace AnyRenderer
         void setImage(const std::string& img);
 
     protected:
-        virtual void create() override;
+        virtual GLuint onCreate() override;
 
-        virtual void update() override;
+        virtual bool onUpdate() override;
 
     private:
         std::string img_;
