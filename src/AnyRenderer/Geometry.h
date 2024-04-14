@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Shape.h"
+#include "Drawable.h"
 #include <vector>
 #include <map>
 #include <set>
@@ -10,11 +10,11 @@ namespace AnyRenderer
 {
     class Texture;
     class CubeMap;
-    class MeshShape : public Shape
+    class Geometry : public Drawable
     {
     public:
-        MeshShape();
-        virtual ~MeshShape();
+        Geometry();
+        virtual ~Geometry();
 
     public:
         void draw(const RenderContext &ctx) override;
@@ -24,7 +24,8 @@ namespace AnyRenderer
         virtual Shader *getShader() const override;
 
     public:
-        static MeshShape *createCube(float size, bool gen_tex_coords = true);
+        
+        static Geometry *createCube(float size, int vertices_loc, int normals_loc, int tex_coords_loc = -1, int cube_map_coords_loc = -1);
 
     private:
         GLuint vao_ = 0;

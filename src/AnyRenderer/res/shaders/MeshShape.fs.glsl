@@ -3,17 +3,15 @@
 
 // layout(location = 0) uniform sampler2D tex_2d;
 
-uniform sampler2D tex;
-uniform samplerCube envmap;
+uniform sampler2D tex_2d;
 uniform mat4 view_matrix;
 
 in vec4 frag_color;
-in vec3 frag_tex_coord;
-in vec3 frag_envmap_coord;
+in vec2 frag_tex_coord;
 
 out vec4 FragColor;
 
 void main(){
-    vec4 color = texture(tex, frag_tex_coord.xy);
+    vec4 color = texture(tex_2d, frag_tex_coord);
     FragColor = color;
 }

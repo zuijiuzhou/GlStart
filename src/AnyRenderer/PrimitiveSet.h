@@ -5,11 +5,12 @@
 
 namespace AnyRenderer
 {
-    class PrimitiveSet : Object
+    class PrimitiveSet : public Object
     {
     public:
         enum Mode
         {
+            Points = GL_POINTS,
             Lines = GL_LINES,
             LineLoop = GL_LINE_LOOP,
             LineStrip = GL_LINE_STRIP,
@@ -59,21 +60,20 @@ namespace AnyRenderer
         GLsizei count_ = 0;
     };
 
-    class DrawElements : public PrimitiveSet
+    class DrawElementsUInt : public PrimitiveSet
     {
     public:
-        DrawElements();
-        DrawElements(Mode mode);
-        DrawElements(Mode mode, GLint insts);
+        DrawElementsUInt();
+        DrawElementsUInt(Mode mode);
+        DrawElementsUInt(Mode mode, GLint insts);
 
     public:
-
-        void setIndices(Array* indices);
-        Array* getIndices() const;
+        void setIndices(std::vector<GLuint> indices);
+         std::vector<GLuint>& getIndices();
 
         virtual void draw() override;
 
     private:
-        Array* indices_ = nullptr;
+        std::vector<GLuint> indices_;
     };
 };

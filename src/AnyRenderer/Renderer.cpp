@@ -3,9 +3,7 @@
 #include <functional>
 #include <stb_image.h>
 #include "Utilities/Resources.h"
-#include "Shape.h"
-#include "MeshShape.h"
-#include "PointCloud.h"
+#include "Drawable.h"
 #include "Shader.h"
 #include "RenderContext.h"
 #include "CameraManipulator.h"
@@ -19,9 +17,9 @@ namespace AnyRenderer
 
     Renderer::~Renderer()
     {
-        for (auto s : shapes_)
+        for (auto d : drawables_)
         {
-            delete s;
+            delete d;
         }
     }
 
@@ -81,7 +79,7 @@ namespace AnyRenderer
 
     void Renderer::error_callback(int error, const char *desc)
     {
-        
+
         auto mesh_shape_shader = Shader::create(__RES("shaders/mesh_shape.vs.glsl"), nullptr, __RES("shaders/mesh_shape.fs.glsl"));
         auto point_cloud_shader = Shader::create(__RES("shaders/point_cloud.vs.glsl"), nullptr, __RES("shaders/point_cloud.fs.glsl"));
     }
@@ -118,41 +116,55 @@ namespace AnyRenderer
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_PROGRAM_POINT_SIZE);
         glDepthFunc(GL_LESS);
         RenderContext ctx(camera_);
         while (!glfwWindowShouldClose(wnd_))
         {
             camera_->apply();
             auto vp = camera_->getViewProjectionMatrix();
-            for (auto shape : shapes_)
+
+            for (auto drawable : drawables_)
             {
-                auto shader = shape->getShader();
-                if(shader){
+                drawable->preDraw(ctx);
+            }
+            for (auto drawable : drawables_)
+            {
+                auto shader = drawable->getShader();
+                if (shader)
+                {
                     shader->use();
                     shader->set("mvp", vp);
                     shader->set("view_matrix", camera_->getViewMatrix());
                 }
-                shape->draw(ctx);
-                if(shader){
+                drawable->draw(ctx);
+                if (shader)
+                {
                     shader->unuse();
                 }
             }
 
+            for (auto drawable : drawables_)
+            {
+                drawable->postDraw(ctx);
+            }
             glfwPollEvents();
             glfwSwapBuffers(wnd_);
         }
         glfwTerminate();
     }
 
-    void Renderer::addShape(Shape *shape)
+    void Renderer::addDrawable(Drawable *drawable)
     {
-        if (std::find(shapes_.begin(), shapes_.end(), shape) == shapes_.end())
+        if (std::find(drawables_.begin(), drawables_.end(), drawable) == drawables_.end())
         {
-            shapes_.push_back(shape);
+            drawables_.push_back(drawable);
         }
     }
 
-    Camera* Renderer::getCamera() const{
+    Camera *Renderer::getCamera() const
+    {
         return camera_;
     }
     // stbi_set_flip_vertically_on_load(true);

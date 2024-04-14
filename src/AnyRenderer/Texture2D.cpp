@@ -13,14 +13,16 @@ namespace AnyRenderer
     {
     }
 
-    Texture::Type Texture2D::getType() const{
+    Texture::Type Texture2D::getType() const
+    {
         return Type::Texture2D;
     }
 
-    void Texture2D::setImage(const std::string& img)
+    void Texture2D::setImage(const std::string &img)
     {
         img_ = img;
-        setDirty(true);
+        if (isCreated())
+            setDirty(true);
     }
 
     GLuint Texture2D::onCreate()
@@ -31,8 +33,9 @@ namespace AnyRenderer
         stbi_set_flip_vertically_on_load(true);
         int w, h, channels;
         auto data = stbi_load(img_.data(), &w, &h, &channels, 0);
-        if(data){
-            glTexImage2D(GL_TEXTURE_2D , 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        if (data)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
             stbi_image_free(data);
         }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -45,7 +48,7 @@ namespace AnyRenderer
 
     bool Texture2D::onUpdate()
     {
-        return true; 
+        return true;
     }
 
 }

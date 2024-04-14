@@ -98,7 +98,7 @@ namespace AnyRenderer
 
     GLuint Shader::onCreate()
     {
-        unsigned int vs_id, gs_id, fs_id;
+        unsigned int vs_id = 0, gs_id = 0, fs_id = 0;
         char msg[512];
         auto status = 0;
         auto app_id = glCreateProgram();

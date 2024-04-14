@@ -7,11 +7,16 @@ namespace AnyRenderer
     GLuint ArrayImpl::onCreate()
     {
         GLuint id = 0;
-        glGenBuffers(GL_ARRAY_BUFFER, &id);
+        glGenBuffers(1, &id);
         glBindBuffer(GL_ARRAY_BUFFER, id);
-        glBufferData(GL_ARRAY_BUFFER, size(), data(), GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBufferData(GL_ARRAY_BUFFER, size() * getSizeOfItem(), (void*)data(), GL_STATIC_DRAW);
+        // glBindBuffer(GL_ARRAY_BUFFER, 0);
         return id;
+    }
+
+    bool ArrayImpl::onUpdate()
+    {
+        return true;
     }
 
     Array::Type ArrayImpl::getType() const

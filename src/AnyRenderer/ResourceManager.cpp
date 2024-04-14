@@ -42,7 +42,7 @@ namespace AnyRenderer
 
     Shader *ResourceManager::getInternalShader(InternalShader shader)
     {
-        if (shader == IS_MeshShape)
+        if (shader == IS_Geometry)
         {
             return getShader("MeshShape");
         }

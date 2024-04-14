@@ -1,49 +1,46 @@
 #include "anyrenderer_global.h"
 #include <iostream>
+#include "Utilities/Resources.h"
 #include "Renderer.h"
-#include "MeshShape.h"
-#include "PointCloud.h"
+#include "Geometry.h"
 #include "PointCloudLoader.h"
+#include "Texture2D.h"
+#include "ResourceManager.h"
 #include <Windows.h>
 
 namespace ar = AnyRenderer;
 
 void CreateSampleShapes(ar::Renderer *renderer)
 {
-    // auto ms = new ar::MeshShape();
-    // {
-    //     std::vector<glm::vec3> vertices{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(1, 1, 0)};
-    //     std::vector<glm::vec3> normals{glm::vec3(1, 0, 0), glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)};
-    //     std::vector<glm::vec4> colors{glm::vec4(1, 0, 0, 1), glm::vec4(0, 1, 0, 1), glm::vec4(0, 0, 1, 1)};
-
-    //     ms->setVertices(vertices);
-    //     ms->setNormals(normals);
-    //     ms->setColors(colors);
-    //     ms->setDrawType(ar::MeshShape::Triangles);
-    // }
-
-    auto cube = ar::MeshShape::createCube(0.6, true);
+    auto cube = ar::Geometry::createCube(0.6, 0, 1, 3);
     {
-
+        auto colors = new ar::Vec4fArray();
+        colors->emplace_back(0.8f, 0.8f, 0.8f, 1.0f);
+        cube->addVertexAttribArray(2, colors);
+        auto tex = new ar::Texture2D();
+        tex->setImage(__RES("images/top.jpg"));
+        cube->addTexture(GL_TEXTURE0, tex);
     }
 
-    auto pc = new ar::PointCloud();
+    auto pc = new ar::Geometry();
     {
-        std::vector<glm::vec3> pts;
-        std::vector<glm::vec3> colors;
-        pts.reserve(1000);
-        colors.reserve(pts.capacity());
+        auto vertices = new ar::Vec3fArray();
+        auto colors = new ar::Vec3fArray();
+        vertices->reserve(1000);
+        colors->reserve(vertices->capacity());
         auto posi_offset = INT16_MAX / 10000.f / 2.f;
-        for (size_t i = 0; i < pts.capacity(); i++)
+        for (size_t i = 0; i < vertices->capacity(); i++)
         {
-            pts.emplace_back(rand() / 10000. - posi_offset, rand() / 10000. - posi_offset, rand() / 10000.);
-            colors.emplace_back(rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX));
+            vertices->emplace_back(rand() / 10000. - posi_offset, rand() / 10000. - posi_offset, rand() / 10000.);
+            colors->emplace_back(rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX));
         }
-        pc->setData(pts, colors);
+        pc->addVertexAttribArray(0, vertices);
+        pc->addVertexAttribArray(1, colors);
+        pc->addPrimitive(new ar::DrawArrays(ar::DrawArrays::Points, 0, vertices->size()));
+        pc->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_PointCloud));
     }
-    // renderer->addShape(ms);
-    renderer->addShape(pc);
-    renderer->addShape(cube);
+    renderer->addDrawable(pc);
+    renderer->addDrawable(cube);
 }
 
 class A
@@ -107,7 +104,7 @@ int main(int argc, char **argv)
     {
         auto file = argv[1];
         auto pcl = new ar::PointCloudLoader(file);
-        renderer->addShape(pcl->getData());
+        renderer->addDrawable(pcl->getData());
     }
     else
     {

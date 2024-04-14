@@ -11,7 +11,7 @@ namespace AnyRenderer
     public:
         enum InternalShader
         {
-            IS_MeshShape = 1,
+            IS_Geometry = 1,
             IS_PointCloud = 2
         };
 

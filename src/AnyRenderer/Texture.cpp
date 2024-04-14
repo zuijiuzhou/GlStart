@@ -16,12 +16,6 @@ namespace AnyRenderer
     void Texture::onBind()
     {
         auto type = getType();
-        if (!isCreated())
-            create();
-        if (!isCreated())
-            return;
-        if (isDirty())
-            update();
         glBindTexture(type, getId());
     }
 

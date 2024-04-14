@@ -15,14 +15,15 @@
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/sample_consensus/model_types.h>
 
-#include "PointCloud.h"
+#include "Geometry.h"
+#include "ResourceManager.h"
 
 namespace AnyRenderer
 {   
     using PCPtr = pcl::PointCloud<pcl::PointXYZRGBA>::Ptr;
     namespace
     {
-        PointCloud *parse(const PCPtr cloud)
+        Geometry *parse(const PCPtr cloud)
         { 
             auto z_lower = 0.3f;
             auto z_upper = 0.5f;
@@ -83,12 +84,11 @@ namespace AnyRenderer
                 // extract2.filter(*cloud_normals);
             }
 
-            auto pc = new PointCloud();
-            std::vector<glm::vec3> vertices;
-            std::vector<glm::vec3> colors;
-
-            vertices.reserve(cloud->size());
-            colors.reserve(cloud->size());
+            auto geom = new Geometry();
+            auto vertices = new Vec3fArray();
+            auto colors = new Vec3fArray();
+            vertices->reserve(cloud->size());
+            colors->reserve(cloud->size());
 
             std::vector<glm::vec3> color_map;
             for(int i = 0; i < 256; i++){
@@ -102,31 +102,33 @@ namespace AnyRenderer
                 auto indices = vec_plane_indices[i];
                 for(auto idx : indices->indices){
                     auto& pt = (*cloud)[idx];
-                    vertices.emplace_back(pt.x, pt.y, pt.z);
-                    colors.emplace_back(color_map[i]);
+                    vertices->emplace_back(pt.x, pt.y, pt.z);
+                    colors->emplace_back(color_map[i]);
                 }
             }
 
             auto depth = 0.f;
             for(auto &&pt : *cloud){
-                vertices.emplace_back(pt.x + 0.5, pt.y, pt.z);
+                vertices->emplace_back(pt.x + 0.5, pt.y, pt.z);
                 depth = (pt.z - z_lower) / z_range * 2.f;
                 if(depth <= 1.f){
-                    colors.emplace_back(1.f - depth, depth, 0.f);
+                    colors->emplace_back(1.f - depth, depth, 0.f);
                 }
                 else if(depth <= 2.f){
-                    colors.emplace_back(0.f, 2.f - depth, depth - 1.f);
+                    colors->emplace_back(0.f, 2.f - depth, depth - 1.f);
                 }
             }
 
             for(auto &&pt : *cloud){
-                vertices.emplace_back(pt.x - 0.5, pt.y, pt.z);
-                colors.emplace_back(pt.r / 255., pt.r / 255., pt.r / 255.);
+                vertices->emplace_back(pt.x - 0.5, pt.y, pt.z);
+                colors->emplace_back(pt.r / 255., pt.r / 255., pt.r / 255.);
             }
 
-            pc->setData(vertices, colors);
-
-            return pc;
+            geom->addVertexAttribArray(0, vertices);
+            geom->addVertexAttribArray(1, colors);
+            geom->addPrimitive(new DrawArrays(DrawArrays::Points, 0, vertices->size()));
+            geom->setShader(ResourceManager::instance()->getInternalShader(ResourceManager::IS_PointCloud));
+            return geom;
         }
     };
 
@@ -154,7 +156,7 @@ namespace AnyRenderer
         }
     }
 
-    PointCloud *PointCloudLoader::getData() const
+    Geometry *PointCloudLoader::getData() const
     {
         return data_;
     }

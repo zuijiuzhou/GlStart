@@ -1,10 +1,10 @@
 #pragma once
-#include "Shape.h"
+#include "Drawable.h"
 
 namespace AnyRenderer
 {
     class CubeMap;
-    class SkyBox : Shape
+    class SkyBox : Drawable
     {
     public:
         SkyBox();

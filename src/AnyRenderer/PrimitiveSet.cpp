@@ -79,55 +79,41 @@ namespace AnyRenderer
         }
     }
 
-    DrawElements::DrawElements()
+    DrawElementsUInt::DrawElementsUInt()
     {
     }
 
-    DrawElements::DrawElements(Mode mode) : DrawElements(mode, 1)
+    DrawElementsUInt::DrawElementsUInt(Mode mode) : DrawElementsUInt(mode, 1)
     {
     }
 
-    DrawElements::DrawElements(Mode mode, GLint insts) : PrimitiveSet(mode, insts)
+    DrawElementsUInt::DrawElementsUInt(Mode mode, GLint insts) : PrimitiveSet(mode, insts)
     {
     }
 
-    void DrawElements::setIndices(Array *indices)
+    void DrawElementsUInt::setIndices(std::vector<GLuint> indices)
     {
-        indices_ = indices;
+        indices_ = std::move(indices);
     }
 
-    Array *DrawElements::getIndices() const
+    std::vector<GLuint>& DrawElementsUInt::getIndices()
     {
         return indices_;
     }
 
-    void DrawElements::draw()
+    void DrawElementsUInt::draw()
     {
-        if (!indices_)
+        if (indices_.empty())
             return;
         auto mode = getMode();
         auto insts = getInstances();
-        auto type = 0;
-        auto arr_type = indices_->getType();
-        if (arr_type == Array::UByteArray)
-        {
-            type = GL_UNSIGNED_BYTE;
-        }
-        else if (arr_type == Array::UShortArray)
-        {
-            type = GL_UNSIGNED_SHORT;
-        }
-        else if (arr_type == Array::UIntArray)
-        {
-            type = GL_UNSIGNED_INT;
-        }
         if (insts > 1)
         {
-            glDrawElementsInstanced(mode, indices_->getSize(), type, 0, insts);
+            glDrawElementsInstanced(mode, indices_.size(), GL_UNSIGNED_INT, (void*)indices_.data(), insts);
         }
         else
         {
-            glDrawElements(mode, indices_->getSize(), type, 0);
+            glDrawElements(mode, indices_.size(), GL_UNSIGNED_INT, (void*)indices_.data());
         }
     }
 }
