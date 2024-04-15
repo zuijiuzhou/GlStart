@@ -25,8 +25,9 @@ void CreateSampleShapes(ar::Renderer *renderer)
         cube->addTexture(GL_TEXTURE0, tex);
         cube->getOrCreateStateSet()->setAttribute(new ar::Material());
         auto light = new ar::Light();
-        light->setPosition(glm::vec4(0, 0, 0, 1.));
-        light->setDirection(glm::vec3(2,4,-1));
+        light->setPosition(glm::vec4(10, 10, 10, 0.));
+        light->setDirection(glm::vec3(2, 4, -1));
+        light->setIsHead(true);
         auto lights = new ar::Lights();
         lights->addLight(light);
         cube->getOrCreateStateSet()->setAttribute(lights);

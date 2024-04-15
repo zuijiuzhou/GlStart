@@ -1,6 +1,7 @@
 #include "Light.h"
 #include "Shader.h"
 #include "RenderContext.h"
+#include "Camera.h"
 
 namespace AnyRenderer
 {
@@ -98,6 +99,16 @@ namespace AnyRenderer
         expo_ = val;
     }
 
+    void Light::setIsHead(bool head)
+    {
+        head_ = head;
+    }
+
+    bool Light::getIsHead() const
+    {
+        return head_;
+    }
+
     void Lights::addLight(Light *l)
     {
         if (!l)
@@ -135,7 +146,6 @@ namespace AnyRenderer
 
     void Lights::apply(const RenderContext &ctx) const
     {
-
         auto shader = ctx.getCurrentShader();
         if (shader)
         {
@@ -149,15 +159,25 @@ namespace AnyRenderer
                 shader->set(prefix + ".a", l->getAmbient());
                 shader->set(prefix + ".d", l->getDiffuse());
                 shader->set(prefix + ".s", l->getSpecular());
-                shader->set(prefix + ".pos", l->getPosition());
-                shader->set(prefix + ".dir", l->getDirection());
                 shader->set(prefix + ".k_c", l->getConstantAttenuation());
                 shader->set(prefix + ".k_l", l->getLinearAttenuation());
                 shader->set(prefix + ".k_q", l->getQuadraticAttenuation());
                 shader->set(prefix + ".expo", l->getExponent());
-                shader->set(prefix + ".cuto", l->getExponent());
+                shader->set(prefix + ".cuto", l->getCutoff());
+
+                auto dir = l->getDirection();
+                auto pos = l->getPosition();
+                if(l->getIsHead()){
+                    dir = ctx.getCamera()->getViewDir();
+                    auto view_pos = ctx.getCamera()->getViewPos();
+                    pos.x = view_pos.x;
+                    pos.y = view_pos.y;
+                    pos.z = view_pos.z;
+                }
+                shader->set(prefix + ".dir", dir);
+                shader->set(prefix + ".pos", pos);
             }
-        shader->set<int>("lights_count", lights_.size() > max_light ? max_light : lights_.size());
+            shader->set<int>("lights_count", lights_.size() > max_light ? max_light : lights_.size());
         }
     }
 

@@ -119,14 +119,18 @@ namespace AnyRenderer
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_PROGRAM_POINT_SIZE);
+        // glEnable(GL_CULL_FACE);
+        // glCullFace(GL_BACK);
+        glFrontFace(GL_CCW);
         glDepthFunc(GL_LESS);
         RenderContext ctx(camera_);
         while (!glfwWindowShouldClose(wnd_))
         {
             Shader *prev_shader_ = nullptr;
             camera_->apply();
-            auto vp = camera_->getViewProjectionMatrix();
-
+            auto matrix_v = camera_->getViewMatrix();
+            auto matrix_mv = camera_->getViewProjectionMatrix();
+            auto view_dir = camera_->getViewDir();
             for (auto drawable : drawables_)
             {
                 auto shader = drawable->getShader();
@@ -136,10 +140,11 @@ namespace AnyRenderer
                     if (shader)
                     {
                         shader->use();
-                        shader->set("matrix_model", glm::mat4(1.0));
-                        shader->set("matrix_view", camera_->getViewMatrix());
-                        shader->set("matrix_mv", camera_->getViewMatrix());
-                        shader->set("matrix_mvp", vp);
+                        shader->set("matrix_m", glm::mat4(1.0));
+                        shader->set("matrix_v", matrix_v);
+                        shader->set("matrix_mv", matrix_v);
+                        shader->set("matrix_mvp", matrix_mv);
+                        shader->set("view_dir", view_dir);
                     }
                 }
                 auto stateset = drawable->getStateSet();
