@@ -33,7 +33,7 @@ namespace AnyRenderer
 
     void Camera::getViewMatrixAsLookAt(glm::vec3 &o_posi, glm::vec3 &o_target, glm::vec3 &o_up)
     {
-        auto m = view_matrix_;
+        auto& m = view_matrix_;
         o_posi = -glm::vec3(m[3][0], m[3][1], m[3][2]);
         o_up = glm::vec3(m[0][1], m[1][1], m[2][1]);
         glm::vec3 dir = -glm::vec3(m[0][2], m[1][2], m[2][2]);
@@ -64,6 +64,12 @@ namespace AnyRenderer
     {
         // glm 矩阵行优先
         return proj_matrix_ * view_matrix_;
+    }
+
+    glm::vec3 Camera::getViewDir() const{
+        auto& m = view_matrix_;
+        auto dir = -glm::vec3(m[0][2], m[1][2], m[2][2]);
+        return dir;
     }
 
     void Camera::apply() const{

@@ -24,6 +24,8 @@ namespace AnyRenderer
         glm::mat4x4 getProjectionMatrix() const;
         glm::mat4x4 getViewProjectionMatrix() const;
 
+        glm::vec3 getViewDir() const;
+
         void apply() const;
 
     private:

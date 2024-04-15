@@ -44,7 +44,7 @@ out vec4 FragColor;
 vec3 get_directional_light_contribution(Light l, Material m, vec3 view_dir, vec3 frag_norm){
    vec3 a = l.a.rgb * m.a.rgb;
    vec3 d = max(dot(l.dir, frag_norm), 0) * m.d.rgb;
-
+    
    return a + d;
 }
 
