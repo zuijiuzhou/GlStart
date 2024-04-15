@@ -23,25 +23,25 @@ namespace AnyRenderer
     {
         if constexpr (std::is_same<float, item_type>::value)
         {
-            return Array::FloatArray;
+            return Array::ARRAY_FLOAT;
         }
         else if constexpr (std::is_same<int, item_type>::value)
         {
-            return Array::IntArray;
+            return Array::ARRAY_INT;
         }
         else if constexpr (std::is_same<glm::vec2, item_type>::value)
         {
-            return Array::Vec2fArray;
+            return Array::ARRAY_VEC2F;
         }
         else if constexpr (std::is_same<glm::vec3, item_type>::value)
         {
-            return Array::Vec3fArray;
+            return Array::ARRAY_VEC3F;
         }
         else if constexpr (std::is_same<glm::vec4, item_type>::value)
         {
-            return Array::Vec4fArray;
+            return Array::ARRAY_VEC4F;
         }
-        return Unknow;
+        return Array::ARRAY_UNKNOW;
     }
 
     GLsizei ArrayImpl::getSize() const

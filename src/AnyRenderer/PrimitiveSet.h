@@ -10,14 +10,14 @@ namespace AnyRenderer
     public:
         enum Mode
         {
-            Points = GL_POINTS,
-            Lines = GL_LINES,
-            LineLoop = GL_LINE_LOOP,
-            LineStrip = GL_LINE_STRIP,
-            Triangles = GL_TRIANGLES,
-            TriangleStrip = GL_TRIANGLE_STRIP,
-            TriangleFan = GL_TRIANGLE_FAN,
-            Quads = GL_QUADS
+            MODE_POINTS = GL_POINTS,
+            MODE_LINES = GL_LINES,
+            MODE_LINE_LOOP = GL_LINE_LOOP,
+            MODE_LINE_STRIP = GL_LINE_STRIP,
+            MODE_TRIANGLES = GL_TRIANGLES,
+            MODE_TRIANGLE_TRIP = GL_TRIANGLE_STRIP,
+            MODE_TRIANGLE_FAN = GL_TRIANGLE_FAN,
+            MODE_QUADS = GL_QUADS
         };
 
     public:
@@ -32,7 +32,7 @@ namespace AnyRenderer
         void setInstances(GLint insts);
 
     private:
-        Mode mode_ = Triangles;
+        Mode mode_ = MODE_TRIANGLES;
         GLint instances_ = 1;
 
     public:

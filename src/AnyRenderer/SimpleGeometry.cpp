@@ -20,9 +20,4 @@ namespace AnyRenderer
     {
         addVertexAttribArray(0, colors);
     }
-
-    void SimpleGeometry::preDraw(const RenderContext &ctx)
-    {
-    }
-
 }

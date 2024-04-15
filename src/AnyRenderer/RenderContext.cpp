@@ -31,6 +31,10 @@ namespace AnyRenderer
         return renderer_;
     }
 
+    Shader* RenderContext::getCurrentShader() const{
+        return current_shader_;
+    }
+
     Texture2D* RenderContext::getDefaultTexture() const{
         return def_tex_;
     }

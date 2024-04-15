@@ -126,7 +126,7 @@ namespace AnyRenderer
 
             geom->addVertexAttribArray(0, vertices);
             geom->addVertexAttribArray(1, colors);
-            geom->addPrimitive(new DrawArrays(DrawArrays::Points, 0, vertices->size()));
+            geom->addPrimitive(new DrawArrays(DrawArrays::MODE_POINTS, 0, vertices->size()));
             geom->setShader(ResourceManager::instance()->getInternalShader(ResourceManager::IS_PointCloud));
             return geom;
         }

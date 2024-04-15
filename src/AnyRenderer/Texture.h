@@ -8,10 +8,10 @@ namespace AnyRenderer
     public:
         enum Type
         {
-            Texture1D = GL_TEXTURE_1D,
-            Texture2D = GL_TEXTURE_2D,
-            Texture3D = GL_TEXTURE_3D,
-            TexCubeMap = GL_TEXTURE_CUBE_MAP
+            TEXTURE_1D = GL_TEXTURE_1D,
+            TEXTURE_2D = GL_TEXTURE_2D,
+            TEXTURE_3D = GL_TEXTURE_3D,
+            TEXTURE_CUBE_MAP = GL_TEXTURE_CUBE_MAP
         };
 
     public:

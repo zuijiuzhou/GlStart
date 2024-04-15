@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "RenderContext.h"
 #include "CameraManipulator.h"
+#include "StateSet.h"
 
 namespace AnyRenderer
 {
@@ -122,33 +123,33 @@ namespace AnyRenderer
         RenderContext ctx(camera_);
         while (!glfwWindowShouldClose(wnd_))
         {
+            Shader *prev_shader_ = nullptr;
             camera_->apply();
             auto vp = camera_->getViewProjectionMatrix();
 
             for (auto drawable : drawables_)
             {
-                drawable->preDraw(ctx);
-            }
-            for (auto drawable : drawables_)
-            {
                 auto shader = drawable->getShader();
-                if (shader)
+                ctx.current_shader_ = shader;
+                if (shader != prev_shader_)
                 {
-                    shader->use();
-                    shader->set("mvp", vp);
-                    shader->set("view_matrix", camera_->getViewMatrix());
+                    if (shader)
+                    {
+                        shader->use();
+                        shader->set("matrix_model", glm::mat4(1.0));
+                        shader->set("matrix_view", camera_->getViewMatrix());
+                        shader->set("matrix_mv", camera_->getViewMatrix());
+                        shader->set("matrix_mvp", vp);
+                    }
+                }
+                auto stateset = drawable->getStateSet();
+                if(stateset){
+                    stateset->apply(ctx);
                 }
                 drawable->draw(ctx);
-                if (shader)
-                {
-                    shader->unuse();
-                }
+                prev_shader_ = shader;
             }
 
-            for (auto drawable : drawables_)
-            {
-                drawable->postDraw(ctx);
-            }
             glfwPollEvents();
             glfwSwapBuffers(wnd_);
         }

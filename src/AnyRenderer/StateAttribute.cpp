@@ -2,7 +2,4 @@
 
 namespace AnyRenderer
 {
-    void StateAttribute::apply() const
-    {
-    }
 }

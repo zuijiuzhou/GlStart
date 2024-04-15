@@ -91,17 +91,17 @@ namespace AnyRenderer
 				else
 				{
 					auto arr_type = arr->getType();
-					if (arr_type == Array::Vec2fArray)
+					if (arr_type == Array::ARRAY_VEC2F)
 					{
 						glm::vec2 val = arr->isEmpty() ? glm::vec2(0.f, 0.f) : *(glm::vec2 *)arr->getAt(0);
 						glVertexAttrib2f(loc, val.x, val.y);
 					}
-					else if (arr_type == Array::Vec3fArray)
+					else if (arr_type == Array::ARRAY_VEC3F)
 					{
 						glm::vec3 val = arr->isEmpty() ? glm::vec3(0.f, 0.f, 0.f) : *(glm::vec3 *)arr->getAt(0);
 						glVertexAttrib3f(loc, val.x, val.y, val.z);
 					}
-					else if (arr_type == Array::Vec4fArray)
+					else if (arr_type == Array::ARRAY_VEC4F)
 					{
 						glm::vec4 val = arr->isEmpty() ? glm::vec4(0.f, 0.f, 0.f, 1.0f) : *(glm::vec4 *)arr->getAt(0);
 						glVertexAttrib4f(loc, val.x, val.y, val.z, val.a);
@@ -140,7 +140,7 @@ namespace AnyRenderer
 		}
 	}
 
-	Geometry *Geometry::createCube(float size, int vertices_loc, int normals_loc, int tex_coords_loc, int cube_map_coords_loc)
+	Geometry *Geometry::createCube(float size, int vertices_loc, int normals_loc, int tex_2d_coords_loc, int cube_map_coords_loc)
 	{
 		auto n = size / 2;
 		auto cube = new Geometry();
@@ -221,7 +221,7 @@ namespace AnyRenderer
 		normals->emplace_back(0.0f, 1.0f, 0.0f);
 		normals->emplace_back(0.0f, 1.0f, 0.0f);
 
-		if (tex_coords_loc >= 0)
+		if (tex_2d_coords_loc >= 0)
 		{
 			auto tex_coords = new Vec2fArray();
 			tex_coords->emplace_back(0.0f, 0.0f);
@@ -261,12 +261,14 @@ namespace AnyRenderer
 			tex_coords->emplace_back(0.0f, 0.0f);
 			tex_coords->emplace_back(0.0f, 1.0f);
 
-			cube->addVertexAttribArray(tex_coords_loc, tex_coords);
+			cube->addVertexAttribArray(tex_2d_coords_loc, tex_coords);
 		}
+		if(cube_map_coords_loc >= 0){
 
+		}
 		cube->addVertexAttribArray(vertices_loc, vertices);
 		cube->addVertexAttribArray(normals_loc, normals);
-		cube->addPrimitive(new DrawArrays(DrawArrays::Triangles, 0, vertices->size()));
+		cube->addPrimitive(new DrawArrays(DrawArrays::MODE_TRIANGLES, 0, vertices->size()));
 		return cube;
 	}
 }

@@ -25,7 +25,7 @@ namespace AnyRenderer
 
     public:
         
-        static Geometry *createCube(float size, int vertices_loc, int normals_loc, int tex_coords_loc = -1, int cube_map_coords_loc = -1);
+        static Geometry *createCube(float size, int vertices_loc, int normals_loc, int tex_2d_coords_loc = -1, int cube_map_coords_loc = -1);
 
     private:
         GLuint vao_ = 0;

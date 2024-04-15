@@ -7,9 +7,9 @@ namespace AnyRenderer
 
     Drawable::~Drawable()
     {
-        if(shader_)
+        if (shader_)
             shader_->unref();
-        if(state_set_)
+        if (state_set_)
             state_set_->unref();
     }
 
@@ -27,20 +27,18 @@ namespace AnyRenderer
         return shader_;
     }
 
-    void Drawable::preDraw(const RenderContext &ctx)
-    {
-    }
-    void Drawable::postDraw(const RenderContext &ctx)
-    {
-    }
-
-    StateSet *Drawable::getOrCreateState()
+    StateSet *Drawable::getOrCreateStateSet()
     {
         if (!state_set_)
         {
             state_set_ = new StateSet();
             state_set_->ref();
         }
+        return state_set_;
+    }
+
+    StateSet *Drawable::getStateSet()
+    {
         return state_set_;
     }
 }

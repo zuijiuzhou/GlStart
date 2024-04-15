@@ -15,7 +15,7 @@ namespace AnyRenderer
 
     Texture::Type CubeMap::getType() const
     {
-        return Type::TexCubeMap;
+        return Type::TEXTURE_CUBE_MAP;
     }
 
     void CubeMap::setImages(const std::vector<std::string> &imgs)

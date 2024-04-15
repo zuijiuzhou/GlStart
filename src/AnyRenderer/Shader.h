@@ -23,37 +23,37 @@ namespace AnyRenderer
           void setName(const std::string& name);
 
           template <typename T>
-          void set(const GLchar *name, const T &val)
+          void set(const std::string& name, const T &val)
           {
                auto id = getId();
                if constexpr (std::is_same<T, bool>::value)
                {
-                    auto loc = glGetUniformLocation(id, name);
+                    auto loc = glGetUniformLocation(id, name.data());
                     if(loc >= 0) glUniform1i(loc, (int)val);
                }
                else if constexpr (std::is_same<T, int>::value)
                {
-                    auto loc = glGetUniformLocation(id, name);
+                    auto loc = glGetUniformLocation(id, name.data());
                     if(loc >= 0) glUniform1i(loc, val);
                }
                else if constexpr (std::is_same<T, float>::value)
                {
-                    auto loc = glGetUniformLocation(id, name);
+                    auto loc = glGetUniformLocation(id, name.data());
                     if(loc >= 0) glUniform1f(loc, val);
                }
                else if constexpr (std::is_same<T, glm::vec3>::value)
                {
-                    auto loc = glGetUniformLocation(id, name);
+                    auto loc = glGetUniformLocation(id, name.data());
                     if(loc >= 0) glUniform3f(loc, val.x, val.y, val.z);
                }               
                else if constexpr (std::is_same<T, glm::vec4>::value)
                {
-                    auto loc = glGetUniformLocation(id, name);
+                    auto loc = glGetUniformLocation(id, name.data());
                     if(loc >= 0) glUniform4f(loc, val.r, val.g, val.b, val.a);
                }
                else if constexpr (std::is_same<T, glm::mat4>::value)
                {
-                    auto loc = glGetUniformLocation(id, name);
+                    auto loc = glGetUniformLocation(id, name.data());
                     if(loc >= 0) glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(val));
                }
                else

@@ -9,7 +9,6 @@ namespace AnyRenderer
         virtual ~SimpleGeometry();
 
     public:
-        virtual void preDraw(const RenderContext &ctx) override;
 
         void setVertices(Vec3fArray *vertices);
         void setNormals(Vec3fArray *normals);

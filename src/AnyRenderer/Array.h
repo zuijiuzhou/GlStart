@@ -7,15 +7,15 @@ namespace AnyRenderer
     public:
         enum Type
         {
-            Unknow = 0,
-            IntArray,
-            UByteArray,
-            UShortArray,
-            UIntArray,
-            FloatArray,
-            Vec2fArray,
-            Vec3fArray,
-            Vec4fArray
+            ARRAY_UNKNOW = 0,
+            ARRAY_INT,
+            ARRAY_UBYTE,
+            ARRAY_USHORT,
+            ARRAY_UINT,
+            ARRAY_FLOAT,
+            ARRAY_VEC2F,
+            ARRAY_VEC3F,
+            ARRAY_VEC4F
         };
 
     public:

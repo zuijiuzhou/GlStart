@@ -10,21 +10,17 @@ namespace AnyRenderer
         public:
         virtual ~Drawable();
     public:
-        virtual void preDraw(const RenderContext& ctx);
-
         virtual void draw(const RenderContext& ctx) = 0;
-
-        virtual void postDraw(const RenderContext& ctx);
 
         void setShader(Shader *shader);
 
         virtual Shader *getShader() const;
 
-        StateSet* getOrCreateState();
+        StateSet* getOrCreateStateSet();
+        StateSet* getStateSet();
 
     private:
         Shader* shader_ = nullptr;
         StateSet* state_set_ = nullptr;
-
     };
 }

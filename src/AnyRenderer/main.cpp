@@ -6,6 +6,9 @@
 #include "PointCloudLoader.h"
 #include "Texture2D.h"
 #include "ResourceManager.h"
+#include "StateSet.h"
+#include "Material.h"
+#include "Light.h"
 #include <Windows.h>
 
 namespace ar = AnyRenderer;
@@ -20,6 +23,13 @@ void CreateSampleShapes(ar::Renderer *renderer)
         auto tex = new ar::Texture2D();
         tex->setImage(__RES("images/top.jpg"));
         cube->addTexture(GL_TEXTURE0, tex);
+        cube->getOrCreateStateSet()->setAttribute(new ar::Material());
+        auto light = new ar::Light();
+        light->setPosition(glm::vec4(0, 0, 0, 1.));
+        light->setDirection(glm::vec3(2,4,-1));
+        auto lights = new ar::Lights();
+        lights->addLight(light);
+        cube->getOrCreateStateSet()->setAttribute(lights);
     }
 
     auto pc = new ar::Geometry();
@@ -36,7 +46,7 @@ void CreateSampleShapes(ar::Renderer *renderer)
         }
         pc->addVertexAttribArray(0, vertices);
         pc->addVertexAttribArray(1, colors);
-        pc->addPrimitive(new ar::DrawArrays(ar::DrawArrays::Points, 0, vertices->size()));
+        pc->addPrimitive(new ar::DrawArrays(ar::DrawArrays::MODE_POINTS, 0, vertices->size()));
         pc->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_PointCloud));
     }
     renderer->addDrawable(pc);

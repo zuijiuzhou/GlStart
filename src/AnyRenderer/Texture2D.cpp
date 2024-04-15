@@ -15,7 +15,7 @@ namespace AnyRenderer
 
     Texture::Type Texture2D::getType() const
     {
-        return Type::Texture2D;
+        return Type::TEXTURE_2D;
     }
 
     void Texture2D::setImage(const std::string &img)
