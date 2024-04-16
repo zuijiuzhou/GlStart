@@ -57,6 +57,7 @@ vec3 get_directional_light_contribution(Light l, Material m, vec3 view_dir, vec3
 
 vec3 get_spot_light_contribution(Light l, Material m, vec3 view_dir, vec3 frag_posi, vec3 frag_norm){
     vec3 l_dir = frag_posi - l.pos.xyz;
+    l_dir = normalize(l_dir);
     vec3 reflect_dir = reflect(l_dir, frag_norm);
     vec3 a = l.a.rgb * m.a.rgb;
     vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * mate.d.rgb; //texture(tex_2d, frag_tex_coord).rgb;

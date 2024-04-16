@@ -29,7 +29,7 @@ void CreateSampleShapes(ar::Renderer *renderer)
         geom->addTexture(GL_TEXTURE0, tex);
 
         auto light = new ar::Light();
-        light->setPosition(glm::vec4(10, 10, 10, 1.));
+        light->setPosition(glm::vec4(10, 10, 10, 0.));
         light->setDirection(glm::vec3(2, 4, -1));
         light->setIsHead(true);
         auto lights = new ar::Lights();

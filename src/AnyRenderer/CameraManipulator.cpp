@@ -84,7 +84,7 @@ namespace AnyRenderer
                 auto m = glm::mat4(1.0f);
                 m = glm::translate(m, glm::vec3(delta_x / 500, -delta_y / 500, 0));
                 vm = m * vm;
-                // camera_->transform(m);
+                camera_->setViewMatrix(vm);
             }
             if (is_rotation_started_)
             {
@@ -93,10 +93,8 @@ namespace AnyRenderer
 
                 mx = glm::rotate(mx, glm::radians(delta_x / 10), glm::vec3(0.0f, 1.0f, 0.0f));
                 my = glm::rotate(my, glm::radians(delta_y / 10), glm::vec3(1.0f, 0.0f, 0.0f));
-                vm *= mx;
-                vm *= my;
+                
             }
-            camera_->setViewMatrix(vm);
             prev_cursor_pt_.x = xx;
             prev_cursor_pt_.y = yy;
         }
