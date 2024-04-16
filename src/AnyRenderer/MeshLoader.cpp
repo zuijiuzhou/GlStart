@@ -20,6 +20,7 @@ namespace AnyRenderer
             {
                 auto mesh = scene->mMeshes[node->mMeshes[i]];
                 auto geom = new Geometry();
+                BoundingBox bb;
                 if (mesh->HasPositions())
                 {
                     auto vertices = new Vec3fArray();
@@ -28,6 +29,7 @@ namespace AnyRenderer
                     for (int j = 0; j < mesh->mNumVertices; j++)
                     {
                         vertices->push_back(glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z));
+                        bb.expandBy(vertices->back());
                     }
                     geom->addVertexAttribArray(0, vertices);
                 }
@@ -81,6 +83,7 @@ namespace AnyRenderer
                     prim->setIndices(indices);
                     geom->addPrimitive(prim);
                 }
+                geom->setBoundingBox(bb);
                 group->addDrawable(geom);
             }
             for (int i = 0; i < node->mNumChildren; i++)

@@ -17,7 +17,6 @@ namespace AnyRenderer
 		{
 			glDeleteVertexArrays(1, &vao_);
 		}
-		
 	}
 
 	void Geometry::addTexture(GLuint unit, Texture *tex)
@@ -130,6 +129,15 @@ namespace AnyRenderer
 				continue;
 			tex->unbind();
 		}
+	}
+
+	BoundingBox Geometry::getBoundingBox() const
+	{
+		return bb_;
+	}
+	void Geometry::setBoundingBox(const BoundingBox &bb)
+	{
+		bb_ = bb;
 	}
 
 	Geometry *Geometry::createCube(float size, int vertices_loc, int normals_loc, int tex_2d_coords_loc, int cube_map_coords_loc)
@@ -265,8 +273,8 @@ namespace AnyRenderer
 
 			cube->addVertexAttribArray(tex_2d_coords_loc, tex_coords);
 		}
-		if(cube_map_coords_loc >= 0){
-
+		if (cube_map_coords_loc >= 0)
+		{
 		}
 		cube->addVertexAttribArray(vertices_loc, vertices);
 		cube->addVertexAttribArray(normals_loc, normals);

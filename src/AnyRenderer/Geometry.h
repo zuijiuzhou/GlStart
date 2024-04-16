@@ -22,6 +22,9 @@ namespace AnyRenderer
         void addTexture(GLuint unit, Texture *tex);
         void addPrimitive(PrimitiveSet* prim);
 
+        virtual BoundingBox getBoundingBox() const override;
+        void setBoundingBox(const BoundingBox& bb);
+
     public:
         
         static Geometry *createCube(float size, int vertices_loc, int normals_loc, int tex_2d_coords_loc = -1, int cube_map_coords_loc = -1);
@@ -31,5 +34,6 @@ namespace AnyRenderer
         std::map<GLuint, Array *> vbos_;
         std::map<GLuint, Texture *> textures_;
         std::vector<PrimitiveSet *> primitives_;
+        BoundingBox bb_;
     };
 }

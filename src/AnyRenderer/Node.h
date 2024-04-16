@@ -2,6 +2,7 @@
 
 #include <glm/mat4x4.hpp>
 #include "Object.h"
+#include "BoundingBox.h"
 namespace AnyRenderer
 {
     class Drawable;
@@ -19,6 +20,8 @@ namespace AnyRenderer
         StateSet *getOrCreateStateSet();
 
         StateSet *getStateSet();
+
+        virtual BoundingBox getBoundingBox() const = 0;
 
     private:
         StateSet *state_set_ = nullptr;

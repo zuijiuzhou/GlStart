@@ -11,10 +11,15 @@ namespace AnyRenderer
 
     public:
         void addDrawable(Drawable *drawable);
+
         void removeDrawable(Drawable *drawable);
+
         const std::vector<Drawable*>& getDrawables() const;
 
+        virtual BoundingBox getBoundingBox() const override;
     private:
-        std::vector<Drawable *> drawables_;
+        std::vector<Drawable*> drawables_;
+        BoundingBox bb_;
+        bool bb_is_dirty_ = true;
     };
 }

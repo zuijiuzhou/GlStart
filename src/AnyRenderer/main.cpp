@@ -138,8 +138,6 @@ int main(int argc, char **argv)
         model->getOrCreateStateSet()->setAttribute(lights);
         model->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Geometry));
         renderer->addModel(model);
-        
-        renderer->getCamera()->setViewMatrixAsLookAt(glm::vec3(0,0,800), glm::vec3(), glm::vec3(0,1,0));
     }
     else
     {

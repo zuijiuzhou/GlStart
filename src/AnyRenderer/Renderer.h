@@ -2,6 +2,7 @@
 
 #include "anyrenderer_global.h"
 #include <vector>
+#include "BoundingBox.h"
 
 namespace AnyRenderer
 {
@@ -34,6 +35,7 @@ namespace AnyRenderer
         GLFWwindow *wnd_ = nullptr;
         std::vector<Group*> models_;
         std::vector<Shader*> shaders_;
+        BoundingBox bb_;
         bool is_initialized = false;
 
     };

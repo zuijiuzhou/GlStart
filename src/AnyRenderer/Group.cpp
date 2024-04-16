@@ -30,4 +30,18 @@ namespace AnyRenderer
     const std::vector<Drawable*>& Group::getDrawables() const{
         return drawables_;
     }
+
+    BoundingBox Group::getBoundingBox() const{
+        if(bb_is_dirty_){
+            BoundingBox bb;
+            for(auto d : drawables_){
+                bb.combine(d->getBoundingBox());
+            }
+            auto this_ = const_cast<Group*>(this);
+            this_->bb_ = bb;
+            this_->bb_is_dirty_ = false;
+        }
+        return bb_;
+    }
+
 }

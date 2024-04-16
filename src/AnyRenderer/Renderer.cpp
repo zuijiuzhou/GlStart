@@ -70,7 +70,7 @@ namespace AnyRenderer
 
         auto camera = new Camera();
         auto cm = new CameraManipulator(camera, wnd);
-        camera->setProjectionMatrix(glm::perspective(glm::radians(45.f), 800.f / 600.f, 1.f, 2000.f));
+        camera->setProjectionMatrix(glm::perspective(glm::radians(45.f), 800.f / 600.f, 1.f, 1000.f));
         camera->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         camera->setClearColor(glm::vec4(0));
         camera_ = camera;
@@ -125,6 +125,20 @@ namespace AnyRenderer
         glFrontFace(GL_CCW);
         glDepthFunc(GL_LESS);
         RenderContext ctx(camera_);
+
+        BoundingBox bb;
+        for (auto model : models_)
+        {
+            bb.combine(model->getBoundingBox());
+        }
+        auto def_view_center = bb.getCenter();
+        auto def_view_dir = glm::vec3(0., 0., -1.0);
+        auto def_view_dist = bb.getRadius();
+        if(def_view_dist < 0.01) def_view_dist = 2.;
+        auto def_view_pos = def_view_center - def_view_dir * glm::vec3(def_view_dist);
+        camera_->setViewMatrixAsLookAt(def_view_pos, def_view_center, glm::vec3(0, 1, 0));
+        camera_->setProjectionMatrix(glm::perspective<double>(30, 1, 1.f, def_view_dist * 2));
+
         while (!glfwWindowShouldClose(wnd_))
         {
             camera_->apply();
@@ -159,7 +173,7 @@ namespace AnyRenderer
         glfwTerminate();
     }
 
-    void Renderer::addModel(Group* model)
+    void Renderer::addModel(Group *model)
     {
         if (std::find(models_.begin(), models_.end(), model) == models_.end())
         {
@@ -172,40 +186,4 @@ namespace AnyRenderer
     {
         return camera_;
     }
-    // stbi_set_flip_vertically_on_load(true);
-    //     int w, h, nr_channels;
-    //     glGenTextures(1, &m_texture1);
-    //     glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture1);
-    //     glTextureParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    //     glTextureParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //     glTextureParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    //     glTextureParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    //     glTextureParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    //     std::string jpgs[] = {"right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg"};
-
-    //     for (int i = 0; i < 6; i++)
-    //     {
-
-    //         unsigned char *data = stbi_load(("res/imgs/" + jpgs[i]).c_str(), &w, &h, &nr_channels, 0);
-    //         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    //         stbi_image_free(data);
-    //     }
-
-    //     glGenerateMipmap(GL_TEXTURE_2D);
-    //     glGenTextures(1, &m_texture2);
-    //     glBindTexture(GL_TEXTURE_2D, m_texture2);
-    //     glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    //     glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    //     glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //     glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    //     unsigned char *img_data = stbi_load("res/imgs/2.jpg", &w, &h, &nr_channels, 0);
-    //     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, img_data);
-
-    //     glGenerateMipmap(GL_TEXTURE_2D);
-    //     stbi_image_free(img_data);
-
-    //     glActiveTexture(GL_TEXTURE1);
-    //     glBindTexture(GL_TEXTURE_2D, m_texture2);
 }
