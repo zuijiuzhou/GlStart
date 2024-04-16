@@ -42,17 +42,21 @@ in vec3 frag_world_norm;
 out vec4 FragColor;
 
 vec3 get_directional_light_contribution(Light l, Material m, vec3 view_dir, vec3 frag_norm){
-   vec3 a = l.a.rgb * m.a.rgb;
-   vec3 d = max(dot(l.dir, frag_norm), 0) * m.d.rgb;
-    
-   return a + d;
+    vec3 l_dir = l.dir;
+    vec3 reflect_dir = reflect(l.dir, frag_norm);
+    vec3 a = l.a.rgb * m.a.rgb;
+    vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * mate.d.rgb; //texture(tex_2d, frag_tex_coord).rgb;
+    vec3 s = l.s.rgb * pow(max(dot(view_dir, reflect_dir), 0.0), mate.sh) * mate.s.rgb;
+    return a + d + s;
 }
 
-vec4 get_sopt_light_contribution(Light l, Material m, vec3 frag_posi, vec3 frag_norm){
-   vec4 a = l.a * m.a;
-   vec4 d = max(dot(l.dir, frag_norm), 0) * m.d;
-
-   return a + d;
+vec3 get_spot_light_contribution(Light l, Material m, vec3 view_dir, vec3 frag_posi, vec3 frag_norm){
+    vec3 l_dir = frag_posi - l.pos.xyz;
+    vec3 reflect_dir = reflect(l_dir, frag_norm);
+    vec3 a = l.a.rgb * m.a.rgb;
+    vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * mate.d.rgb; //texture(tex_2d, frag_tex_coord).rgb;
+    vec3 s = l.s.rgb * pow(max(dot(view_dir, reflect_dir), 0.0), mate.sh) * mate.s.rgb;
+    return a + d + s;
 }
 
 void main(){
@@ -64,7 +68,12 @@ void main(){
             if(i >= MAX_LIGHT)
                 break;
             Light l = lights[i];
-            c += get_directional_light_contribution(l, mate, view_dir, frag_world_norm);
+            if(l.pos.w == 1.0){
+                c += get_directional_light_contribution(l, mate, view_dir, frag_world_norm);
+            }
+            else{
+                c += get_spot_light_contribution(l, mate, view_dir, frag_world_posi, frag_world_norm);
+            }
         }
         color = vec4(c, 1.0);
     }

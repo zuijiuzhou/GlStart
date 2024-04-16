@@ -20,6 +20,8 @@ namespace AnyRenderer
         void setViewMatrixAsLookAt(const glm::vec3 &posi, const glm::vec3 &target, const glm::vec3 &up);
         void setViewMatrix(const glm::mat4x4 &mat);
         void setProjectionMatrix(const glm::mat4x4 &mat);
+        glm::vec3 getViewDir() const;
+        glm::vec3 getViewPos() const;
         glm::mat4x4 getViewMatrix() const;
         glm::mat4x4 getProjectionMatrix() const;
         glm::mat4x4 getViewProjectionMatrix() const;

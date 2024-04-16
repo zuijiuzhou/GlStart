@@ -70,7 +70,7 @@ namespace AnyRenderer
 		if (primitives_.empty())
 			return;
 
-		auto shader = getShader();
+		auto shader = ctx.getCurrentShader();
 		if (vao_ == 0)
 		{
 			glGenVertexArrays(1, &vao_);
@@ -152,30 +152,35 @@ namespace AnyRenderer
 		vertices->emplace_back(n, n, -n);
 		vertices->emplace_back(-n, n, -n);
 		vertices->emplace_back(-n, -n, -n);
+
 		vertices->emplace_back(-n, -n, n);
 		vertices->emplace_back(n, -n, n);
 		vertices->emplace_back(n, n, n);
 		vertices->emplace_back(n, n, n);
 		vertices->emplace_back(-n, n, n);
 		vertices->emplace_back(-n, -n, n);
+
 		vertices->emplace_back(-n, n, n);
 		vertices->emplace_back(-n, n, -n);
 		vertices->emplace_back(-n, -n, -n);
 		vertices->emplace_back(-n, -n, -n);
 		vertices->emplace_back(-n, -n, n);
 		vertices->emplace_back(-n, n, n);
+
 		vertices->emplace_back(n, n, n);
 		vertices->emplace_back(n, n, -n);
 		vertices->emplace_back(n, -n, -n);
 		vertices->emplace_back(n, -n, -n);
 		vertices->emplace_back(n, -n, n);
 		vertices->emplace_back(n, n, n);
+
 		vertices->emplace_back(-n, -n, -n);
 		vertices->emplace_back(n, -n, -n);
 		vertices->emplace_back(n, -n, n);
 		vertices->emplace_back(n, -n, n);
 		vertices->emplace_back(-n, -n, n);
 		vertices->emplace_back(-n, -n, -n);
+
 		vertices->emplace_back(-n, n, -n);
 		vertices->emplace_back(n, n, -n);
 		vertices->emplace_back(n, n, n);
@@ -190,30 +195,35 @@ namespace AnyRenderer
 		normals->emplace_back(0.0f, 0.0f, -1.0f);
 		normals->emplace_back(0.0f, 0.0f, -1.0f);
 		normals->emplace_back(0.0f, 0.0f, -1.0f);
+
 		normals->emplace_back(0.0f, 0.0f, 1.0f);
 		normals->emplace_back(0.0f, 0.0f, 1.0f);
 		normals->emplace_back(0.0f, 0.0f, 1.0f);
 		normals->emplace_back(0.0f, 0.0f, 1.0f);
 		normals->emplace_back(0.0f, 0.0f, 1.0f);
 		normals->emplace_back(0.0f, 0.0f, 1.0f);
+
+		normals->emplace_back(-1.0f, 0.0f, 0.0f);
+		normals->emplace_back(-1.0f, 0.0f, 0.0f);
+		normals->emplace_back(-1.0f, 0.0f, 0.0f);
+		normals->emplace_back(-1.0f, 0.0f, 0.0f);
+		normals->emplace_back(-1.0f, 0.0f, 0.0f);
+		normals->emplace_back(-1.0f, 0.0f, 0.0f);
+
 		normals->emplace_back(1.0f, 0.0f, 0.0f);
 		normals->emplace_back(1.0f, 0.0f, 0.0f);
 		normals->emplace_back(1.0f, 0.0f, 0.0f);
 		normals->emplace_back(1.0f, 0.0f, 0.0f);
 		normals->emplace_back(1.0f, 0.0f, 0.0f);
 		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
+
 		normals->emplace_back(0.0f, -1.0f, 0.0f);
 		normals->emplace_back(0.0f, -1.0f, 0.0f);
 		normals->emplace_back(0.0f, -1.0f, 0.0f);
 		normals->emplace_back(0.0f, -1.0f, 0.0f);
 		normals->emplace_back(0.0f, -1.0f, 0.0f);
 		normals->emplace_back(0.0f, -1.0f, 0.0f);
+
 		normals->emplace_back(0.0f, 1.0f, 0.0f);
 		normals->emplace_back(0.0f, 1.0f, 0.0f);
 		normals->emplace_back(0.0f, 1.0f, 0.0f);

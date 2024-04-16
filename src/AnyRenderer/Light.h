@@ -43,12 +43,16 @@ namespace AnyRenderer
         float getExponent() const;
         void setExponent(float val);
 
+        void setIsHead(bool head);
+        bool getIsHead() const;
+
     private:
         glm::vec4 a_, d_, s_;
         glm::vec4 pos_;
         glm::vec3 dir_;
         float k_c_, k_l_, k_q_;
         float expo_, cutoff_;
+        bool head_ = false;
     };
 
     class Lights : public StateAttribute
@@ -56,14 +60,15 @@ namespace AnyRenderer
     public:
         void addLight(Light *l);
         void removeLight(Light *l);
-        std::vector<Light*> getLights() const;
+        std::vector<Light *> getLights() const;
 
-        virtual void apply(const RenderContext& ctx) const override;
+        virtual void apply(const RenderContext &ctx) const override;
 
         virtual Type getType() const override;
 
-        public:
+    public:
         static int getMaxLight();
+
     private:
         std::vector<Light *> lights_;
     };
