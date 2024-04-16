@@ -55,14 +55,6 @@ namespace AnyRenderer
 		prim->ref();
 	}
 
-	Shader *Geometry::getShader() const
-	{
-		auto shader = Drawable::getShader();
-		if (!shader)
-			shader = ResourceManager::instance()->getInternalShader(ResourceManager::IS_Geometry);
-		return shader;
-	}
-
 	void Geometry::draw(const RenderContext &ctx)
 	{
 		if (vbos_.empty())

@@ -3,11 +3,12 @@
 #include <functional>
 #include <stb_image.h>
 #include "Utilities/Resources.h"
+#include "Group.h"
 #include "Drawable.h"
 #include "Shader.h"
+#include "StateSet.h"
 #include "RenderContext.h"
 #include "CameraManipulator.h"
-#include "StateSet.h"
 
 namespace AnyRenderer
 {
@@ -18,9 +19,9 @@ namespace AnyRenderer
 
     Renderer::~Renderer()
     {
-        for (auto d : drawables_)
+        for (auto m : models_)
         {
-            delete d;
+            m->unref();
         }
     }
 
@@ -69,7 +70,7 @@ namespace AnyRenderer
 
         auto camera = new Camera();
         auto cm = new CameraManipulator(camera, wnd);
-        camera->setProjectionMatrix(glm::perspective(glm::radians(45.f), 800.f / 600.f, 0.1f, 1000.f));
+        camera->setProjectionMatrix(glm::perspective(glm::radians(45.f), 800.f / 600.f, 1.f, 2000.f));
         camera->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         camera->setClearColor(glm::vec4(0));
         camera_ = camera;
@@ -126,20 +127,19 @@ namespace AnyRenderer
         RenderContext ctx(camera_);
         while (!glfwWindowShouldClose(wnd_))
         {
-            Shader *prev_shader_ = nullptr;
             camera_->apply();
             auto matrix_v = camera_->getViewMatrix();
             auto matrix_mv = camera_->getViewProjectionMatrix();
             auto view_dir = camera_->getViewDir();
-            for (auto drawable : drawables_)
+            for (auto model : models_)
             {
-                auto shader = drawable->getShader();
-                ctx.current_shader_ = shader;
-                if (shader != prev_shader_)
+                auto stateset = model->getStateSet();
+                if (stateset)
                 {
+                    stateset->apply(ctx);
+                    auto shader = ctx.getCurrentShader();
                     if (shader)
                     {
-                        shader->use();
                         shader->set("matrix_m", glm::mat4(1.0));
                         shader->set("matrix_v", matrix_v);
                         shader->set("matrix_mv", matrix_v);
@@ -147,12 +147,10 @@ namespace AnyRenderer
                         shader->set("view_dir", view_dir);
                     }
                 }
-                auto stateset = drawable->getStateSet();
-                if(stateset){
-                    stateset->apply(ctx);
+                for (auto drawable : model->getDrawables())
+                {
+                    drawable->draw(ctx);
                 }
-                drawable->draw(ctx);
-                prev_shader_ = shader;
             }
 
             glfwPollEvents();
@@ -161,11 +159,12 @@ namespace AnyRenderer
         glfwTerminate();
     }
 
-    void Renderer::addDrawable(Drawable *drawable)
+    void Renderer::addModel(Group* model)
     {
-        if (std::find(drawables_.begin(), drawables_.end(), drawable) == drawables_.end())
+        if (std::find(models_.begin(), models_.end(), model) == models_.end())
         {
-            drawables_.push_back(drawable);
+            models_.push_back(model);
+            model->ref();
         }
     }
 

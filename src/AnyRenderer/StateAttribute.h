@@ -13,12 +13,12 @@ namespace AnyRenderer
             ATTR_LIGHTING,
             ATTR_SPOT_LIGHTS,
             ATTR_DIRECTIONAL_LIGHTS,
-            ATTR_UNIFORM,
-            ATTR_LIGHTS
+            ATTR_LIGHTS,
+            ATTR_SHADER
         };
 
     public:
-        virtual void apply(const RenderContext &ctx) const = 0;
+        virtual void apply(RenderContext &ctx) const = 0;
 
         virtual Type getType() const = 0;
     };

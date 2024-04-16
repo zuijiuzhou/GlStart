@@ -9,32 +9,42 @@
 #include "StateSet.h"
 #include "Material.h"
 #include "Light.h"
+#include "Group.h"
+#include "MeshLoader.h"
+#include "Camera.h"
 #include <Windows.h>
 
 namespace ar = AnyRenderer;
 
 void CreateSampleShapes(ar::Renderer *renderer)
 {
-    auto cube = ar::Geometry::createCube(0.6, 0, 1, 3);
+    auto cube = new ar::Group();
     {
+        auto geom = ar::Geometry::createCube(0.6, 0, 1, 3);
         auto colors = new ar::Vec4fArray();
         colors->emplace_back(0.8f, 0.8f, 0.8f, 1.0f);
-        cube->addVertexAttribArray(2, colors);
+        geom->addVertexAttribArray(2, colors);
         auto tex = new ar::Texture2D();
         tex->setImage(__RES("images/top.jpg"));
-        cube->addTexture(GL_TEXTURE0, tex);
-        cube->getOrCreateStateSet()->setAttribute(new ar::Material());
+        geom->addTexture(GL_TEXTURE0, tex);
+
         auto light = new ar::Light();
-        light->setPosition(glm::vec4(10, 10, 10, 0.));
+        light->setPosition(glm::vec4(10, 10, 10, 1.));
         light->setDirection(glm::vec3(2, 4, -1));
         light->setIsHead(true);
         auto lights = new ar::Lights();
         lights->addLight(light);
+
+        cube->addDrawable(geom);
+        cube->getOrCreateStateSet()->setAttribute(new ar::Material());
         cube->getOrCreateStateSet()->setAttribute(lights);
+        cube->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Geometry));
     }
 
-    auto pc = new ar::Geometry();
+    auto pc = new ar::Group();
     {
+        pc->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_PointCloud));
+        auto geom = new ar::Geometry();
         auto vertices = new ar::Vec3fArray();
         auto colors = new ar::Vec3fArray();
         vertices->reserve(1000);
@@ -45,13 +55,13 @@ void CreateSampleShapes(ar::Renderer *renderer)
             vertices->emplace_back(rand() / 10000. - posi_offset, rand() / 10000. - posi_offset, rand() / 10000.);
             colors->emplace_back(rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX), rand() / static_cast<double>(INT16_MAX));
         }
-        pc->addVertexAttribArray(0, vertices);
-        pc->addVertexAttribArray(1, colors);
-        pc->addPrimitive(new ar::DrawArrays(ar::DrawArrays::MODE_POINTS, 0, vertices->size()));
-        pc->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_PointCloud));
+        geom->addVertexAttribArray(0, vertices);
+        geom->addVertexAttribArray(1, colors);
+        geom->addPrimitive(new ar::DrawArrays(ar::DrawArrays::MODE_POINTS, 0, vertices->size()));
+        pc->addDrawable(geom);
     }
-    renderer->addDrawable(pc);
-    renderer->addDrawable(cube);
+    renderer->addModel(pc);
+    renderer->addModel(cube);
 }
 
 class A
@@ -114,8 +124,22 @@ int main(int argc, char **argv)
     if (argc > 1)
     {
         auto file = argv[1];
-        auto pcl = new ar::PointCloudLoader(file);
-        renderer->addDrawable(pcl->getData());
+        // auto pcl = new ar::PointCloudLoader(file);
+        // renderer->addModel(pcl->getData());
+
+        auto model = ar::MeshLoader().loadFile(file);
+        auto light = new ar::Light();
+        light->setPosition(glm::vec4(10, 10, 10, 1.));
+        light->setDirection(glm::vec3(2, 4, -1));
+        light->setIsHead(true);
+        auto lights = new ar::Lights();
+        lights->addLight(light);
+        model->getOrCreateStateSet()->setAttribute(new ar::Material());
+        model->getOrCreateStateSet()->setAttribute(lights);
+        model->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Geometry));
+        renderer->addModel(model);
+        
+        renderer->getCamera()->setViewMatrixAsLookAt(glm::vec3(0,0,800), glm::vec3(), glm::vec3(0,1,0));
     }
     else
     {

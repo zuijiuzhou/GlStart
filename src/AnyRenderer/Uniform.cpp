@@ -8,7 +8,7 @@ namespace AnyRenderer
     {
     }
 
-    void Uniform::apply(const RenderContext &ctx) const
+    void Uniform::apply(RenderContext &ctx) const
     {
         auto shader = ctx.getCurrentShader();
         if(shader){

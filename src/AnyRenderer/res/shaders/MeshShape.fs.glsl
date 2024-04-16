@@ -20,7 +20,9 @@ struct Light{
 
     // Spot
     vec4 pos;
-    float cuto;
+    // cutoff
+    float co;
+    // exponent
     float expo;
 
     float k_c;
@@ -46,7 +48,10 @@ vec3 get_directional_light_contribution(Light l, Material m, vec3 view_dir, vec3
     vec3 reflect_dir = reflect(l.dir, frag_norm);
     vec3 a = l.a.rgb * m.a.rgb;
     vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * mate.d.rgb; //texture(tex_2d, frag_tex_coord).rgb;
-    vec3 s = l.s.rgb * pow(max(dot(view_dir, reflect_dir), 0.0), mate.sh) * mate.s.rgb;
+    // Phong
+    // vec3 s = l.s.rgb * pow(max(dot(view_dir, reflect_dir), 0.0), mate.sh) * mate.s.rgb;
+    // Blinn_Phong
+    vec3 s = l.s.rgb * pow(max(dot(normalize(-l_dir + view_dir), frag_norm), 0.0), mate.sh) * mate.s.rgb;
     return a + d + s;
 }
 

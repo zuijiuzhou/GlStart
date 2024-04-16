@@ -68,7 +68,7 @@ namespace AnyRenderer
         return ATTR_MATERIAL;
     }
 
-    void Material::apply(const RenderContext &ctx) const
+    void Material::apply(RenderContext &ctx) const
     {
         auto shader = ctx.getCurrentShader();
         if (shader)

@@ -26,7 +26,7 @@ namespace AnyRenderer
 
         Type getType() const;
     
-        virtual void apply(const RenderContext& ctx) const override;
+        virtual void apply(RenderContext& ctx) const override;
         
     private:
         glm::vec4 a_, d_, s_, e_;

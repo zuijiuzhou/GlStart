@@ -21,7 +21,6 @@ namespace AnyRenderer
         void addVertexAttribArray(GLuint loc, Array *data);
         void addTexture(GLuint unit, Texture *tex);
         void addPrimitive(PrimitiveSet* prim);
-        virtual Shader *getShader() const override;
 
     public:
         

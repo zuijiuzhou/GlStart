@@ -6,7 +6,7 @@
 namespace AnyRenderer
 {
     Light::Light()
-        : a_(glm::vec4(0.05f, 0.05f, 0.05f, 1.0f)), d_(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f)), s_(glm::vec4(0.05f, 0.05f, 0.05f, 1.0f)), pos_(glm::vec4(0.f, 0.f, 1.f, 0.0f)), dir_(glm::vec3(0.f, 0.f, -1.f)), k_c_(1.0f), k_l_(0.0f), k_q_(0.0f), expo_(0.f), cutoff_(180)
+        : a_(glm::vec4(0.05f, 0.05f, 0.05f, 1.0f)), d_(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f)), s_(glm::vec4(0.05f, 0.05f, 0.05f, 1.0f)), pos_(glm::vec4(0.f, 0.f, 1.f, 0.0f)), dir_(glm::vec3(0.f, 0.f, -1.f)), k_c_(1.0f), k_l_(0.0f), k_q_(0.0f), expo_(0.f), co_(180)
     {
     }
     glm::vec4 Light::getAmbient() const
@@ -83,11 +83,11 @@ namespace AnyRenderer
 
     float Light::getCutoff() const
     {
-        return cutoff_;
+        return co_;
     }
     void Light::setCutoff(float val)
     {
-        cutoff_ = val;
+        co_ = val;
     }
 
     float Light::getExponent() const
@@ -144,7 +144,7 @@ namespace AnyRenderer
         return ATTR_LIGHTS;
     }
 
-    void Lights::apply(const RenderContext &ctx) const
+    void Lights::apply(RenderContext &ctx) const
     {
         auto shader = ctx.getCurrentShader();
         if (shader)
@@ -163,7 +163,7 @@ namespace AnyRenderer
                 shader->set(prefix + ".k_l", l->getLinearAttenuation());
                 shader->set(prefix + ".k_q", l->getQuadraticAttenuation());
                 shader->set(prefix + ".expo", l->getExponent());
-                shader->set(prefix + ".cuto", l->getCutoff());
+                shader->set(prefix + ".co", l->getCutoff());
 
                 auto dir = l->getDirection();
                 auto pos = l->getPosition();

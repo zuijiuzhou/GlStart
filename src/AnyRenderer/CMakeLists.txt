@@ -2,12 +2,13 @@ SET(CURRENT_TARGET_NAME AnyRenderer)
 
 find_package(PCL REQUIRED)
 find_package(opencv REQUIRED)
+find_package(assimp REQUIRED)
 
 file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
 add_executable(${CURRENT_TARGET_NAME} ${SRC_FILES} ${HEADER_FILES} ${GLAD_SRC_FILES})
-target_link_libraries(${CURRENT_TARGET_NAME} Utilities glfw glm::glm ${PCL_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(${CURRENT_TARGET_NAME} Utilities glfw glm::glm assimp::assimp ${PCL_LIBRARIES} ${OpenCV_LIBS})
 target_compile_definitions(${CURRENT_TARGET_NAME} PRIVATE CURRENT_MODULE_NAME="${CURRENT_TARGET_NAME}" CURRENT_RES_DIR="${GLSTART_RES_ROOT_DIR}${CURRENT_TARGET_NAME}")
 
 set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res/)

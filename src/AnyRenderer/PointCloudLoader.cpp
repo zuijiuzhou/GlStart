@@ -16,14 +16,16 @@
 #include <pcl/sample_consensus/model_types.h>
 
 #include "Geometry.h"
+#include "Group.h"
 #include "ResourceManager.h"
+#include "StateSet.h"
 
 namespace AnyRenderer
 {   
     using PCPtr = pcl::PointCloud<pcl::PointXYZRGBA>::Ptr;
     namespace
     {
-        Geometry *parse(const PCPtr cloud)
+        Group *parse(const PCPtr cloud)
         { 
             auto z_lower = 0.3f;
             auto z_upper = 0.5f;
@@ -127,8 +129,12 @@ namespace AnyRenderer
             geom->addVertexAttribArray(0, vertices);
             geom->addVertexAttribArray(1, colors);
             geom->addPrimitive(new DrawArrays(DrawArrays::MODE_POINTS, 0, vertices->size()));
-            geom->setShader(ResourceManager::instance()->getInternalShader(ResourceManager::IS_PointCloud));
-            return geom;
+
+            auto pc = new Group();
+            pc->addDrawable(geom);
+            pc->getOrCreateStateSet()->setShader(ResourceManager::instance()->getInternalShader(ResourceManager::IS_PointCloud));
+            
+            return pc;
         }
     };
 
@@ -156,7 +162,7 @@ namespace AnyRenderer
         }
     }
 
-    Geometry *PointCloudLoader::getData() const
+    Group *PointCloudLoader::getData() const
     {
         return data_;
     }

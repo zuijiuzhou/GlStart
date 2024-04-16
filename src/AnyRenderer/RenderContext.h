@@ -7,11 +7,13 @@ namespace AnyRenderer
     class Texture2D;
     class CubeMap;
     class Shader;
+    class StateSet;
 
     class RenderContext final
     {
         friend class Renderer;
-
+        friend class StateSet;
+        
     private:
         RenderContext();
         RenderContext(Camera *cam);

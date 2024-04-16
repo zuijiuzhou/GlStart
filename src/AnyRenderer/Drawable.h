@@ -1,26 +1,15 @@
 #pragma once
 #include <glad/glad.h>
+#include <glm/mat4x4.hpp>
+#include "Object.h"
 namespace AnyRenderer
 {
     class RenderContext;
     class StateSet;
     class Shader;
-    class Drawable
+    class Drawable : public Object
     {
-        public:
-        virtual ~Drawable();
     public:
-        virtual void draw(const RenderContext& ctx) = 0;
-
-        void setShader(Shader *shader);
-
-        virtual Shader *getShader() const;
-
-        StateSet* getOrCreateStateSet();
-        StateSet* getStateSet();
-
-    private:
-        Shader* shader_ = nullptr;
-        StateSet* state_set_ = nullptr;
+        virtual void draw(const RenderContext &ctx) = 0;
     };
 }

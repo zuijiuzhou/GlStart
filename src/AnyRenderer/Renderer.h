@@ -6,7 +6,7 @@
 namespace AnyRenderer
 {
     class Shader;
-    class Drawable;
+    class Group;
     class Camera;
     class CameraManipulator;
     class Renderer
@@ -18,10 +18,9 @@ namespace AnyRenderer
         
     public:
         void run();
-        void addDrawable(Drawable* drawable);
+        void addModel(Group* model);
         Camera* getCamera() const;
 
-        // int registerShader(Shader* shader);
     private:
         void init();
 
@@ -33,7 +32,7 @@ namespace AnyRenderer
         Camera *camera_ = nullptr;
         CameraManipulator *cm_ = nullptr;
         GLFWwindow *wnd_ = nullptr;
-        std::vector<Drawable*> drawables_;
+        std::vector<Group*> models_;
         std::vector<Shader*> shaders_;
         bool is_initialized = false;
 

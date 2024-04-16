@@ -1,18 +1,28 @@
 #pragma once
-#include <vector>
+#include <map>
 #include "Object.h"
+#include "StateAttribute.h"
+
 namespace AnyRenderer
 {
     class StateAttribute;
+    class Shader;
     class RenderContext;
     class StateSet : public Object
     {
     public:
         void setAttribute(StateAttribute *attr);
 
-        void apply(const RenderContext &ctx)const;
+        StateAttribute* getAttribute(StateAttribute::Type type) const;
+
+        Shader* getShader() const;
+
+        void setShader(Shader* shader);
+
+        void apply(RenderContext &ctx) const;
 
     private:
-        std::vector<StateAttribute *> state_attrs;
+        std::map<StateAttribute::Type, StateAttribute*> state_attrs;
+        Shader* shader_ = nullptr;
     };
 }

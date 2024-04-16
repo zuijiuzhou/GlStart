@@ -9,7 +9,7 @@ namespace AnyRenderer
         Uniform(const std::string &name, int val);
 
     public:
-        virtual void apply(const RenderContext &ctx) const override;
+        virtual void apply(RenderContext &ctx) const override;
 
     private:
         std::string name_;
