@@ -1,3 +1,5 @@
+{
+}
 #include "QtViewer.h"
 #include "Renderer.h"
 #include "Camera.h"
@@ -7,12 +9,17 @@ namespace AnyRenderer
 {
     struct QtViewer::Data
     {
-        RefPtr<Renderer> renderer = nullptr;
+        RefPtr<Renderer> renderer;
     };
 
     QtViewer::QtViewer()
         : d(new Data())
     {
+        setMouseTracking(true);
+        QSurfaceFormat format;
+        format.setProfile(QSurfaceFormat::CompatibilityProfile);
+
+        setFormat(format);
     }
 
     QtViewer::~QtViewer()
@@ -52,4 +59,24 @@ namespace AnyRenderer
     void QtViewer::resizeEvent(QResizeEvent *e)
     {
     }
+
+    void QtViewer::mousePressEvent(QMouseEvent *event){
+
+    };
+
+    void QtViewer::mouseReleaseEvent(QMouseEvent *event){
+
+    };
+
+    void QtViewer::mouseDoubleClickEvent(QMouseEvent *event){
+
+    };
+
+    void QtViewer::mouseMoveEvent(QMouseEvent *event){
+
+    };
+
+    void QtViewer::wheelEvent(QWheelEvent *event){
+
+    };
 }
