@@ -4,7 +4,7 @@ namespace AnyRenderer
 {
     class Object;
     template <typename T>
-        // requires std::is_base_of<Object, T>::value
+    // requires std::is_base_of<Object, T>::value
     class RefPtr
     {
     public:
@@ -27,7 +27,7 @@ namespace AnyRenderer
         }
 
         template <typename TOther>
-            // requires std::is_base_of<Object, TOther>::value
+        // requires std::is_base_of<Object, TOther>::value
         RefPtr(const RefPtr<TOther> &other) : ptr_(other.ptr_)
         {
             if (ptr_)
@@ -98,7 +98,7 @@ namespace AnyRenderer
         }
 
         template <typename TOther>
-            // requires std::is_base_of<T, TOther>::value
+        // requires std::is_base_of<T, TOther>::value
         RefPtr &operator=(const RefPtr<TOther> &right)
         {
             set(right.ptr_);
@@ -106,7 +106,7 @@ namespace AnyRenderer
         }
 
         template <typename TOther>
-            // requires std::is_base_of<T, TOther>::value
+        // requires std::is_base_of<T, TOther>::value
         RefPtr &operator=(TOther *ptr)
         {
             set(ptr);
@@ -132,13 +132,33 @@ namespace AnyRenderer
         {
             return ptr_ != right;
         }
+        
+        bool valid() const
+        {
+            return ptr_ != nullptr;
+        }
 
     private:
         template <typename TOther>
-            // requires std::is_base_of<Object, TOther>::value
+        // requires std::is_base_of<Object, TOther>::value
         friend class RefPtr;
 
     private:
         T *ptr_;
     };
+
+    template <class T>
+    inline void swap(RefPtr<T> &rp1, RefPtr<T> &rp2) { rp1.swap(rp2); }
+
+    template<class T> inline
+    T* get_pointer(const RefPtr<T>& rp) { return rp.get(); }
+
+    template <class T, class Y>
+    inline RefPtr<T> static_pointer_cast(const RefPtr<Y> &rp) { return static_cast<T *>(rp.get()); }
+
+    template <class T, class Y>
+    inline RefPtr<T> dynamic_pointer_cast(const RefPtr<Y> &rp) { return dynamic_cast<T *>(rp.get()); }
+
+    template <class T, class Y>
+    inline RefPtr<T> const_pointer_cast(const RefPtr<Y> &rp) { return const_cast<T *>(rp.get()); }
 }

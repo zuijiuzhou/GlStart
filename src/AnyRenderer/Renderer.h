@@ -1,8 +1,7 @@
 #pragma once
-
-#include "anyrenderer_global.h"
 #include <vector>
 #include "BoundingBox.h"
+#include "Object.h"
 
 namespace AnyRenderer
 {
@@ -10,34 +9,22 @@ namespace AnyRenderer
     class Group;
     class Camera;
     class CameraManipulator;
-    class Renderer
+    class RenderContext;
+    class Renderer : public Object
     {
-
     public:
         Renderer();
         virtual ~Renderer();
-        
+
     public:
-        void run();
-        void addModel(Group* model);
-        Camera* getCamera() const;
+        void frame();
+        void addModel(Group *model);
+        Camera *getCamera() const;
+        void initialize();
 
     private:
-        void init();
-
-        void error_callback(int error, const char *desc);
-        void key_callback(GLFWwindow *wnd, int key, int scancode, int action, int mods);
-        void framebuffer_size_callback(GLFWwindow *wnd, int w, int h);
-
-    private:
-        Camera *camera_ = nullptr;
-        CameraManipulator *cm_ = nullptr;
-        GLFWwindow *wnd_ = nullptr;
-        std::vector<Group*> models_;
-        std::vector<Shader*> shaders_;
-        BoundingBox bb_;
-        bool is_initialized = false;
-
+        struct Data;
+        Data *const d;
     };
 
 } // namespace AnyRenderer

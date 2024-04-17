@@ -1,45 +1,65 @@
 #include "RenderContext.h"
+#include "Utilities/Resources.h"
 #include "Texture2D.h"
 #include "CubeMap.h"
-#include "Utilities/Resources.h"
 #include "ResourceManager.h"
+#include "RefPtr.h"
+#include "Shader.h"
+#include "Renderer.h"
+#include "Camera.h"
 
 namespace AnyRenderer
 {
-    RenderContext::RenderContext() : RenderContext(nullptr){
 
-    }
-
-    RenderContext::RenderContext(Camera *cam) : cam_(cam)
+    struct RenderContext::Data
     {
-        def_tex_ = new Texture2D();
-        def_tex_->setImage(__RES("/images/top.jpg"));
-        def_env_map_ = ResourceManager::instance()->getInternalCubeMap(ResourceManager::ICM_CubeMap2);
+        RefPtr<Camera> camera;
+        RefPtr<Renderer> renderer;
+        RefPtr<Shader> current_shader;
+        RefPtr<Texture2D> default_tex;
+        RefPtr<CubeMap> default_env_map;
+    };
+
+    extern void RenderContext_set_shader(RenderContext::Data* d, Shader *shader)
+    {
+        d->current_shader = shader;
     }
 
-    RenderContext::~RenderContext(){
-        delete def_tex_;
-        delete def_env_map_;
+    RenderContext::RenderContext(Camera *cam) : d(new Data())
+    {
+        d->camera = cam;
+        d->default_tex = new Texture2D();
+        d->default_tex->setImage(__RES("/images/top.jpg"));
+        d->default_env_map = ResourceManager::instance()->getInternalCubeMap(ResourceManager::ICM_CubeMap2);
+    }
+
+    RenderContext::~RenderContext()
+    {
+        delete d;
     }
 
     Camera *RenderContext::getCamera() const
     {
-        return cam_;
+        return d->camera.get();
     }
 
-    Renderer* RenderContext::getRenderer() const {
-        return renderer_;
+    Renderer *RenderContext::getRenderer() const
+    {
+        return d->renderer.get();
     }
 
-    Shader* RenderContext::getCurrentShader() const{
-        return current_shader_;
+    Shader *RenderContext::getCurrentShader() const
+    {
+        return d->current_shader.get();
     }
 
-    Texture2D* RenderContext::getDefaultTexture() const{
-        return def_tex_;
+    Texture2D *RenderContext::getDefaultTexture() const
+    {
+        return d->default_tex.get();
     }
-        
-    CubeMap* RenderContext::getDefaultEnvMap() const{
-        return def_env_map_;
+
+    CubeMap *RenderContext::getDefaultEnvMap() const
+    {
+        return d->default_env_map.get();
     }
 }

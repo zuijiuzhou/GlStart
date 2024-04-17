@@ -1,73 +1,77 @@
 #include "Geometry.h"
 #include "Shader.h"
-#include "ResourceManager.h"
-#include "Texture2D.h"
-#include "CubeMap.h"
 #include "RenderContext.h"
+#include "RefPtr.h"
+#include "Texture.h"
 
 namespace AnyRenderer
 {
-	Geometry::Geometry()
+	struct Geometry::Data
+	{
+		GLuint vao = 0;
+		std::map<GLuint, RefPtr<Array>> vbos;
+		std::map<GLuint, RefPtr<Texture>> textures;
+		std::vector<RefPtr<PrimitiveSet>> primitives;
+		BoundingBox bb;
+	};
+
+	Geometry::Geometry() : d(new Data())
 	{
 	}
 
 	Geometry::~Geometry()
 	{
-		if (vao_)
+		if (d->vao)
 		{
-			glDeleteVertexArrays(1, &vao_);
+			glDeleteVertexArrays(1, &d->vao);
 		}
+		delete d;
 	}
 
 	void Geometry::addTexture(GLuint unit, Texture *tex)
 	{
-		auto found_at = textures_.find(unit);
-		if (found_at != textures_.end())
+		auto found_at = d->textures.find(unit);
+		if (found_at != d->textures.end())
 		{
 			auto t = found_at->second;
 			if (t == tex)
 				return;
-			t->unref();
 		}
-		textures_[unit] = tex;
-		tex->ref();
+		d->textures[unit] = tex;
 	}
 
 	void Geometry::addVertexAttribArray(GLuint loc, Array *arr)
 	{
 		assert(arr);
-		auto found_at = vbos_.find(loc);
-		if (found_at != vbos_.end())
+		auto found_at = d->vbos.find(loc);
+		if (found_at != d->vbos.end())
 		{
 			auto vbo = found_at->second;
 			if (vbo == arr)
 				return;
-			vbo->unref();
 		}
-		vbos_[loc] = arr;
-		arr->ref();
+		d->vbos[loc] = arr;
 	}
 
 	void Geometry::addPrimitive(PrimitiveSet *prim)
 	{
-		primitives_.push_back(prim);
-		prim->ref();
+		d->primitives.push_back(prim);
 	}
 
 	void Geometry::draw(const RenderContext &ctx)
 	{
-		if (vbos_.empty())
+		if (d->vbos.empty())
 			return;
-		if (primitives_.empty())
+		if (d->primitives.empty())
 			return;
 
 		auto shader = ctx.getCurrentShader();
-		if (vao_ == 0)
+		if (d->vao == 0)
 		{
-			glGenVertexArrays(1, &vao_);
-			glBindVertexArray(vao_);
+			glGenVertexArrays(1, &d->vao);
+			glBindVertexArray(d->vao);
 			// VBOs
-			for (auto &kv : vbos_)
+			for (auto &kv : d->vbos)
 			{
 				auto loc = kv.first;
 				auto arr = kv.second;
@@ -105,11 +109,11 @@ namespace AnyRenderer
 		}
 		else
 		{
-			glBindVertexArray(vao_);
+			glBindVertexArray(d->vao);
 		}
 
 		shader->set("tex_2d", 0);
-		for (auto &kv : textures_)
+		for (auto &kv : d->textures)
 		{
 			auto unit = kv.first;
 			auto tex = kv.second;
@@ -117,12 +121,12 @@ namespace AnyRenderer
 			tex->bind();
 		}
 
-		for (auto priv : primitives_)
+		for (auto priv : d->primitives)
 		{
 			priv->draw();
 		}
 		glBindVertexArray(0);
-		for (auto &kv : textures_)
+		for (auto &kv : d->textures)
 		{
 			auto tex = kv.second;
 			if (!tex)
@@ -133,11 +137,11 @@ namespace AnyRenderer
 
 	BoundingBox Geometry::getBoundingBox() const
 	{
-		return bb_;
+		return d->bb;
 	}
 	void Geometry::setBoundingBox(const BoundingBox &bb)
 	{
-		bb_ = bb;
+		d->bb = bb;
 	}
 
 	Geometry *Geometry::createCube(float size, int vertices_loc, int normals_loc, int tex_2d_coords_loc, int cube_map_coords_loc)

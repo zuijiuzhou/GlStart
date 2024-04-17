@@ -1,30 +1,42 @@
 #pragma once
-#include "anyrenderer_global.h"
-#include "Camera.h"
+#include "UIEvent.h"
+#include "Object.h"
 
 namespace AnyRenderer
 {
-    class CameraManipulator
+    class Camera;
+    class CameraManipulator : public Object
     {
     public:
-        CameraManipulator(Camera *cameraPtr, GLFWwindow *wndPtr);
+        virtual void notifyMousePressed(MouseButton btn, int x, int y) = 0;
+        virtual void notifyMouseReleased(MouseButton btn, int x, int y) = 0;
+        virtual void notifyMouseMoved(int x, int y) = 0;
+        virtual void notifyMouseScrolled(int delta) = 0;
+    protected:
+        virtual glm::mat4 computeViewMatrix() const = 0;
+        virtual glm::mat4 computeProjectionMatrix() const = 0;
+    };
+
+    class StandardCameraManipulator : public CameraManipulator
+    {
+    public:
+    public:
+        StandardCameraManipulator(Camera *cam);
+        virtual ~StandardCameraManipulator();
+
+    public:
+        virtual void notifyMousePressed(MouseButton btn, int x, int y) override;
+        virtual void notifyMouseReleased(MouseButton btn, int x, int y) override;
+        virtual void notifyMouseMoved(int x, int y) override;
+        virtual void notifyMouseScrolled(int delta) override;
+
+    protected:
+        virtual glm::mat4 computeViewMatrix() const override;
+        virtual glm::mat4 computeProjectionMatrix() const override;
 
     private:
-        void init();
-
-        void mouse_button_callback(GLFWwindow *wnd, int button, int action, int mods);
-        void cursor_position_callback(GLFWwindow *wnd, double x, double y);
-        void scroll_callback(GLFWwindow *wnd, double x, double y);
-
-    private:
-        Camera *camera_;
-        GLFWwindow *wnd_;
-
-        bool is_rotation_started_ = false;
-        bool is_pan_started_ = false;
-        bool is_cursor_move_started_ = false;
-
-        glm::vec2 prev_cursor_pt_;
+       struct Data;
+       Data* const d;
     };
 
 } // namespace AnyRenderer

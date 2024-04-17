@@ -2,8 +2,14 @@
 #include <glad/glad.h>
 #include "Object.h"
 
-namespace AnyRenderer{
-    class GLObject : public Object{
+namespace AnyRenderer
+{
+    class GLObject : public Object
+    {
+    public:
+        GLObject();
+        virtual ~GLObject();
+
     public:
         GLuint getId() const;
 
@@ -14,6 +20,7 @@ namespace AnyRenderer{
         virtual GLuint onCreate() = 0;
 
     private:
-        GLuint id_ = 0;
+        struct Data;
+        Data *const d;
     };
 }

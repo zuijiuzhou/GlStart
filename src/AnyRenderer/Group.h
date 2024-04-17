@@ -7,6 +7,7 @@ namespace AnyRenderer
     class Group : public Node
     {
     public:
+        Group();
         virtual ~Group();
 
     public:
@@ -14,12 +15,14 @@ namespace AnyRenderer
 
         void removeDrawable(Drawable *drawable);
 
-        const std::vector<Drawable*>& getDrawables() const;
+        int getNbDrawables() const;
+
+        Drawable* getDrawableAt(int index) const;
 
         virtual BoundingBox getBoundingBox() const override;
+
     private:
-        std::vector<Drawable*> drawables_;
-        BoundingBox bb_;
-        bool bb_is_dirty_ = true;
+        struct Data;
+        Data* const d;
     };
 }

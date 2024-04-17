@@ -10,6 +10,7 @@ namespace AnyRenderer
     class Node : public Object
     {
     public:
+        Node();
         virtual ~Node();
 
     public:
@@ -24,7 +25,7 @@ namespace AnyRenderer
         virtual BoundingBox getBoundingBox() const = 0;
 
     private:
-        StateSet *state_set_ = nullptr;
-        glm::mat4 matrix_ = glm::mat4(1.0);
+        struct Data;
+        Data *const d;
     };
 }

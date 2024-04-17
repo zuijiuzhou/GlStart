@@ -2,20 +2,33 @@
 
 namespace AnyRenderer
 {
+    struct GLObject::Data
+    {
+        GLuint id = 0;
+    };
+
+    GLObject::GLObject() : d(new Data())
+    {
+    }
+    GLObject::~GLObject()
+    {
+        delete d;
+    }
     GLuint GLObject::getId() const
     {
-        return id_;
+        return d->id;
     }
 
-    void GLObject::create(){
-        if(isCreated())
+    void GLObject::create()
+    {
+        if (isCreated())
             return;
-        id_ = onCreate();
+        d->id = onCreate();
     }
 
     bool GLObject::isCreated() const
     {
-        return id_ > 0;
+        return d->id > 0;
     }
 
 }

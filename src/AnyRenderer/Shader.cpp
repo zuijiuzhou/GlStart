@@ -52,8 +52,19 @@ namespace AnyRenderer
         }
     }
 
-    Shader::Shader(const std::string &vs_code, const std::string &gs_code, const std::string &fs_code) : vs_code_(vs_code), gs_code_(gs_code), fs_code_(fs_code)
+    struct Shader::Data
     {
+        std::string name;
+        std::string vs_code;
+        std::string gs_code;
+        std::string fs_code;
+    };
+
+    Shader::Shader(const std::string &vs_code, const std::string &gs_code, const std::string &fs_code) : d(new Data())
+    {
+        d->vs_code = vs_code;
+        d->gs_code = gs_code;
+        d->fs_code = fs_code;
     }
 
     Shader::~Shader()
@@ -63,6 +74,7 @@ namespace AnyRenderer
         {
             glDeleteProgram(id);
         }
+        delete d;
     }
 
     void Shader::use()
@@ -88,12 +100,12 @@ namespace AnyRenderer
 
     std::string Shader::getName() const
     {
-        return name_;
+        return d->name;
     }
 
     void Shader::setName(const std::string &name)
     {
-        name_ = name;
+        d->name = name;
     }
 
     GLuint Shader::onCreate()
@@ -103,19 +115,19 @@ namespace AnyRenderer
         auto status = 0;
         auto app_id = glCreateProgram();
 
-        if (!vs_code_.empty())
+        if (!d->vs_code.empty())
         {
-            vs_id = createShader(vs_code_.data(), GL_VERTEX_SHADER);
+            vs_id = createShader(d->vs_code.data(), GL_VERTEX_SHADER);
             glAttachShader(app_id, vs_id);
         }
-        if (!gs_code_.empty())
+        if (!d->gs_code.empty())
         {
-            gs_id = createShader(gs_code_.data(), GL_GEOMETRY_SHADER);
+            gs_id = createShader(d->gs_code.data(), GL_GEOMETRY_SHADER);
             glAttachShader(app_id, gs_id);
         }
-        if (!fs_code_.empty())
+        if (!d->fs_code.empty())
         {
-            fs_id = createShader(fs_code_.data(), GL_FRAGMENT_SHADER);
+            fs_id = createShader(d->fs_code.data(), GL_FRAGMENT_SHADER);
             glAttachShader(app_id, fs_id);
         }
         glLinkProgram(app_id);

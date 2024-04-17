@@ -1,4 +1,5 @@
 #pragma once
+#include "Object.h"
 
 namespace AnyRenderer
 {
@@ -9,29 +10,26 @@ namespace AnyRenderer
     class Shader;
     class StateSet;
 
-    class RenderContext final
+    class RenderContext final : public Object
     {
         friend class Renderer;
         friend class StateSet;
-        
+
     private:
-        RenderContext();
         RenderContext(Camera *cam);
         virtual ~RenderContext();
+
     public:
         Camera *getCamera() const;
-        Renderer* getRenderer() const;
-        Shader* getCurrentShader() const;
-        Texture2D* getDefaultTexture() const;
-        CubeMap* getDefaultEnvMap() const;
+        Renderer *getRenderer() const;
+        Shader *getCurrentShader() const;
+        Texture2D *getDefaultTexture() const;
+        CubeMap *getDefaultEnvMap() const;
 
+    public:
+        struct Data;
 
     private:
-        Camera *cam_ = nullptr;
-        Renderer* renderer_ = nullptr;
-        Shader* current_shader_ = nullptr;
-
-        Texture2D* def_tex_ = nullptr;
-        CubeMap* def_env_map_ = nullptr;
+        Data *const d;
     };
 }

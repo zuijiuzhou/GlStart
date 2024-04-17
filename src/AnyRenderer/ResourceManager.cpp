@@ -3,13 +3,14 @@
 #include "Utilities/Resources.h"
 #include "Shader.h"
 #include "CubeMap.h"
+#include "RefPtr.h"
 
 namespace AnyRenderer
 {
 
     namespace
     {
-        std::map<std::string, Shader *> s_shaders;
+        std::map<std::string, RefPtr<Shader>> s_shaders;
     }
 
     ResourceManager::ResourceManager()
@@ -37,7 +38,7 @@ namespace AnyRenderer
             }
             return shader;
         }
-        return s_shaders[name];
+        return s_shaders[name].get();
     }
 
     Shader *ResourceManager::getInternalShader(InternalShader shader)

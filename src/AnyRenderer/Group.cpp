@@ -1,47 +1,63 @@
 #include "Group.h"
 #include "Drawable.h"
+#include "RefPtr.h"
 
 namespace AnyRenderer
 {
+    struct Group::Data
+    {
+
+        std::vector<RefPtr<Drawable>> drawables;
+        BoundingBox bb;
+        bool bb_is_dirty = true;
+    };
+    Group::Group() : d(new Data())
+    {
+    }
+
     Group::~Group()
     {
-        for (auto item : drawables_)
-        {
-            item->unref();
-        }
+        delete d;
     }
 
     void Group::addDrawable(Drawable *drawable)
     {
-        drawables_.push_back(drawable);
-        drawable->ref();
+        d->drawables.push_back(drawable);
     }
 
     void Group::removeDrawable(Drawable *drawable)
     {
-        auto found_at = std::find(drawables_.rbegin(), drawables_.rend(), drawable);
-        if (found_at != drawables_.rend())
+        auto found_at = std::find(d->drawables.rbegin(), d->drawables.rend(), drawable);
+        if (found_at != d->drawables.rend())
         {
-            drawables_.erase(found_at.base());
-            (*found_at.base())->unref();
+            d->drawables.erase(found_at.base());
         }
     }
 
-    const std::vector<Drawable*>& Group::getDrawables() const{
-        return drawables_;
+    int Group::getNbDrawables() const
+    {
+        return d->drawables.size();
     }
 
-    BoundingBox Group::getBoundingBox() const{
-        if(bb_is_dirty_){
+    Drawable *Group::getDrawableAt(int index) const
+    {
+        return d->drawables.at(index).get();
+    }
+
+    BoundingBox Group::getBoundingBox() const
+    {
+        if (d->bb_is_dirty)
+        {
             BoundingBox bb;
-            for(auto d : drawables_){
+            for (auto d : d->drawables)
+            {
                 bb.combine(d->getBoundingBox());
             }
-            auto this_ = const_cast<Group*>(this);
-            this_->bb_ = bb;
-            this_->bb_is_dirty_ = false;
+            auto this_ = const_cast<Group *>(this);
+            this_->d->bb = bb;
+            this_->d->bb_is_dirty = false;
         }
-        return bb_;
+        return d->bb;
     }
 
 }

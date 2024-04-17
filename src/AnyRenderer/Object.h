@@ -4,6 +4,8 @@ namespace AnyRenderer
 {
     class Object
     {
+    public:
+        virtual ~Object();
 
     public:
         void ref();

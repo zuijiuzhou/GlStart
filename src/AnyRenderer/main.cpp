@@ -12,7 +12,9 @@
 #include "Group.h"
 #include "MeshLoader.h"
 #include "Camera.h"
+#include "GlfwViewer.h"
 #include <Windows.h>
+#include "RefPtr.h"
 
 namespace ar = AnyRenderer;
 
@@ -120,7 +122,8 @@ void TestThrow()
 
 int main(int argc, char **argv)
 {
-    auto renderer = new ar::Renderer();
+    ar::GlfwViewer v;
+    auto renderer = v.getRenderer();
     if (argc > 1)
     {
         auto file = argv[1];
@@ -143,7 +146,9 @@ int main(int argc, char **argv)
     {
         CreateSampleShapes(renderer);
     }
-    renderer->run();
+    ar::RefPtr<ar::Array> p;
+    auto b = !p;
 
+    v.run();
     return 0;
 }

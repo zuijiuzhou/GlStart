@@ -30,10 +30,7 @@ namespace AnyRenderer
         static Geometry *createCube(float size, int vertices_loc, int normals_loc, int tex_2d_coords_loc = -1, int cube_map_coords_loc = -1);
 
     private:
-        GLuint vao_ = 0;
-        std::map<GLuint, Array *> vbos_;
-        std::map<GLuint, Texture *> textures_;
-        std::vector<PrimitiveSet *> primitives_;
-        BoundingBox bb_;
+        struct Data;
+        Data* const d;
     };
 }

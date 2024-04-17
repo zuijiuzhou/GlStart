@@ -1,36 +1,44 @@
 #include "Node.h"
 #include "StateSet.h"
+#include "RefPtr.h"
 
 namespace AnyRenderer
 {
+    struct Node::Data
+    {
+        RefPtr<StateSet> state_set = nullptr;
+        glm::mat4 matrix = glm::mat4(1.0);
+    };
+
+    Node::Node() : d(new Data())
+    {
+    }
     Node::~Node()
     {
-        if (state_set_)
-            state_set_->unref();
+        delete d;
     }
 
     glm::mat4 Node::getMatrix() const
     {
-        return matrix_;
+        return d->matrix;
     }
 
     void Node::setMatrix(const glm::mat4 &mat)
     {
-        matrix_ = mat;
+        d->matrix = mat;
     }
 
     StateSet *Node::getOrCreateStateSet()
     {
-        if (!state_set_)
+        if (!d->state_set.get())
         {
-            state_set_ = new StateSet();
-            state_set_->ref();
+            d->state_set = new StateSet();
         }
-        return state_set_;
+        return d->state_set.get();
     }
 
     StateSet *Node::getStateSet()
     {
-        return state_set_;
+        return d->state_set.get();
     }
 }

@@ -23,6 +23,7 @@ namespace AnyRenderer
         virtual bool onUpdate() override;
 
     private:
-        std::string img_;
+        struct Data;
+        Data* const d;
     };
 }

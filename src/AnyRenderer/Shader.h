@@ -69,9 +69,7 @@ namespace AnyRenderer
           GLuint onCreate();
 
      private:
-          std::string name_;
-          std::string vs_code_ = nullptr;
-          std::string gs_code_ = nullptr;
-          std::string fs_code_ = nullptr;
+          struct Data;
+          Data* const d;
      };
 }

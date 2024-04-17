@@ -5,12 +5,18 @@
 namespace AnyRenderer
 {
 
-    Texture2D::Texture2D()
+    struct Texture2D::Data
+    {
+        std::string img;
+    };
+
+    Texture2D::Texture2D() : d(new Data())
     {
     }
 
     Texture2D::~Texture2D()
     {
+        delete d;
     }
 
     Texture::Type Texture2D::getType() const
@@ -20,7 +26,7 @@ namespace AnyRenderer
 
     void Texture2D::setImage(const std::string &img)
     {
-        img_ = img;
+        d->img = img;
         if (isCreated())
             setDirty(true);
     }
@@ -32,7 +38,7 @@ namespace AnyRenderer
         glBindTexture(GL_TEXTURE_2D, id);
         stbi_set_flip_vertically_on_load(true);
         int w, h, channels;
-        auto data = stbi_load(img_.data(), &w, &h, &channels, 0);
+        auto data = stbi_load(d->img.data(), &w, &h, &channels, 0);
         if (data)
         {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);

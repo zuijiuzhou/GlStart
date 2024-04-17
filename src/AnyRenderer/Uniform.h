@@ -6,13 +6,16 @@ namespace AnyRenderer
     class Uniform : StateAttribute
     {
     public:
+        Uniform();
         Uniform(const std::string &name, int val);
+
+        virtual ~Uniform();
 
     public:
         virtual void apply(RenderContext &ctx) const override;
 
     private:
-        std::string name_;
-        int int_val_ = 0;
+        struct Data;
+        Data *const d;
     };
 }
