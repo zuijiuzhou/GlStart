@@ -13,14 +13,14 @@ namespace AnyRenderer
 
     public:
         glm::vec4 getClearColor() const;
-        void setClearColor(const glm::vec4& color);
+        void setClearColor(const glm::vec4 &color);
 
         GLdouble getClearDepth() const;
         void setClearDepth(GLdouble depth);
 
         GLint getClearStencil() const;
         void setClearStencil(GLint val);
-        
+
         GLbitfield getClearMask() const;
         void setClearMask(GLbitfield mask);
 
@@ -29,7 +29,7 @@ namespace AnyRenderer
 
         void setViewMatrix(const glm::mat4x4 &mat);
         glm::mat4x4 getViewMatrix() const;
-        
+
         glm::vec3 getViewDir() const;
         glm::vec3 getViewPos() const;
 
@@ -39,12 +39,9 @@ namespace AnyRenderer
         glm::mat4x4 getViewProjectionMatrix() const;
 
         void setViewport(int x, int y, int w, int h);
+        void getViewport(int& x, int& y, int& w, int& h) const;
 
         void apply() const;
-
-    private:
-        glm::mat4 computeViewMatrix() const;
-        glm::mat4 computeProjectionMatrix() const;
 
     private:
         glm::mat4x4 view_matrix_;
@@ -53,9 +50,6 @@ namespace AnyRenderer
         GLint clear_stencil_;
         glm::vec4 clear_color_;
         GLbitfield clear_mask_;
-
-        glm::vec3 view_pos_, view_center_, view_up_;
-        double near_, far_, fov_;
         double vp_x_, vp_y_, vp_w_, vp_h_;
     };
 }

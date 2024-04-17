@@ -32,7 +32,7 @@ namespace AnyRenderer
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         auto wnd = glfwCreateWindow(800, 600, "GlfwViewer", NULL, NULL);
         glfwMakeContextCurrent(wnd);
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -115,6 +115,7 @@ namespace AnyRenderer
     }
 
     void GlfwViewer::run(){
+        glfwShowWindow(d->wnd);
         glfwMakeContextCurrent(d->wnd);
         while (!glfwWindowShouldClose(d->wnd))
         {
@@ -152,8 +153,7 @@ namespace AnyRenderer
         if (w == 0 || h == 0)
             return;
         glfwMakeContextCurrent(wnd);
-        auto cam = d->renderer->getCamera();
-        cam->setViewport(0, 0, w, h);
+        d->cm->notifyResized(w, h);
     }
 
     void GlfwViewer::mouse_button_callback(GLFWwindow *wnd, int button, int action, int mods)

@@ -7,16 +7,13 @@ namespace AnyRenderer
           clear_stencil_(1),
           clear_color_(0.f, 0.f, 0.f, 1.f),
           clear_mask_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT),
-          view_pos_(0.f, 0.f, 10.f),
-          view_center_(0.f, 0.f, 0.f),
-          view_up_(0.f, 1.f, 0.f),
-          near_(1.0), far_(1000.0),
-          fov_(30.0),
+          vp_x_(0.),
+          vp_y_(0.),
           vp_w_(1.0),
           vp_h_(1.0)
     {
-        view_matrix_ = computeViewMatrix();
-        proj_matrix_ = computeProjectionMatrix();
+        view_matrix_ = glm::lookAt(glm::vec3(0.f, 0.f, 10.f), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
+        proj_matrix_ = glm::perspective(glm::radians(30.0), vp_w_ / vp_h_, 1.0, 1000.0);
     }
 
     glm::vec4 Camera::getClearColor() const
@@ -74,14 +71,9 @@ namespace AnyRenderer
         view_matrix_ = mat;
     }
 
-    void Camera::setViewport(int x, int y, int w, int h)
+    glm::mat4x4 Camera::getViewMatrix() const
     {
-        vp_x_ = x;
-        vp_y_ = y;
-        vp_w_ = w;
-        vp_h_ = h;
-        glViewport(x, y, w, h);
-        setProjectionMatrix(computeProjectionMatrix());
+        return view_matrix_;
     }
 
     glm::vec3 Camera::getViewDir() const
@@ -94,9 +86,21 @@ namespace AnyRenderer
         return -glm::vec3(view_matrix_[3][0], view_matrix_[3][1], view_matrix_[3][2]);
     }
 
-    glm::mat4x4 Camera::getViewMatrix() const
+    void Camera::getViewport(int &x, int &y, int &w, int &h) const
     {
-        return view_matrix_;
+        x = vp_x_;
+        y = vp_y_;
+        w = vp_w_;
+        h = vp_h_;
+    }
+
+    void Camera::setViewport(int x, int y, int w, int h)
+    {
+        vp_x_ = x;
+        vp_y_ = y;
+        vp_w_ = w;
+        vp_h_ = h;
+        glViewport(x, y, w, h);
     }
 
     void Camera::setProjectionMatrix(const glm::mat4x4 &mat)
@@ -113,16 +117,6 @@ namespace AnyRenderer
     {
         // glm 矩阵行优先
         return proj_matrix_ * view_matrix_;
-    }
-
-    glm::mat4 Camera::computeViewMatrix() const
-    {
-        return glm::lookAt(view_pos_, view_center_, view_up_);
-    }
-
-    glm::mat4 Camera::computeProjectionMatrix() const
-    {
-        return glm::perspective(glm::radians(fov_), vp_w_ / vp_h_, near_, far_);
     }
 
     void Camera::apply() const
