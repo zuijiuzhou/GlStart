@@ -25,7 +25,11 @@ namespace AnyRenderer
 
     Renderer::Renderer() : d(new Data())
     {
+        auto cam = new Camera();
+        auto ctx = new RenderContext(cam);
 
+        d->ctx = ctx;
+        d->camera = cam;
     }
 
     Renderer::~Renderer()
@@ -35,11 +39,6 @@ namespace AnyRenderer
 
     void Renderer::initialize()
     {
-        auto cam = new Camera();
-        auto ctx = new RenderContext(cam);
-
-        d->ctx = ctx;
-        d->camera = cam;
         d->is_initialized = true;
     }
 

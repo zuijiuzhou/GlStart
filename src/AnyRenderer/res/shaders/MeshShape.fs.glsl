@@ -66,7 +66,6 @@ vec3 get_spot_light_contribution(Light l, Material m, vec3 view_dir, vec3 frag_p
 }
 
 void main(){
-
     vec4 color = texture(tex_2d, frag_tex_coord);
     if(lights_count > 0){
         vec3 c = vec3(0, 0, 0);

@@ -105,6 +105,7 @@ namespace AnyRenderer
     {
         if(d->wnd){
             glfwDestroyWindow(d->wnd);
+            glfwTerminate();
         }
         delete d;
     }

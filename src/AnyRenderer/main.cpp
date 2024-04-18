@@ -1,5 +1,6 @@
-#include "anyrenderer_global.h"
 #include <iostream>
+#include <Windows.h>
+#include <QApplication>
 #include "Utilities/Resources.h"
 #include "Renderer.h"
 #include "Geometry.h"
@@ -13,7 +14,8 @@
 #include "MeshLoader.h"
 #include "Camera.h"
 #include "GlfwViewer.h"
-#include <Windows.h>
+#include "QtMainWindow.h"
+#include "QtViewer.h"
 #include "RefPtr.h"
 
 namespace ar = AnyRenderer;
@@ -31,7 +33,7 @@ void CreateSampleShapes(ar::Renderer *renderer)
         geom->addTexture(GL_TEXTURE0, tex);
 
         auto light = new ar::Light();
-        light->setPosition(glm::vec4(10, 10, 10, 0.));
+        light->setPosition(glm::vec4(10, 10, 10, 1.));
         light->setDirection(glm::vec3(2, 4, -1));
         light->setIsHead(true);
         auto lights = new ar::Lights();
@@ -66,64 +68,20 @@ void CreateSampleShapes(ar::Renderer *renderer)
     renderer->addModel(cube);
 }
 
-class A
-{
-public:
-    int xx;
-    A(int x) : xx(x) {}
-    ~A()
-    {
-        std::cout << "A dctor." << xx << std::endl;
-    }
-};
-
-void ThrowCPPEX()
-{
-    A obj2(1);
-    try
-    {
-        throw std::exception("123");
-    }
-    catch (...)
-    {
-    }
-}
-
-void ThrowSEHEX()
-{
-    A obj(2);
-    try
-    {
-        A obj2(3);
-        auto a = 1, b = 0;
-        std::cout << a / b;
-    }
-    catch (...)
-    {
-        std::cerr << "Cpp Catch:" << '\n';
-        std::rethrow_exception(std::current_exception());
-    }
-}
-
-void TestThrow()
-{
-    // ThrowCPPEX();
-    __try
-    {
-        ThrowSEHEX();
-    }
-    __except (EXCEPTION_EXECUTE_HANDLER)
-    {
-        std::cout << "SEH Catch:" << std::endl;
-    }
-    // A a;
-    // throw std::exception("TestThrow throw a exception\n");
-}
-
 int main(int argc, char **argv)
 {
+#define GLFW_VIEWER1
+
+#ifdef GLFW_VIEWER
     ar::GlfwViewer v;
     auto renderer = v.getRenderer();
+#else
+    // QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication app(argc, argv);
+    ar::QtMainWindow wnd;
+    auto renderer = wnd.getViewer()->getRenderer();
+#endif
+
     if (argc > 1)
     {
         auto file = argv[1];
@@ -146,9 +104,11 @@ int main(int argc, char **argv)
     {
         CreateSampleShapes(renderer);
     }
-    ar::RefPtr<ar::Array> p;
-    auto b = !p;
-
+#ifdef GLFW_VIEWER
     v.run();
+#else
+    wnd.show();
+    app.exec();
+#endif
     return 0;
 }

@@ -1,7 +1,6 @@
 #pragma once
-#include <glad/glad.h>
 #include <QOpenGLWidget>
-#
+
 namespace AnyRenderer
 {
     class Renderer;
@@ -12,6 +11,8 @@ namespace AnyRenderer
         virtual ~QtViewer();
 
     public:
+        Renderer *getRenderer() const;
+
     protected:
         virtual void initializeGL() override;
         virtual void resizeGL(int w, int h) override;

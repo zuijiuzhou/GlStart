@@ -11,6 +11,8 @@ namespace AnyRenderer
         virtual ~QtMainWindow();
 
     public:
+        QtViewer *getViewer() const;
+
     protected:
     private:
         struct Data;

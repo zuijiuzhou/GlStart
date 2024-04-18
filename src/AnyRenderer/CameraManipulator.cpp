@@ -87,7 +87,6 @@ namespace AnyRenderer
                 vm *= my;
 
                 d->camera->setViewMatrix(vm);
-
             }
             d->prev_cursor_pt.x = xx;
             d->prev_cursor_pt.y = yy;
@@ -125,6 +124,7 @@ namespace AnyRenderer
     {
         return d->proj_type;
     };
+
     void StandardCameraManipulator::setProjectionType(ProjectionType type)
     {
         d->proj_type = type;
@@ -134,6 +134,7 @@ namespace AnyRenderer
     {
         return d->fov;
     };
+
     void StandardCameraManipulator::setFov(double fov)
     {
         d->fov = fov;
@@ -145,6 +146,7 @@ namespace AnyRenderer
         target = d->target;
         up = d->up;
     };
+
     void StandardCameraManipulator::setViewAsLookAt(const glm::vec3 &eye, const glm::vec3 &target, const glm::vec3 &up)
     {
         d->eye = eye;
@@ -153,7 +155,9 @@ namespace AnyRenderer
         d->camera->setViewMatrix(computeViewMatrix());
     };
 
-    void StandardCameraManipulator::setViewMode(ViewMode mode){};
+    void StandardCameraManipulator::setViewMode(ViewMode mode){
+
+    };
 
     glm::mat4 StandardCameraManipulator::computeViewMatrix() const
     {
@@ -163,7 +167,7 @@ namespace AnyRenderer
     glm::mat4 StandardCameraManipulator::computeProjectionMatrix() const
     {
         if (d->proj_type == Perspective)
-            return glm::perspective<double>(glm::radians<double>(d->fov), (double)d->width / d->height, d->near, d->far);
+            return glm::perspective<double>(glm::radians<double>(d->fov), ((double)d->width) / d->height, d->near, d->far);
         else
             return glm::ortho<double>(-d->width / 2., d->width / 2., -d->height / 2., d->height / 2.);
     }
