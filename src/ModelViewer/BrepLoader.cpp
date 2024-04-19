@@ -63,6 +63,8 @@ namespace ModelViewer
 
             return type != OtherType;
         }
+    
+        
     }
 
     bool BrepLoader::isSupported(const std::string &file)
@@ -218,6 +220,7 @@ namespace ModelViewer
 
                 edge_geom->setVertexArray(vertices);
                 edge_geom->setColorArray(edge_colors, osg::Array::BIND_OVERALL);
+                
                 edge_geom->setUseDisplayList(false);
                 edge_geod->addDrawable(edge_geom);
             }

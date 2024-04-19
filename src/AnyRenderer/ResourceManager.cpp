@@ -61,10 +61,10 @@ namespace AnyRenderer
         {
             files.push_back(__RES("images/right.jpg"));
             files.push_back(__RES("images/left.jpg"));
-            files.push_back(__RES("images/front.jpg"));
-            files.push_back(__RES("images/back.jpg"));
             files.push_back(__RES("images/top.jpg"));
             files.push_back(__RES("images/bottom.jpg"));
+            files.push_back(__RES("images/front.jpg"));
+            files.push_back(__RES("images/back.jpg"));
         }
         else if (map == ICM_CubeMap2)
         {

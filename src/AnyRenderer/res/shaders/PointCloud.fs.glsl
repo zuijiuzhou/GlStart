@@ -3,7 +3,8 @@
 #define MOD(a, b) a - b * floor(a / b)
 
 in vec4 frag_color;
-in int point_id;
+flat in int point_id;
+
 
 out vec4 FragColor;
 

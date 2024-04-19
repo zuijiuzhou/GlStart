@@ -30,14 +30,14 @@ struct Light{
     float k_q;
 };
 
-uniform sampler2D tex_2d;
+uniform samplerCube tex;
 uniform Material mate;
 uniform Light lights[MAX_LIGHT];
 uniform int lights_count = 0;
 uniform vec3 view_dir;
 
 in vec4 frag_color;
-in vec2 frag_tex_coord;
+in vec3 frag_tex_coord;
 in vec3 frag_world_posi;
 in vec3 frag_world_norm;
 
@@ -47,7 +47,7 @@ vec3 get_directional_light_contribution(Light l, Material m, vec3 view_dir, vec3
     vec3 l_dir = l.dir;
     vec3 reflect_dir = reflect(l.dir, frag_norm);
     vec3 a = l.a.rgb * m.a.rgb;
-    vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * mate.d.rgb; //texture(tex_2d, frag_tex_coord).rgb;
+    vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * /* mate.d.rgb*/ texture(tex, frag_tex_coord).rgb;
     // Phong
     // vec3 s = l.s.rgb * pow(max(dot(view_dir, reflect_dir), 0.0), mate.sh) * mate.s.rgb;
     // Blinn_Phong
@@ -60,13 +60,13 @@ vec3 get_spot_light_contribution(Light l, Material m, vec3 view_dir, vec3 frag_p
     l_dir = normalize(l_dir);
     vec3 reflect_dir = reflect(l_dir, frag_norm);
     vec3 a = l.a.rgb * m.a.rgb;
-    vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * mate.d.rgb; //texture(tex_2d, frag_tex_coord).rgb;
+    vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * /* mate.d.rgb*/ texture(tex, frag_tex_coord).rgb;
     vec3 s = l.s.rgb * pow(max(dot(view_dir, reflect_dir), 0.0), mate.sh) * mate.s.rgb;
     return a + d + s;
 }
 
 void main(){
-    vec4 color = texture(tex_2d, frag_tex_coord);
+    vec4 color = texture(tex, frag_tex_coord);
     if(lights_count > 0){
         vec3 c = vec3(0, 0, 0);
         for(int i = 0; i < lights_count; i++){

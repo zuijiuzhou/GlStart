@@ -1,6 +1,6 @@
 SET(CURRENT_TARGET_NAME ModelViewer)
 
-find_package(OpenSceneGraph COMPONENTS osgDB osgGA osgUtil osgViewer REQUIRED)
+find_package(OpenSceneGraph REQUIRED COMPONENTS osgDB osgGA osgUtil osgViewer)
 find_package(opencascade REQUIRED)
 find_package(osgVerse REQUIRED)
 find_package(assimp REQUIRED)

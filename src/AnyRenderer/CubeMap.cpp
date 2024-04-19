@@ -31,7 +31,7 @@ namespace AnyRenderer
         GLuint id = 0;
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-        stbi_set_flip_vertically_on_load(true);
+        stbi_set_flip_vertically_on_load(false);
         for (int i = 0; i < 6; i++)
         {
             auto &file = imgs_[i];

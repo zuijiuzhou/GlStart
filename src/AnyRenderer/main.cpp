@@ -17,6 +17,7 @@
 #include "QtMainWindow.h"
 #include "QtViewer.h"
 #include "RefPtr.h"
+#include "CubeMap.h"
 
 namespace ar = AnyRenderer;
 
@@ -24,12 +25,11 @@ void CreateSampleShapes(ar::Renderer *renderer)
 {
     auto cube = new ar::Group();
     {
-        auto geom = ar::Geometry::createCube(0.6, 0, 1, 3);
+        auto geom = ar::Geometry::createCube(0.6, 0, 1, -1, 3);
         auto colors = new ar::Vec4fArray();
         colors->emplace_back(0.8f, 0.8f, 0.8f, 1.0f);
         geom->addVertexAttribArray(2, colors);
-        auto tex = new ar::Texture2D();
-        tex->setImage(__RES("images/top.jpg"));
+        auto tex = ar::ResourceManager::instance()->getInternalCubeMap(ar::ResourceManager::ICM_CubeMap2);
         geom->addTexture(GL_TEXTURE0, tex);
 
         auto light = new ar::Light();

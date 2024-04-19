@@ -112,7 +112,7 @@ namespace AnyRenderer
 			glBindVertexArray(d->vao);
 		}
 
-		shader->set("tex_2d", 0);
+		shader->set("tex", 0);
 		for (auto &kv : d->textures)
 		{
 			auto unit = kv.first;
@@ -279,6 +279,49 @@ namespace AnyRenderer
 		}
 		if (cube_map_coords_loc >= 0)
 		{
+			auto tex_coords = new Vec3fArray();
+			tex_coords->emplace_back(-n, -n, -n);
+			tex_coords->emplace_back(n, -n, -n);
+			tex_coords->emplace_back(n, n, -n);
+			tex_coords->emplace_back(n, n, -n);
+			tex_coords->emplace_back(-n, n, -n);
+			tex_coords->emplace_back(-n, -n, -n);
+
+			tex_coords->emplace_back(-n, -n, n);
+			tex_coords->emplace_back(n, -n, n);
+			tex_coords->emplace_back(n, n, n);
+			tex_coords->emplace_back(n, n, n);
+			tex_coords->emplace_back(-n, n, n);
+			tex_coords->emplace_back(-n, -n, n);
+
+			tex_coords->emplace_back(-n, n, n);
+			tex_coords->emplace_back(-n, n, -n);
+			tex_coords->emplace_back(-n, -n, -n);
+			tex_coords->emplace_back(-n, -n, -n);
+			tex_coords->emplace_back(-n, -n, n);
+			tex_coords->emplace_back(-n, n, n);
+
+			tex_coords->emplace_back(n, n, n);
+			tex_coords->emplace_back(n, n, -n);
+			tex_coords->emplace_back(n, -n, -n);
+			tex_coords->emplace_back(n, -n, -n);
+			tex_coords->emplace_back(n, -n, n);
+			tex_coords->emplace_back(n, n, n);
+
+			tex_coords->emplace_back(-n, -n, -n);
+			tex_coords->emplace_back(n, -n, -n);
+			tex_coords->emplace_back(n, -n, n);
+			tex_coords->emplace_back(n, -n, n);
+			tex_coords->emplace_back(-n, -n, n);
+			tex_coords->emplace_back(-n, -n, -n);
+
+			tex_coords->emplace_back(-n, n, -n);
+			tex_coords->emplace_back(n, n, -n);
+			tex_coords->emplace_back(n, n, n);
+			tex_coords->emplace_back(n, n, n);
+			tex_coords->emplace_back(-n, n, n);
+			tex_coords->emplace_back(-n, n, -n);
+			cube->addVertexAttribArray(cube_map_coords_loc, tex_coords);
 		}
 		cube->addVertexAttribArray(vertices_loc, vertices);
 		cube->addVertexAttribArray(normals_loc, normals);
