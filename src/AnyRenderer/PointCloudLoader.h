@@ -3,7 +3,7 @@
 
 namespace AnyRenderer
 {
-    class Group;
+    class Model;
     class PointCloudLoader
     {
 
@@ -11,12 +11,12 @@ namespace AnyRenderer
         PointCloudLoader(const std::string &path);
 
     public:
-        Group *getData() const;
+        Model *getData() const;
 
     private:
         void load(const std::string &path);
 
     private:
-        Group *data_ = nullptr;
+        Model *data_ = nullptr;
     };
 }

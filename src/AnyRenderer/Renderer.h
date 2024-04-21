@@ -6,7 +6,7 @@
 namespace AnyRenderer
 {
     class Shader;
-    class Group;
+    class Model;
     class Camera;
     class CameraManipulator;
     class RenderContext;
@@ -18,7 +18,7 @@ namespace AnyRenderer
 
     public:
         void frame();
-        void addModel(Group *model);
+        void addModel(Model *model);
         Camera *getCamera() const;
         void initialize();
 

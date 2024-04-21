@@ -35,7 +35,7 @@ namespace ModelViewer
     struct Viewer::Rep
     {
         osg::ref_ptr<ViewerEx> viewer_impl;
-        osg::ref_ptr<osg::Group> root;
+        osg::ref_ptr<osg::Model> root;
     };
     Viewer::Viewer()
         : rep_(new Rep())
@@ -46,7 +46,7 @@ namespace ModelViewer
             is_verse_initialized = true;
         }
         auto pipeline = new osgVerse::Pipeline();
-        rep_->root = new osg::Group();
+        rep_->root = new osg::Model();
         rep_->viewer_impl = new ViewerEx(pipeline);
 
         auto traits = new osg::GraphicsContext::Traits();

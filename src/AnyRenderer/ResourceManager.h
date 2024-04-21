@@ -11,8 +11,10 @@ namespace AnyRenderer
     public:
         enum InternalShader
         {
-            IS_Geometry = 1,
-            IS_PointCloud = 2
+            IS_Base = 0,
+            IS_Geometry,
+            IS_PointCloud,
+            IS_SkyBox
         };
 
         enum InternalCubeMap{

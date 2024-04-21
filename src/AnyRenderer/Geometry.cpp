@@ -192,49 +192,52 @@ namespace AnyRenderer
 		vertices->emplace_back(-n, n, n);
 		vertices->emplace_back(-n, n, -n);
 
-		auto normals = new Vec3fArray();
-		normals->emplace_back(0.0f, 0.0f, -1.0f);
-		normals->emplace_back(0.0f, 0.0f, -1.0f);
-		normals->emplace_back(0.0f, 0.0f, -1.0f);
-		normals->emplace_back(0.0f, 0.0f, -1.0f);
-		normals->emplace_back(0.0f, 0.0f, -1.0f);
-		normals->emplace_back(0.0f, 0.0f, -1.0f);
+		if (normals_loc >= 0)
+		{
+			auto normals = new Vec3fArray();
+			normals->emplace_back(0.0f, 0.0f, -1.0f);
+			normals->emplace_back(0.0f, 0.0f, -1.0f);
+			normals->emplace_back(0.0f, 0.0f, -1.0f);
+			normals->emplace_back(0.0f, 0.0f, -1.0f);
+			normals->emplace_back(0.0f, 0.0f, -1.0f);
+			normals->emplace_back(0.0f, 0.0f, -1.0f);
 
-		normals->emplace_back(0.0f, 0.0f, 1.0f);
-		normals->emplace_back(0.0f, 0.0f, 1.0f);
-		normals->emplace_back(0.0f, 0.0f, 1.0f);
-		normals->emplace_back(0.0f, 0.0f, 1.0f);
-		normals->emplace_back(0.0f, 0.0f, 1.0f);
-		normals->emplace_back(0.0f, 0.0f, 1.0f);
+			normals->emplace_back(0.0f, 0.0f, 1.0f);
+			normals->emplace_back(0.0f, 0.0f, 1.0f);
+			normals->emplace_back(0.0f, 0.0f, 1.0f);
+			normals->emplace_back(0.0f, 0.0f, 1.0f);
+			normals->emplace_back(0.0f, 0.0f, 1.0f);
+			normals->emplace_back(0.0f, 0.0f, 1.0f);
 
-		normals->emplace_back(-1.0f, 0.0f, 0.0f);
-		normals->emplace_back(-1.0f, 0.0f, 0.0f);
-		normals->emplace_back(-1.0f, 0.0f, 0.0f);
-		normals->emplace_back(-1.0f, 0.0f, 0.0f);
-		normals->emplace_back(-1.0f, 0.0f, 0.0f);
-		normals->emplace_back(-1.0f, 0.0f, 0.0f);
+			normals->emplace_back(-1.0f, 0.0f, 0.0f);
+			normals->emplace_back(-1.0f, 0.0f, 0.0f);
+			normals->emplace_back(-1.0f, 0.0f, 0.0f);
+			normals->emplace_back(-1.0f, 0.0f, 0.0f);
+			normals->emplace_back(-1.0f, 0.0f, 0.0f);
+			normals->emplace_back(-1.0f, 0.0f, 0.0f);
 
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
-		normals->emplace_back(1.0f, 0.0f, 0.0f);
+			normals->emplace_back(1.0f, 0.0f, 0.0f);
+			normals->emplace_back(1.0f, 0.0f, 0.0f);
+			normals->emplace_back(1.0f, 0.0f, 0.0f);
+			normals->emplace_back(1.0f, 0.0f, 0.0f);
+			normals->emplace_back(1.0f, 0.0f, 0.0f);
+			normals->emplace_back(1.0f, 0.0f, 0.0f);
 
-		normals->emplace_back(0.0f, -1.0f, 0.0f);
-		normals->emplace_back(0.0f, -1.0f, 0.0f);
-		normals->emplace_back(0.0f, -1.0f, 0.0f);
-		normals->emplace_back(0.0f, -1.0f, 0.0f);
-		normals->emplace_back(0.0f, -1.0f, 0.0f);
-		normals->emplace_back(0.0f, -1.0f, 0.0f);
+			normals->emplace_back(0.0f, -1.0f, 0.0f);
+			normals->emplace_back(0.0f, -1.0f, 0.0f);
+			normals->emplace_back(0.0f, -1.0f, 0.0f);
+			normals->emplace_back(0.0f, -1.0f, 0.0f);
+			normals->emplace_back(0.0f, -1.0f, 0.0f);
+			normals->emplace_back(0.0f, -1.0f, 0.0f);
 
-		normals->emplace_back(0.0f, 1.0f, 0.0f);
-		normals->emplace_back(0.0f, 1.0f, 0.0f);
-		normals->emplace_back(0.0f, 1.0f, 0.0f);
-		normals->emplace_back(0.0f, 1.0f, 0.0f);
-		normals->emplace_back(0.0f, 1.0f, 0.0f);
-		normals->emplace_back(0.0f, 1.0f, 0.0f);
-
+			normals->emplace_back(0.0f, 1.0f, 0.0f);
+			normals->emplace_back(0.0f, 1.0f, 0.0f);
+			normals->emplace_back(0.0f, 1.0f, 0.0f);
+			normals->emplace_back(0.0f, 1.0f, 0.0f);
+			normals->emplace_back(0.0f, 1.0f, 0.0f);
+			normals->emplace_back(0.0f, 1.0f, 0.0f);
+		cube->addVertexAttribArray(normals_loc, normals);
+		}
 		if (tex_2d_coords_loc >= 0)
 		{
 			auto tex_coords = new Vec2fArray();
@@ -280,51 +283,11 @@ namespace AnyRenderer
 		if (cube_map_coords_loc >= 0)
 		{
 			auto tex_coords = new Vec3fArray();
-			tex_coords->emplace_back(-n, -n, -n);
-			tex_coords->emplace_back(n, -n, -n);
-			tex_coords->emplace_back(n, n, -n);
-			tex_coords->emplace_back(n, n, -n);
-			tex_coords->emplace_back(-n, n, -n);
-			tex_coords->emplace_back(-n, -n, -n);
-
-			tex_coords->emplace_back(-n, -n, n);
-			tex_coords->emplace_back(n, -n, n);
-			tex_coords->emplace_back(n, n, n);
-			tex_coords->emplace_back(n, n, n);
-			tex_coords->emplace_back(-n, n, n);
-			tex_coords->emplace_back(-n, -n, n);
-
-			tex_coords->emplace_back(-n, n, n);
-			tex_coords->emplace_back(-n, n, -n);
-			tex_coords->emplace_back(-n, -n, -n);
-			tex_coords->emplace_back(-n, -n, -n);
-			tex_coords->emplace_back(-n, -n, n);
-			tex_coords->emplace_back(-n, n, n);
-
-			tex_coords->emplace_back(n, n, n);
-			tex_coords->emplace_back(n, n, -n);
-			tex_coords->emplace_back(n, -n, -n);
-			tex_coords->emplace_back(n, -n, -n);
-			tex_coords->emplace_back(n, -n, n);
-			tex_coords->emplace_back(n, n, n);
-
-			tex_coords->emplace_back(-n, -n, -n);
-			tex_coords->emplace_back(n, -n, -n);
-			tex_coords->emplace_back(n, -n, n);
-			tex_coords->emplace_back(n, -n, n);
-			tex_coords->emplace_back(-n, -n, n);
-			tex_coords->emplace_back(-n, -n, -n);
-
-			tex_coords->emplace_back(-n, n, -n);
-			tex_coords->emplace_back(n, n, -n);
-			tex_coords->emplace_back(n, n, n);
-			tex_coords->emplace_back(n, n, n);
-			tex_coords->emplace_back(-n, n, n);
-			tex_coords->emplace_back(-n, n, -n);
+			tex_coords->resize(vertices->size());
+			std::copy(vertices->begin(), vertices->end(), tex_coords->begin());
 			cube->addVertexAttribArray(cube_map_coords_loc, tex_coords);
 		}
 		cube->addVertexAttribArray(vertices_loc, vertices);
-		cube->addVertexAttribArray(normals_loc, normals);
 		cube->addPrimitive(new DrawArrays(DrawArrays::MODE_TRIANGLES, 0, vertices->size()));
 		return cube;
 	}

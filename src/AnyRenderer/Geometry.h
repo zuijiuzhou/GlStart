@@ -20,17 +20,16 @@ namespace AnyRenderer
         void draw(const RenderContext &ctx) override;
         void addVertexAttribArray(GLuint loc, Array *data);
         void addTexture(GLuint unit, Texture *tex);
-        void addPrimitive(PrimitiveSet* prim);
+        void addPrimitive(PrimitiveSet *prim);
 
         virtual BoundingBox getBoundingBox() const override;
-        void setBoundingBox(const BoundingBox& bb);
+        void setBoundingBox(const BoundingBox &bb);
 
     public:
-        
-        static Geometry *createCube(float size, int vertices_loc, int normals_loc, int tex_2d_coords_loc = -1, int cube_map_coords_loc = -1);
+        static Geometry *createCube(float size, int vertices_loc, int normals_loc = -1, int tex_2d_coords_loc = -1, int cube_map_coords_loc = -1);
 
     private:
         struct Data;
-        Data* const d;
+        Data *const d;
     };
 }

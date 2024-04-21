@@ -4,7 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "Geometry.h"
-#include "Group.h"
+#include "Model.h"
 
 namespace AnyRenderer
 {
@@ -14,7 +14,7 @@ namespace AnyRenderer
     {
         glm::vec4 s_default_face_color = glm::vec4(0.88, 0.88, 0.88, 1.0);
 
-        void aiProcessNode(Group* group, const aiScene *scene, aiNode *node)
+        void aiProcessNode(Model* group, const aiScene *scene, aiNode *node)
         {
             for (int i = 0; i < node->mNumMeshes; i++)
             {
@@ -105,9 +105,9 @@ namespace AnyRenderer
         return exts.contains(file_ext);
     }
 
-    Group* MeshLoader::loadFile(const std::string &file)
+    Model* MeshLoader::loadFile(const std::string &file)
     {
-        auto root = new Group();
+        auto root = new Model();
         ai::Importer im;
         auto scene = im.ReadFile(file, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_GenSmoothNormals);
         if (scene)

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <QApplication>
+#include <glm/glm.hpp>
 #include "Utilities/Resources.h"
 #include "Renderer.h"
 #include "Geometry.h"
@@ -10,7 +11,7 @@
 #include "StateSet.h"
 #include "Material.h"
 #include "Light.h"
-#include "Group.h"
+#include "Model.h"
 #include "MeshLoader.h"
 #include "Camera.h"
 #include "GlfwViewer.h"
@@ -18,14 +19,43 @@
 #include "QtViewer.h"
 #include "RefPtr.h"
 #include "CubeMap.h"
+#include "RenderContext.h"
 
 namespace ar = AnyRenderer;
 
 void CreateSampleShapes(ar::Renderer *renderer)
 {
-    auto cube = new ar::Group();
+    auto axis = new ar::Model();
     {
-        auto geom = ar::Geometry::createCube(0.6, 0, 1, -1, 3);
+        auto geom =  new ar::Geometry();
+        auto vertices = new ar::Vec3fArray();
+        {
+            vertices->push_back(glm::vec3());
+            vertices->push_back(glm::vec3(10,0,0));
+            vertices->push_back(glm::vec3());
+            vertices->push_back(glm::vec3(0,10,0));
+            vertices->push_back(glm::vec3());
+            vertices->push_back(glm::vec3(0,0,10));
+        }
+        geom->addVertexAttribArray(0, vertices);
+        auto colors = new ar::Vec4fArray();{
+            colors->emplace_back(1.f, 0.f, 0.0f, 1.0f);
+            colors->emplace_back(1.f, 0.f, 0.0f, 1.0f);
+            colors->emplace_back(0.f, 1.f, 0.0f, 1.0f);
+            colors->emplace_back(0.f, 1.f, 0.0f, 1.0f);
+            colors->emplace_back(0.f, 0.f, 1.0f, 1.0f);
+            colors->emplace_back(0.f, 0.f, 1.0f, 1.0f);
+        }
+        geom->addVertexAttribArray(2, colors);
+        geom->addPrimitive(new ar::DrawArrays(ar::PrimitiveSet::MODE_LINES, 0, vertices->size()));
+        axis->addDrawable(geom);
+        axis->getOrCreateStateSet()->setAttribute(new ar::Material());
+        axis->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Base));
+    }
+
+    auto cube = new ar::Model();
+    {
+        auto geom = ar::Geometry::createCube(4, 0, 1, -1, 3);
         auto colors = new ar::Vec4fArray();
         colors->emplace_back(0.8f, 0.8f, 0.8f, 1.0f);
         geom->addVertexAttribArray(2, colors);
@@ -45,7 +75,25 @@ void CreateSampleShapes(ar::Renderer *renderer)
         cube->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Geometry));
     }
 
-    auto pc = new ar::Group();
+    auto skybox = cube;
+    {
+        struct UpdateCallback : public ar::ModelCallback
+        {
+            UpdateCallback() : ar::ModelCallback(UPDATE)
+            {
+            }
+
+            virtual void operator()(const ar::RenderContext &ctx, ar::Model *model)
+            {
+                auto cam_pos = ctx.getCamera()->getViewPos();
+                glm::mat4 m(1.0);
+                model->setMatrix(glm::translate(m, glm::vec3(0,0,-1)));
+            }
+        };
+        // skybox->addCallback(new UpdateCallback());
+    }
+
+    auto pc = new ar::Model();
     {
         pc->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_PointCloud));
         auto geom = new ar::Geometry();
@@ -64,8 +112,10 @@ void CreateSampleShapes(ar::Renderer *renderer)
         geom->addPrimitive(new ar::DrawArrays(ar::DrawArrays::MODE_POINTS, 0, vertices->size()));
         pc->addDrawable(geom);
     }
+    renderer->addModel(axis);
     renderer->addModel(pc);
     renderer->addModel(cube);
+    renderer->addModel(skybox);
 }
 
 int main(int argc, char **argv)

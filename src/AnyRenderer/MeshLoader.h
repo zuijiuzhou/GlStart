@@ -4,10 +4,10 @@
 
 namespace AnyRenderer{
 
-class Group;
+class Model;
 class MeshLoader{
 public:
-    Group* loadFile(const std::string& file);
+    Model* loadFile(const std::string& file);
     
     static bool isSupported(const std::string& file);
 };

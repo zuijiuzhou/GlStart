@@ -92,6 +92,7 @@ namespace AnyRenderer
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_PROGRAM_POINT_SIZE);
         // glEnable(GL_CULL_FACE);
+        glDisable(GL_CULL_FACE);
         // glCullFace(GL_BACK);
         glFrontFace(GL_CCW);
         glDepthFunc(GL_LESS);

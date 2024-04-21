@@ -43,13 +43,21 @@ namespace AnyRenderer
 
     Shader *ResourceManager::getInternalShader(InternalShader shader)
     {
-        if (shader == IS_Geometry)
+        if (shader == IS_Base)
+        {
+            return getShader("Base");
+        }
+        else if (shader == IS_Geometry)
         {
             return getShader("MeshShape");
         }
         else if (shader == IS_PointCloud)
         {
             return getShader("PointCloud");
+        }
+        else if (shader == IS_SkyBox)
+        {
+            return getShader("SkyBox");
         }
         return nullptr;
     }
@@ -61,8 +69,8 @@ namespace AnyRenderer
         {
             files.push_back(__RES("images/right.jpg"));
             files.push_back(__RES("images/left.jpg"));
-            files.push_back(__RES("images/top.jpg"));
             files.push_back(__RES("images/bottom.jpg"));
+            files.push_back(__RES("images/top.jpg"));
             files.push_back(__RES("images/front.jpg"));
             files.push_back(__RES("images/back.jpg"));
         }

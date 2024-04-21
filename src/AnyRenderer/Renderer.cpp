@@ -3,7 +3,7 @@
 #include <functional>
 #include <glad/glad.h>
 #include "Utilities/Resources.h"
-#include "Group.h"
+#include "Model.h"
 #include "Drawable.h"
 #include "Shader.h"
 #include "StateSet.h"
@@ -17,7 +17,7 @@ namespace AnyRenderer
     {
         RefPtr<Camera> camera;
         RefPtr<RenderContext> ctx;
-        std::vector<RefPtr<Group>> models;
+        std::vector<RefPtr<Model>> models;
         std::vector<RefPtr<Shader>> shaders;
         BoundingBox bb;
         bool is_initialized;
@@ -46,11 +46,13 @@ namespace AnyRenderer
     {
         d->camera->apply();
         auto matrix_v = d->camera->getViewMatrix();
-        auto matrix_mv = d->camera->getViewProjectionMatrix();
+        auto matrix_vp = d->camera->getViewProjectionMatrix();
         auto view_dir = d->camera->getViewDir();
         auto &ctx = *d->ctx;
         for (auto model : d->models)
         {
+            model->update(*d->ctx);
+            auto matrix_m = model->getMatrix();
             auto stateset = model->getStateSet();
             if (stateset)
             {
@@ -58,10 +60,10 @@ namespace AnyRenderer
                 auto shader = ctx.getCurrentShader();
                 if (shader)
                 {
-                    shader->set("matrix_m", glm::mat4(1.0));
+                    shader->set("matrix_m", matrix_m);
                     shader->set("matrix_v", matrix_v);
-                    shader->set("matrix_mv", matrix_v);
-                    shader->set("matrix_mvp", matrix_mv);
+                    shader->set("matrix_mv", matrix_m * matrix_v);
+                    shader->set("matrix_mvp", matrix_m * matrix_vp);
                     shader->set("view_dir", view_dir);
                 }
             }
@@ -72,7 +74,7 @@ namespace AnyRenderer
             }
         }
     }
-    void Renderer::addModel(Group *model)
+    void Renderer::addModel(Model *model)
     {
         if (std::find(d->models.begin(), d->models.end(), model) == d->models.end())
         {
