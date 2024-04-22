@@ -67,20 +67,20 @@ vec3 get_spot_light_contribution(Light l, Material m, vec3 view_dir, vec3 frag_p
 
 void main(){
     vec4 color = texture(tex, frag_tex_coord);
-    // if(lights_count > 0){
-    //     vec3 c = vec3(0, 0, 0);
-    //     for(int i = 0; i < lights_count; i++){
-    //         if(i >= MAX_LIGHT)
-    //             break;
-    //         Light l = lights[i];
-    //         if(l.pos.w == 1.0){
-    //             c += get_directional_light_contribution(l, mate, view_dir, frag_world_norm);
-    //         }
-    //         else{
-    //             c += get_spot_light_contribution(l, mate, view_dir, frag_world_posi, frag_world_norm);
-    //         }
-    //     }
-    //     color = vec4(c, 1.0);
-    // }
+    if(lights_count > 0){
+        vec3 c = vec3(0, 0, 0);
+        for(int i = 0; i < lights_count; i++){
+            if(i >= MAX_LIGHT)
+                break;
+            Light l = lights[i];
+            if(l.pos.w == 1.0){
+                c += get_directional_light_contribution(l, mate, view_dir, frag_world_norm);
+            }
+            else{
+                c += get_spot_light_contribution(l, mate, view_dir, frag_world_posi, frag_world_norm);
+            }
+        }
+        color = vec4(c, 1.0);
+    }
     FragColor = color;
 }

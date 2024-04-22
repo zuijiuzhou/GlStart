@@ -51,7 +51,6 @@ namespace AnyRenderer
         auto &ctx = *d->ctx;
         for (auto model : d->models)
         {
-            model->update(*d->ctx);
             auto matrix_m = model->getMatrix();
             auto stateset = model->getStateSet();
             if (stateset)
@@ -62,11 +61,12 @@ namespace AnyRenderer
                 {
                     shader->set("matrix_m", matrix_m);
                     shader->set("matrix_v", matrix_v);
-                    shader->set("matrix_mv", matrix_m * matrix_v);
-                    shader->set("matrix_mvp", matrix_m * matrix_vp);
+                    shader->set("matrix_mv", matrix_v * matrix_m);
+                    shader->set("matrix_mvp",  matrix_vp * matrix_m);
                     shader->set("view_dir", view_dir);
                 }
             }
+            model->update(*d->ctx);
             for (int i = 0; i < model->getNbDrawables(); i++)
             {
                 auto drawable = model->getDrawableAt(i);
@@ -74,6 +74,7 @@ namespace AnyRenderer
             }
         }
     }
+
     void Renderer::addModel(Model *model)
     {
         if (std::find(d->models.begin(), d->models.end(), model) == d->models.end())

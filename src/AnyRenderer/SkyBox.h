@@ -1,7 +1,7 @@
 #pragma once
 namespace AnyRenderer
 {
-    class Geometry;
+    class Model;
     class CubeMap;
-    static Geometry* createSkyBox(CubeMap* tex);
+    Model* createSkyBox(CubeMap* tex);
 }

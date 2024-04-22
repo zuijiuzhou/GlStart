@@ -12,7 +12,7 @@ namespace AnyRenderer
           vp_w_(1.0),
           vp_h_(1.0)
     {
-        view_matrix_ = glm::lookAt(glm::vec3(0.f, 0.f, 2.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, -1.f, 0.f));
+        view_matrix_ = glm::lookAt(glm::vec3(0., 0., 2.), glm::vec3(0., 0., 0.), glm::vec3(0., 1., 0.));
         proj_matrix_ = glm::perspective(glm::radians(30.0), vp_w_ / vp_h_, 0.1, 1000.0);
     }
 
@@ -71,7 +71,7 @@ namespace AnyRenderer
         view_matrix_ = mat;
     }
 
-    glm::mat4x4 Camera::getViewMatrix() const
+    glm::mat4 Camera::getViewMatrix() const
     {
         return view_matrix_;
     }

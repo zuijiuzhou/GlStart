@@ -4,9 +4,9 @@ layout(location=1) in vec3 tex_coord;
 
 uniform mat4 matrix_mvp;
 
-out vec3 tex_coord;
+out vec3 frag_tex_coord;
 
 void main(){
     gl_Position = matrix_mvp * vec4(position.x, position.y, position.z, 1.0);
-    tex_coord = tex_coord;
+    frag_tex_coord = tex_coord;
 }

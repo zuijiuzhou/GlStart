@@ -11,6 +11,8 @@ namespace AnyRenderer
 		GLuint vao = 0;
 		std::map<GLuint, RefPtr<Array>> vbos;
 		std::map<GLuint, RefPtr<Texture>> textures;
+		std::map<GLuint, GLuint> texture_locs;
+		std::map<GLuint, std::string> texture_names_;
 		std::vector<RefPtr<PrimitiveSet>> primitives;
 		BoundingBox bb;
 	};
@@ -28,7 +30,7 @@ namespace AnyRenderer
 		delete d;
 	}
 
-	void Geometry::addTexture(GLuint unit, Texture *tex)
+	void Geometry::addTexture(GLuint unit, GLuint loc, Texture *tex)
 	{
 		auto found_at = d->textures.find(unit);
 		if (found_at != d->textures.end())
@@ -38,6 +40,20 @@ namespace AnyRenderer
 				return;
 		}
 		d->textures[unit] = tex;
+		d->texture_locs[unit] = loc;
+	}
+
+	void Geometry::addTexture(GLuint unit, const std::string &name, Texture *tex)
+	{
+		auto found_at = d->textures.find(unit);
+		if (found_at != d->textures.end())
+		{
+			auto t = found_at->second;
+			if (t == tex)
+				return;
+		}
+		d->textures[unit] = tex;
+		d->texture_names_[unit] = name;
 	}
 
 	void Geometry::addVertexAttribArray(GLuint loc, Array *arr)
@@ -111,12 +127,18 @@ namespace AnyRenderer
 		{
 			glBindVertexArray(d->vao);
 		}
-
-		shader->set("tex", 0);
 		for (auto &kv : d->textures)
 		{
 			auto unit = kv.first;
 			auto tex = kv.second;
+			if (d->texture_locs.contains(unit))
+			{
+				shader->set(d->texture_locs[unit], unit);
+			}
+			else
+			{
+				shader->set(d->texture_names_[unit], unit);
+			}
 			glActiveTexture(unit);
 			tex->bind();
 		}
@@ -236,7 +258,7 @@ namespace AnyRenderer
 			normals->emplace_back(0.0f, 1.0f, 0.0f);
 			normals->emplace_back(0.0f, 1.0f, 0.0f);
 			normals->emplace_back(0.0f, 1.0f, 0.0f);
-		cube->addVertexAttribArray(normals_loc, normals);
+			cube->addVertexAttribArray(normals_loc, normals);
 		}
 		if (tex_2d_coords_loc >= 0)
 		{

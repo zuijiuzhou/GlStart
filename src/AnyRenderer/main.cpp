@@ -20,6 +20,7 @@
 #include "RefPtr.h"
 #include "CubeMap.h"
 #include "RenderContext.h"
+#include "SkyBox.h"
 
 namespace ar = AnyRenderer;
 
@@ -55,12 +56,12 @@ void CreateSampleShapes(ar::Renderer *renderer)
 
     auto cube = new ar::Model();
     {
-        auto geom = ar::Geometry::createCube(4, 0, 1, -1, 3);
+        auto geom = ar::Geometry::createCube(1, 0, 1, -1, 3);
         auto colors = new ar::Vec4fArray();
         colors->emplace_back(0.8f, 0.8f, 0.8f, 1.0f);
         geom->addVertexAttribArray(2, colors);
-        auto tex = ar::ResourceManager::instance()->getInternalCubeMap(ar::ResourceManager::ICM_CubeMap2);
-        geom->addTexture(GL_TEXTURE0, tex);
+        auto tex = ar::ResourceManager::instance()->getInternalCubeMap(ar::ResourceManager::ICM_CubeMap1);
+        geom->addTexture(GL_TEXTURE0, "tex", tex);
 
         auto light = new ar::Light();
         light->setPosition(glm::vec4(10, 10, 10, 1.));
@@ -70,28 +71,15 @@ void CreateSampleShapes(ar::Renderer *renderer)
         lights->addLight(light);
 
         cube->addDrawable(geom);
+        glm::mat4 m1(1.f);
+        m1 = glm::rotate(m1, glm::radians(90.f), glm::vec3(1.0f, 0.f, 0.f));
+        cube->setMatrix(m1);
         cube->getOrCreateStateSet()->setAttribute(new ar::Material());
         cube->getOrCreateStateSet()->setAttribute(lights);
         cube->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Geometry));
     }
 
-    auto skybox = cube;
-    {
-        struct UpdateCallback : public ar::ModelCallback
-        {
-            UpdateCallback() : ar::ModelCallback(UPDATE)
-            {
-            }
-
-            virtual void operator()(const ar::RenderContext &ctx, ar::Model *model)
-            {
-                auto cam_pos = ctx.getCamera()->getViewPos();
-                glm::mat4 m(1.0);
-                model->setMatrix(glm::translate(m, glm::vec3(0,0,-1)));
-            }
-        };
-        // skybox->addCallback(new UpdateCallback());
-    }
+    auto skybox = ar::createSkyBox(ar::ResourceManager::instance()->getInternalCubeMap(ar::ResourceManager::ICM_CubeMap2));
 
     auto pc = new ar::Model();
     {

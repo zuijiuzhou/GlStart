@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <string>
 #include "Arrays.h"
 #include "PrimitiveSet.h"
 
@@ -19,7 +20,8 @@ namespace AnyRenderer
     public:
         void draw(const RenderContext &ctx) override;
         void addVertexAttribArray(GLuint loc, Array *data);
-        void addTexture(GLuint unit, Texture *tex);
+        void addTexture(GLuint unit, GLuint loc, Texture *tex);
+        void addTexture(GLuint unit, const std::string& name, Texture *tex);
         void addPrimitive(PrimitiveSet *prim);
 
         virtual BoundingBox getBoundingBox() const override;
