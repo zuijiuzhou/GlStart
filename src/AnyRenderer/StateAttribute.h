@@ -2,9 +2,12 @@
 #include "Object.h"
 namespace AnyRenderer
 {
+    class StateSet;
     class RenderContext;
     class StateAttribute : public Object
     {
+        friend class StateSet;
+
     public:
         enum Type
         {
@@ -18,8 +21,11 @@ namespace AnyRenderer
         };
 
     public:
+        virtual Type getType() const = 0;
+
+    protected:
         virtual void apply(RenderContext &ctx) const = 0;
 
-        virtual Type getType() const = 0;
+        virtual void restore(RenderContext &ctx) const;
     };
 }

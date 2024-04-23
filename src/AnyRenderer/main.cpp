@@ -115,6 +115,7 @@ int main(int argc, char **argv)
     auto renderer = v.getRenderer();
 #else
     // QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication::setAttribute(Qt::AA_ShareOpenGLContexts, false);
     QApplication app(argc, argv);
     ar::QtMainWindow wnd;
     auto renderer = wnd.getViewer()->getRenderer();

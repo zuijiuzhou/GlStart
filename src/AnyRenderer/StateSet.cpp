@@ -37,16 +37,28 @@ namespace AnyRenderer
         d->state_attrs.insert({attr->getType(), attr});
     }
 
-    void StateSet::apply(RenderContext &ctx) const
+    void StateSet::applyShader(RenderContext &ctx) const
     {
         if (d->shader.valid())
         {
             RenderContext_set_shader(ctx.d, d->shader.get());
             d->shader->use();
         }
+    }
+
+    void StateSet::apply(RenderContext &ctx) const
+    {
         for (auto &kv : d->state_attrs)
         {
             kv.second->apply(ctx);
+        }
+    }
+
+    void StateSet::restore(RenderContext &ctx) const
+    {
+        for (auto &kv : d->state_attrs)
+        {
+            kv.second->restore(ctx);
         }
     }
 

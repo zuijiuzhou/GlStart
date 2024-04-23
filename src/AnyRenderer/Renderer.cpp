@@ -40,19 +40,29 @@ namespace AnyRenderer
     void Renderer::initialize()
     {
         d->is_initialized = true;
+        glDepthMask(GL_TRUE);
     }
 
     void Renderer::frame()
     {
         d->camera->apply();
+
+        glDepthRange(0.0, 1.0);
+        glDepthFunc(GL_LESS);
+        glDepthMask(GL_TRUE);
+
         auto matrix_v = d->camera->getViewMatrix();
         auto matrix_vp = d->camera->getViewProjectionMatrix();
         auto view_dir = d->camera->getViewDir();
         auto &ctx = *d->ctx;
         for (auto model : d->models)
         {
-            auto matrix_m = model->getMatrix();
             auto stateset = model->getStateSet();
+            if(stateset){
+                stateset->applyShader(ctx);
+            }
+            model->update(ctx);
+            auto matrix_m = model->getMatrix();
             if (stateset)
             {
                 stateset->apply(ctx);
@@ -66,11 +76,13 @@ namespace AnyRenderer
                     shader->set("view_dir", view_dir);
                 }
             }
-            model->update(*d->ctx);
             for (int i = 0; i < model->getNbDrawables(); i++)
             {
                 auto drawable = model->getDrawableAt(i);
                 drawable->draw(ctx);
+            }
+            if(stateset){
+                stateset->restore(ctx);
             }
         }
     }

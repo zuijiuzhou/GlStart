@@ -64,9 +64,10 @@ namespace AnyRenderer
 
         std::vector<Light *> getLights() const;
 
-        virtual void apply(RenderContext &ctx) const override;
-
         virtual Type getType() const override;
+
+    protected:
+        virtual void apply(RenderContext &ctx) const override;
 
     public:
         static int getMaxLight();

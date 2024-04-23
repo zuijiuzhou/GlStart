@@ -25,6 +25,9 @@ namespace AnyRenderer
         format.setProfile(QSurfaceFormat::CoreProfile);
         format.setSamples(4);
         format.setVersion(4, 6);
+        format.setDepthBufferSize(24);
+        format.setStencilBufferSize(8);
+        format.setColorSpace(QSurfaceFormat::ColorSpace::DefaultColorSpace);
         format.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
         setFormat(format);
 

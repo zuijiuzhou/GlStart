@@ -7,6 +7,7 @@
 #include "RefPtr.h"
 #include "RenderContext.h"
 #include "Camera.h"
+#include "Depth.h"
 
 namespace AnyRenderer
 {
@@ -15,10 +16,12 @@ namespace AnyRenderer
         const char *sky_box_vs = R"(
 #version 330 core
 layout(location=0) in vec3 position;
-uniform mat4 matrix_mvp;
+uniform mat4 matrix_mvp_;
 out vec3 frag_tex_coord;
 void main(){
-    gl_Position = matrix_mvp * vec4(position.x, position.y, position.z, 1.0);
+    vec4 posi = matrix_mvp_ * vec4(position, 1.0);
+    posi.z = posi.w;
+    gl_Position = posi;
     frag_tex_coord = position;
 }
         )";
@@ -46,20 +49,21 @@ void main(){
                 m1 = glm::rotate(m1, glm::radians(90.f), glm::vec3(1.f, 0.f, 0.f));
                 auto mat_p = cam->getProjectionMatrix();
 
-                shader->set("matrix_mvp", mat_p * mat_v *m1);
+                shader->set("matrix_mvp_", mat_p * mat_v * m1);
             }
         };
     }
 
     Model *createSkyBox(CubeMap *tex)
     {
-        auto cube = Geometry::createCube(1000, 0, -1, -1, -1);
+        auto cube = Geometry::createCube(1, 0, -1, -1, -1);
         cube->addTexture(0, "tex", tex);
         auto shader = new Shader(sky_box_vs, {}, sky_box_fs);
         auto model = new Model();
-        model->getOrCreateStateSet()->setShader(shader);
         model->addDrawable(cube);
         model->addCallback(new SkyBoxUpdateCallback());
+        model->getOrCreateStateSet()->setShader(shader);
+        model->getOrCreateStateSet()->setAttribute(new Depth(1, 1, Depth::LEQUAL, true));
         return model;
     }
 }
