@@ -28,11 +28,38 @@ namespace AnyRenderer
         return Type::TEXTURE_2D;
     }
 
+    void Texture2D::setWidth(GLsizei w)
+    {
+        d->w = w;
+        setDirty(true);
+    }
+
+    void Texture2D::setHeight(GLsizei h)
+    {
+        d->h = h;
+        setDirty(true);
+    }
+
+    GLsizei Texture2D::getWidth() const
+    {
+        return d->w;
+    }
+
+    GLsizei Texture2D::getHeight() const
+    {
+        return d->h;
+    }
+
     void Texture2D::setImage(const std::string &img)
     {
         d->img = img;
         if (isCreated())
             setDirty(true);
+    }
+
+    bool Texture2D::save(const std::string &path) const
+    {
+        return false;
     }
 
     GLuint Texture2D::onCreate()
@@ -55,9 +82,9 @@ namespace AnyRenderer
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-
         }
-        else if(d->w != 0 && d->h != 0 && d->informat != 0){
+        else if (d->w != 0 && d->h != 0 && d->informat != 0)
+        {
             glTexImage2D(GL_TEXTURE_2D, 0, d->informat, d->w, d->h, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
         }
         return id;

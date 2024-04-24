@@ -13,9 +13,19 @@ namespace AnyRenderer
         virtual ~Texture2D();
 
     public:
-
         virtual Type getType() const override;
-        void setImage(const std::string& img);
+
+        void setWidth(GLsizei w);
+
+        void setHeight(GLsizei h);
+
+        GLsizei getWidth() const;
+
+        GLsizei getHeight() const;
+
+        void setImage(const std::string &img);
+
+        bool save(const std::string &path) const;
 
     protected:
         virtual GLuint onCreate() override;
@@ -24,6 +34,6 @@ namespace AnyRenderer
 
     private:
         struct Data;
-        Data* const d;
+        Data *const d;
     };
 }

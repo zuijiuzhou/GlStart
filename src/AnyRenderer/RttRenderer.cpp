@@ -2,18 +2,47 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include "Texture2D.h"
+#include "FrameBufferObject.h"
 #include "RefPtr.h"
 
 namespace AnyRenderer
 {
     struct RttRenderer::Data
     {
-        GLFWwindow* wnd = nullptr;
+        GLFWwindow *wnd = nullptr;
         GLuint fbo_ = 0;
         RefPtr<Texture2D> color_buffer_;
+        GLsizei w = 640, h = 360;
+        bool is_initialized = false;
     };
 
     RttRenderer::RttRenderer() : d(new Data())
+    {
+    }
+
+    RttRenderer::~RttRenderer()
+    {
+    }
+
+    void RttRenderer::resize(int w, int h)
+    {
+        if(w < 0 || h < 0)
+            throw std::exception();
+        d->w = w;
+        d->h = h;
+    }
+
+    GLsizei RttRenderer::getWidth() const
+    {
+        return d->w;
+    }
+
+    GLsizei RttRenderer::getHeight() const
+    {
+        return d->h;
+    }
+
+    void RttRenderer::initialize()
     {
         if (!glfwInit())
         {
@@ -29,7 +58,7 @@ namespace AnyRenderer
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         auto wnd = glfwCreateWindow(800, 600, "RttRenderer", NULL, NULL);
         glfwMakeContextCurrent(wnd);
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        if (!glad_glClear && !gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
             glfwDestroyWindow(wnd);
             glfwTerminate();
@@ -37,11 +66,17 @@ namespace AnyRenderer
             throw std::exception("GLAD init failed");
         }
         d->wnd = wnd;
+        d->is_initialized = true;
     }
 
-    RttRenderer::~RttRenderer()
+    bool RttRenderer::isInitialized() const
     {
+        return d->is_initialized;
+    }
 
+    Texture *RttRenderer::getColorBuffer() const
+    {
+        return d->color_buffer_.get();
     }
 
 }

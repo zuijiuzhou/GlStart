@@ -5,7 +5,7 @@
 namespace AnyRenderer
 {
     class Renderer;
-    class CameraManipulator;
+    class Texture;
     class RttRenderer : public Renderer
     {
     public:
@@ -13,7 +13,17 @@ namespace AnyRenderer
         virtual ~RttRenderer();
 
     public:
-        
+        void resize(int w, int h);
+
+        GLsizei getWidth() const;
+
+        GLsizei getHeight() const;
+
+        Texture* getColorBuffer() const;
+
+        void initialize();
+
+        bool isInitialized() const;
 
     private:
         struct Data;
