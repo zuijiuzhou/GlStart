@@ -1,5 +1,6 @@
-
-#version 400 core
+#version 330 core
+#extension GL_ARB_shader_image_load_store : enable
+layout(early_fragment_tests) in;
 uniform samplerCube tex;
 in vec3 frag_tex_coord;
 out vec4 FragColor;

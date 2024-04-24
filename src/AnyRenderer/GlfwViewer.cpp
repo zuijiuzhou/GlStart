@@ -3,6 +3,7 @@
 #include <functional>
 #include <memory>
 #include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 #include "Renderer.h"
 #include "Camera.h"
 #include "CameraManipulator.h"
@@ -129,6 +130,7 @@ namespace AnyRenderer
 
     void GlfwViewer::error_callback(int error, const char *desc)
     {
+
     }
 
     void GlfwViewer::key_callback(GLFWwindow *wnd, int key, int scancode, int action, int mods)

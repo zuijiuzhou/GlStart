@@ -1,7 +1,7 @@
-#version 400 core
+#version 330 core
 #define MAX_LIGHT 8
 // #extension GL_ARB_explicit_uniform_location : enable
-
+#extension GL_ARB_shader_image_load_store : enable
 // layout(location = 0) uniform sampler2D tex_2d;
 struct Material{
     vec4 a;
@@ -29,7 +29,7 @@ struct Light{
     float k_l;
     float k_q;
 };
-
+layout(early_fragment_tests) in;
 uniform samplerCube tex;
 uniform Material mate;
 uniform Light lights[MAX_LIGHT];

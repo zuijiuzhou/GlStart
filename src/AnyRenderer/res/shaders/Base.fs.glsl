@@ -1,6 +1,7 @@
-#version 400 core
+#version 330 core
 #define MAX_LIGHT 8
 // #extension GL_ARB_explicit_uniform_location : enable
+#extension GL_ARB_shader_image_load_store : enable
 
 struct Material{
     vec4 a;
@@ -28,6 +29,7 @@ struct Light{
     float k_l;
     float k_q;
 };
+layout(early_fragment_tests) in;
 // REQUIRED
 uniform Material mate;
 uniform Light lights[MAX_LIGHT];
