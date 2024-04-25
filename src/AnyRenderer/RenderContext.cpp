@@ -1,4 +1,5 @@
 #include "RenderContext.h"
+#include <set>
 #include "Utilities/Resources.h"
 #include "Texture2D.h"
 #include "CubeMap.h"
@@ -7,10 +8,10 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "GLObject.h"
 
 namespace AnyRenderer
 {
-
     struct RenderContext::Data
     {
         static int max_context_id;
@@ -20,6 +21,7 @@ namespace AnyRenderer
         RefPtr<Shader> current_shader;
         RefPtr<Texture2D> default_tex;
         RefPtr<CubeMap> default_env_map;
+        std::set<RefPtr<GLObject>> gl_objs;
     };
 
     int RenderContext::Data::max_context_id = 0;
@@ -73,8 +75,27 @@ namespace AnyRenderer
         return d->context_id;
     }
 
-    void RenderContext::makeCurrent(){
-        
+    void RenderContext::makeCurrent()
+    {
+    }
+
+    void RenderContext::attachGLObject(GLObject *obj)
+    {
+        if(!d->gl_objs.contains(obj)){
+            d->gl_objs.insert(obj);
+        }
+    }
+    void RenderContext::detachGLObject(GLObject *obj)
+    {
+        d->gl_objs.erase(obj);
+    }
+
+    void RenderContext::releaseGLObjects(){
+        makeCurrent();
+        while (!d->gl_objs.empty())
+        {
+           d->gl_objs.begin()->get()->release(*this);
+        }
     }
 
     RenderContext *RenderContext::getContextById(int id)

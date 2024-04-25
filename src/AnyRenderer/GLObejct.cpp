@@ -38,12 +38,14 @@ namespace AnyRenderer
             return;
         auto id = onCreate(ctx);
         d->ids.insert({ctx.getContextId(), id});
+        ctx.attachGLObject(this);
     }
 
     void GLObject::release(RenderContext& ctx){
         if(isCreated(ctx)){
             onRelease(ctx);
             d->ids.erase(ctx.getContextId());
+            ctx.detachGLObject(this);
         }
     }
 

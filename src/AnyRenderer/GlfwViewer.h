@@ -5,6 +5,7 @@ struct GLFWwindow;
 namespace AnyRenderer
 {
     class Renderer;
+
     class GlfwViewer
     {
     public:
@@ -13,6 +14,10 @@ namespace AnyRenderer
 
     public:
         Renderer *getRenderer() const;
+
+        void initialize();
+
+        bool isInitialized() const;
 
         void run();
         

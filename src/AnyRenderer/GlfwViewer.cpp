@@ -9,19 +9,60 @@
 #include "CameraManipulator.h"
 #include "UIEvent.h"
 #include "RefPtr.h"
+#include "RenderContext.h"
 
 namespace AnyRenderer
 {
+    namespace
+    {
+        class GlfwRenderContext : public RenderContext
+        {
+        public:
+            GlfwRenderContext(GLFWwindow *wnd, Camera *cam) : RenderContext(cam), wnd_(wnd)
+            {
+            }
+
+        public:
+            virtual void makeCurrent() override
+            {
+                glfwMakeContextCurrent(wnd_);
+            }
+
+        private:
+            GLFWwindow *wnd_;
+        };
+    }
+
     struct GlfwViewer::Data
     {
         RefPtr<Renderer> renderer;
         RefPtr<CameraManipulator> cm;
+        RefPtr<RenderContext> ctx;
         GLFWwindow *wnd = nullptr;
         glm::vec2 cursor_pt;
+        bool is_initialized = false;
     };
 
     GlfwViewer::GlfwViewer() : d(new Data())
     {
+
+    }
+
+    GlfwViewer::~GlfwViewer()
+    {
+        if (d->wnd)
+        {
+            // d->ctx->releaseGLObjects();
+            glfwDestroyWindow(d->wnd);
+            glfwTerminate();
+        }
+        delete d;
+    }
+
+    void GlfwViewer::initialize()
+    {
+        if (d->is_initialized)
+            return;
         if (!glfwInit())
         {
             throw std::exception("GLFW init failed");
@@ -78,10 +119,11 @@ namespace AnyRenderer
             wnd, (GLFWscrollfun)[](GLFWwindow * wnd, double x, double y) { auto callback = scroll_callback; callback(wnd, x, y); });
 
         auto renderer = new Renderer();
-        renderer->initialize();
-        auto cm = new StandardCameraManipulator(renderer->getCamera());
-
         auto cam = renderer->getCamera();
+        auto cm = new StandardCameraManipulator(cam);
+        auto ctx = new GlfwRenderContext(wnd, cam);
+        renderer->setContext(ctx);
+
         cam->setViewport(0., 0., w, h);
         cam->setClearDepth(1.0);
         cam->setClearStencil(1);
@@ -98,18 +140,18 @@ namespace AnyRenderer
         glFrontFace(GL_CCW);
         glDepthFunc(GL_LESS);
 
+        renderer->initialize();
+
         d->renderer = renderer;
         d->cm = cm;
         d->wnd = wnd;
+        d->ctx = ctx;
+        d->is_initialized = true;
     }
 
-    GlfwViewer::~GlfwViewer()
+    bool GlfwViewer::isInitialized() const
     {
-        if(d->wnd){
-            glfwDestroyWindow(d->wnd);
-            glfwTerminate();
-        }
-        delete d;
+        return d->is_initialized;
     }
 
     Renderer *GlfwViewer::getRenderer() const
@@ -117,7 +159,8 @@ namespace AnyRenderer
         return d->renderer.get();
     }
 
-    void GlfwViewer::run(){
+    void GlfwViewer::run()
+    {
         glfwShowWindow(d->wnd);
         glfwMakeContextCurrent(d->wnd);
         while (!glfwWindowShouldClose(d->wnd))
@@ -130,7 +173,6 @@ namespace AnyRenderer
 
     void GlfwViewer::error_callback(int error, const char *desc)
     {
-
     }
 
     void GlfwViewer::key_callback(GLFWwindow *wnd, int key, int scancode, int action, int mods)

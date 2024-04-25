@@ -9,26 +9,28 @@ namespace AnyRenderer
     class CubeMap;
     class Shader;
     class StateSet;
+    class GLObject;
 
     class RenderContext : public Object
     {
         friend class Renderer;
         friend class StateSet;
 
-    private:
+    protected:
         RenderContext(Camera *cam);
         virtual ~RenderContext();
 
     public:
+        int getContextId() const;
+        virtual void makeCurrent();
         Camera *getCamera() const;
         Renderer *getRenderer() const;
         Shader *getCurrentShader() const;
         Texture2D *getDefaultTexture() const;
         CubeMap *getDefaultEnvMap() const;
-
-        int getContextId() const;
-
-        virtual void makeCurrent();
+        void attachGLObject(GLObject *obj);
+        void detachGLObject(GLObject *obj);
+        void releaseGLObjects();
 
     public:
         static RenderContext *getContextById(int id);

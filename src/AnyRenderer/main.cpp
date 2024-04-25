@@ -108,10 +108,11 @@ void CreateSampleShapes(ar::Renderer *renderer)
 
 int main(int argc, char **argv)
 {
-#define GLFW_VIEWER1
+#define GLFW_VIEWER
 
 #ifdef GLFW_VIEWER
     ar::GlfwViewer v;
+    v.initialize();
     auto renderer = v.getRenderer();
 #else
     // QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

@@ -55,8 +55,15 @@ namespace AnyRenderer
         d->is_initialized = true;
     }
 
+    bool Renderer::isInitialized() const
+    {
+        return d->is_initialized;
+    }
+
     void Renderer::frame()
     {
+        if (!d->is_initialized)
+            return;
         d->ctx->makeCurrent();
         d->camera->apply();
 

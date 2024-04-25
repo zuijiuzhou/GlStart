@@ -41,7 +41,8 @@ namespace ModelViewer
         : rep_(new Rep())
     {
         static bool is_verse_initialized = false;
-        if(!is_verse_initialized){
+        if (!is_verse_initialized)
+        {
             osgVerse::globalInitialize(0, 0);
             is_verse_initialized = true;
         }
@@ -59,7 +60,7 @@ namespace ModelViewer
         traits->doubleBuffer = true;
         traits->depth = 24;
         traits->samples = 4;
-        traits->screenNum = 1;
+        traits->screenNum = 0;
         auto gc = osg::GraphicsContext::createGraphicsContext(traits);
 
         auto cam = rep_->viewer_impl->getCamera();
@@ -97,14 +98,17 @@ namespace ModelViewer
         // lightGeode->addDrawable(light1);
         addNode(lightGeode);
 
-        class ViewerEventCallback : public osgGA::GUIEventHandler{
+        class ViewerEventCallback : public osgGA::GUIEventHandler
+        {
         public:
-            ViewerEventCallback(osgVerse::LightDrawable* light0)
-                : light0_(light0){
-                
+            ViewerEventCallback(osgVerse::LightDrawable *light0)
+                : light0_(light0)
+            {
             }
-            virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa, osg::Object*, osg::NodeVisitor*) override {
-                if(ea.getEventType() == osgGA::GUIEventAdapter::FRAME){
+            virtual bool handle(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &aa, osg::Object *, osg::NodeVisitor *) override
+            {
+                if (ea.getEventType() == osgGA::GUIEventAdapter::FRAME)
+                {
                     osg::Vec3 eye, center, up, dir;
                     aa.asView()->getCamera()->getViewMatrixAsLookAt(eye, center, up);
                     // dir = center - eye;
@@ -115,8 +119,9 @@ namespace ModelViewer
                 }
                 return false;
             }
+
         private:
-            osgVerse::LightDrawable* light0_;
+            osgVerse::LightDrawable *light0_;
         };
 
         rep_->viewer_impl->addEventHandler(new ViewerEventCallback(light0));
@@ -124,7 +129,7 @@ namespace ModelViewer
         osgVerse::StandardPipelineParameters params(SHADER_DIR, SKYBOX_DIR "barcelona.hdr");
         params.enablePostEffects = true;
         params.enableAO = false;
-        osgVerse::setupStandardPipeline(pipeline, rep_->viewer_impl.get(), params);
+        // osgVerse::setupStandardPipeline(pipeline, rep_->viewer_impl.get(), params);
 
         // // Post pipeline settings
         // auto shadow = static_cast<osgVerse::ShadowModule*>(pipeline->getModule("Shadow"));
@@ -133,8 +138,9 @@ namespace ModelViewer
         //     addNode(shadow->getFrustumGeode(), PM_ForwardScene);
         // }
 
-        auto light = static_cast<osgVerse::LightModule*>(pipeline->getModule("Light"));
-        if (light) light->setMainLight(light0, "Shadow");
+        auto light = static_cast<osgVerse::LightModule *>(pipeline->getModule("Light"));
+        if (light)
+            light->setMainLight(light0, "Shadow");
     }
 
     void Viewer::run()
@@ -142,7 +148,8 @@ namespace ModelViewer
         rep_->viewer_impl->run();
     }
 
-    void Viewer::addNode(osg::Node* node){
+    void Viewer::addNode(osg::Node *node)
+    {
         osgVerse::TangentSpaceVisitor tsv;
         node->accept(tsv);
         rep_->root->addChild(node);
@@ -159,5 +166,10 @@ namespace ModelViewer
         auto cm = rep_->viewer_impl->getCameraManipulator();
         cm->computeHomePosition(rep_->viewer_impl->getCamera());
         cm->home(0);
+    }
+
+    osg::Camera *Viewer::getMasterCamera() const
+    {
+        return rep_->viewer_impl->getCamera();
     }
 }

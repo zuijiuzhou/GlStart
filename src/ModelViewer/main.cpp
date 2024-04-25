@@ -11,12 +11,13 @@
 #include "MeshLoader.h"
 #include "ModelDefs.h"
 #include "CurveGenerator.h"
+#include "CoordGenerator.h"
 
 int main(int argc, char **argv)
 {
     using namespace ModelViewer;
     osg::Node *model = nullptr;
-    if (argc == 1 || true)
+    if (argc == 1)
     {
         std::vector<osg::Vec3d> cpts;
         std::vector<osg::Vec3d> tans;
@@ -70,9 +71,16 @@ int main(int argc, char **argv)
     namespace fs = std::filesystem;
     fs::current_path(Utilities::getApplicationDir());
 
+    auto coord = createCoord(100, 2, 20, 4, true);
     Viewer v;
+
+
+    auto hud_coord = createHudCoord(v.getMasterCamera(), 60, 2, 12, 4);
+
     // v.addNode(new osg::ShapeDrawable(new osg::Cylinder(osg::Vec3(0,0,0), 20, 50)));
     v.addNode(model);
+    v.addNode(coord);
+    v.addNode(hud_coord);
     // v.addNode(model2);
     v.fitToSceen();
     v.run();

@@ -22,7 +22,7 @@ namespace AnyRenderer
         Camera *getCamera() const;
         void setContext(RenderContext* ctx);
         void initialize();
-
+        bool isInitialized() const;
     private:
         struct Data;
         Data *const d;

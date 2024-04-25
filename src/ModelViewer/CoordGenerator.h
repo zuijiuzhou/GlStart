@@ -4,7 +4,10 @@
 
 namespace osg{
     class MatrixTransform;
+    class Camera;
 }
 namespace ModelViewer{
-    osg::MatrixTransform* createCoord(double axis_len, bool auto_rotate_to_screen);
+    osg::MatrixTransform* createCoord(double cyli_len, double cyli_r, double cone_len, double cone_r, bool auto_rotate_to_screen);
+
+    osg::Camera* createHudCoord(osg::Camera *master, double cyli_len, double cyli_r, double cone_len, double cone_r);
 }

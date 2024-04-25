@@ -113,29 +113,49 @@ namespace AnyRenderer
             return *this;
         }
 
-        bool operator==(const RefPtr &right)
+        bool operator==(const RefPtr &right) const
         {
             return ptr_ == right.ptr_;
         }
 
-        bool operator==(const T *right)
+        bool operator==(const T *right) const
         {
             return ptr_ == right;
         }
 
-        bool operator!=(const RefPtr &right)
+        bool operator!=(const RefPtr &right) const
         {
             return !(*this == right);
         }
 
-        bool operator!=(const T *right)
+        bool operator!=(const T *right) const
         {
             return ptr_ != right;
         }
-        
+
         bool valid() const
         {
             return ptr_ != nullptr;
+        }
+
+        bool operator<(const RefPtr<T> &right) const
+        {
+            return ptr_ < right.ptr_;
+        }
+
+        bool operator<(const T *right) const
+        {
+            return ptr_ < right;
+        }
+
+        bool operator>(const RefPtr<T> &right) const
+        {
+            return ptr_ > right.ptr_;
+        }
+
+        bool operator>(const T *right) const
+        {
+            return ptr_ > right;
         }
 
     private:
@@ -150,8 +170,8 @@ namespace AnyRenderer
     template <class T>
     inline void swap(RefPtr<T> &rp1, RefPtr<T> &rp2) { rp1.swap(rp2); }
 
-    template<class T> inline
-    T* get_pointer(const RefPtr<T>& rp) { return rp.get(); }
+    template <class T>
+    inline T *get_pointer(const RefPtr<T> &rp) { return rp.get(); }
 
     template <class T, class Y>
     inline RefPtr<T> static_pointer_cast(const RefPtr<Y> &rp) { return static_cast<T *>(rp.get()); }
