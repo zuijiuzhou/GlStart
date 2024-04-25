@@ -69,26 +69,20 @@ namespace AnyRenderer
 
     Shader::~Shader()
     {
-        auto id = getId();
-        if (id)
-        {
-            glDeleteProgram(id);
-        }
-        delete d;
     }
 
-    void Shader::use()
+    void Shader::use(RenderContext& ctx)
     {
-        if (!isCreated())
-            GLObject::create();
-        if (!isCreated())
+        if (!isCreated(ctx))
+            GLObject::create(ctx);
+        if (!isCreated(ctx))
             return;
-        glUseProgram(getId());
+        glUseProgram(getId(ctx));
     }
 
-    void Shader::unuse()
+    void Shader::unuse(RenderContext& ctx)
     {
-        auto id = getId();
+        auto id = getId(ctx);
         if (id)
         {
             GLint current_prog;
@@ -108,7 +102,7 @@ namespace AnyRenderer
         d->name = name;
     }
 
-    GLuint Shader::onCreate()
+    GLuint Shader::onCreate(RenderContext& ctx)
     {
         unsigned int vs_id = 0, gs_id = 0, fs_id = 0;
         char msg[512];
@@ -155,6 +149,11 @@ namespace AnyRenderer
             glDeleteShader(fs_id);
         }
         return app_id;
+    }
+
+    void Shader::onRelease(RenderContext& ctx){
+        auto id = getId(ctx);
+        glDeleteProgram(id);
     }
 
     Shader *Shader::create(const std::string &vs_path, const std::string &gs_path, const std::string &fs_path)

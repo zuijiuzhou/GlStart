@@ -1,10 +1,12 @@
 #include "GLObject.h"
+#include <map>
+#include "RenderContext.h"
 
 namespace AnyRenderer
 {
     struct GLObject::Data
     {
-        GLuint id = 0;
+        std::map<int, GLuint> ids;
     };
 
     GLObject::GLObject() : d(new Data())
@@ -14,21 +16,35 @@ namespace AnyRenderer
     {
         delete d;
     }
-    GLuint GLObject::getId() const
+    GLuint GLObject::getId(RenderContext & ctx) const
     {
-        return d->id;
+        auto ctx_id = ctx.getContextId();
+        if (d->ids.contains(ctx_id))
+        {
+            return d->ids[ctx_id];
+        }
+        return 0;
     }
 
-    void GLObject::create()
+    bool GLObject::isCreated(RenderContext & ctx) const
     {
-        if (isCreated())
+        auto ctx_id = ctx.getContextId();
+        return d->ids.contains(ctx_id);
+    }
+
+    void GLObject::create(RenderContext & ctx)
+    {
+        if (isCreated(ctx))
             return;
-        d->id = onCreate();
+        auto id = onCreate(ctx);
+        d->ids.insert({ctx.getContextId(), id});
     }
 
-    bool GLObject::isCreated() const
-    {
-        return d->id > 0;
+    void GLObject::release(RenderContext& ctx){
+        if(isCreated(ctx)){
+            onRelease(ctx);
+            d->ids.erase(ctx.getContextId());
+        }
     }
 
 }

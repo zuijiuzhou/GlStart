@@ -37,14 +37,27 @@ namespace AnyRenderer
         delete d;
     }
 
+    void Renderer::setContext(RenderContext *ctx)
+    {
+        if (d->is_initialized)
+            throw std::exception();
+        d->ctx = ctx;
+    }
+
     void Renderer::initialize()
     {
-        d->is_initialized = true;
+        if (d->is_initialized)
+        {
+            return;
+        }
+        d->ctx->makeCurrent();
         glDepthMask(GL_TRUE);
+        d->is_initialized = true;
     }
 
     void Renderer::frame()
     {
+        d->ctx->makeCurrent();
         d->camera->apply();
 
         glDepthRange(0.0, 1.0);
@@ -58,7 +71,8 @@ namespace AnyRenderer
         for (auto model : d->models)
         {
             auto stateset = model->getStateSet();
-            if(stateset){
+            if (stateset)
+            {
                 stateset->applyShader(ctx);
             }
             model->update(ctx);
@@ -69,11 +83,11 @@ namespace AnyRenderer
                 auto shader = ctx.getCurrentShader();
                 if (shader)
                 {
-                    shader->set("matrix_m", matrix_m);
-                    shader->set("matrix_v", matrix_v);
-                    shader->set("matrix_mv", matrix_v * matrix_m);
-                    shader->set("matrix_mvp",  matrix_vp * matrix_m);
-                    shader->set("view_dir", view_dir);
+                    shader->set(ctx, "matrix_m", matrix_m);
+                    shader->set(ctx, "matrix_v", matrix_v);
+                    shader->set(ctx, "matrix_mv", matrix_v * matrix_m);
+                    shader->set(ctx, "matrix_mvp", matrix_vp * matrix_m);
+                    shader->set(ctx, "view_dir", view_dir);
                 }
             }
             for (int i = 0; i < model->getNbDrawables(); i++)
@@ -81,7 +95,8 @@ namespace AnyRenderer
                 auto drawable = model->getDrawableAt(i);
                 drawable->draw(ctx);
             }
-            if(stateset){
+            if (stateset)
+            {
                 stateset->restore(ctx);
             }
         }

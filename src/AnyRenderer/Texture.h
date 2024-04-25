@@ -21,7 +21,8 @@ namespace AnyRenderer
         virtual Type getType() const = 0;
 
     protected:
-        virtual void onBind() override;
-        virtual void onUnbind() override;
+        virtual void onBind(RenderContext& ctx) override;
+        virtual void onUnbind(RenderContext& ctx) override;
+        virtual void onRelease(RenderContext& ctx) override;
     };
 }

@@ -23,6 +23,9 @@
 #include <TopoDS_Edge.hxx>
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Compound.hxx>
+#include <Poly_Connect.hxx>
+#include <TColgp_Array1OfDir.hxx>
+#include <GeomLib.hxx>
 
 #include "Utilities/Text.h"
 
@@ -32,21 +35,25 @@ namespace ModelViewer
 {
     namespace
     {
-        bool isStpFile(const std::string& ext){
+        bool isStpFile(const std::string &ext)
+        {
             return ext == ".stp" || ext == ".step";
         }
 
-        bool isIgesFile(const std::string& ext){
+        bool isIgesFile(const std::string &ext)
+        {
             return ext == ".iges" || ext == ".igs";
         }
 
-        enum FileType {
+        enum FileType
+        {
             OtherType,
             StepType,
             IgesType
         };
 
-        bool isSupportedType(const std::string &file, FileType& type){
+        bool isSupportedType(const std::string &file, FileType &type)
+        {
             namespace fs = std::filesystem;
             fs::path path(file);
             if (!path.has_extension())
@@ -54,17 +61,84 @@ namespace ModelViewer
 
             auto file_ext = path.extension().string();
             std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), ::tolower);
-            if(isStpFile(file_ext))
+            if (isStpFile(file_ext))
                 type = StepType;
-            else if(isIgesFile(file_ext))
+            else if (isIgesFile(file_ext))
                 type = IgesType;
-            else 
+            else
                 type = OtherType;
 
             return type != OtherType;
         }
-    
-        
+
+        void getFaceNormals(const TopoDS_Face& theFace, Poly_Triangulation* aPolyTri, TColgp_Array1OfDir& theNormals)
+        {
+            Standard_Integer numNodes = aPolyTri->NbNodes();
+
+            if (aPolyTri->HasNormals())
+            {
+                for (Standard_Integer aNodeIter = 1; aNodeIter <= numNodes; ++aNodeIter)
+                {
+                    theNormals(aNodeIter) = aPolyTri->Normal(aNodeIter);
+                }
+
+                if (theFace.Orientation() == TopAbs_REVERSED)
+                {
+                    for (Standard_Integer aNodeIter = 1; aNodeIter <= numNodes; ++aNodeIter)
+                    {
+                        theNormals.ChangeValue(aNodeIter).Reverse();
+                    }
+                }
+            }
+            else
+            {
+                // take in face the surface location
+                Poly_Connect thePolyConnect(aPolyTri);
+                const TopoDS_Face aZeroFace = TopoDS::Face(theFace.Located(TopLoc_Location()));
+                Handle(Geom_Surface) aSurf = BRep_Tool::Surface(aZeroFace);
+                const Standard_Real aTol = Precision::Confusion();
+                Standard_Boolean hasNodesUV = aPolyTri->HasUVNodes() && !aSurf.IsNull();
+                Standard_Integer aTri[3];
+
+                aPolyTri->AddNormals();
+                for (Standard_Integer aNodeIter = 1; aNodeIter <= numNodes; ++aNodeIter)
+                {
+                    // try to retrieve normal from real surface first, when UV coordinates are available
+                    if (!hasNodesUV || GeomLib::NormEstim(aSurf, aPolyTri->UVNode(aNodeIter), aTol, theNormals(aNodeIter)) > 1)
+                    {
+                        // compute flat normals
+                        gp_XYZ eqPlan(0.0, 0.0, 0.0);
+
+                        for (thePolyConnect.Initialize(aNodeIter); thePolyConnect.More(); thePolyConnect.Next())
+                        {
+                            aPolyTri->Triangle(thePolyConnect.Value()).Get(aTri[0], aTri[1], aTri[2]);
+                            const gp_XYZ v1(aPolyTri->Node(aTri[1]).Coord() - aPolyTri->Node(aTri[0]).Coord());
+                            const gp_XYZ v2(aPolyTri->Node(aTri[2]).Coord() - aPolyTri->Node(aTri[1]).Coord());
+                            const gp_XYZ vv = v1 ^ v2;
+                            const Standard_Real aMod = vv.Modulus();
+
+                            if (aMod >= aTol)
+                            {
+                                eqPlan += vv / aMod;
+                            }
+                        }
+
+                        const Standard_Real aModMax = eqPlan.Modulus();
+                        theNormals(aNodeIter) = (aModMax > aTol) ? gp_Dir(eqPlan) : gp::DZ();
+                    }
+
+                    aPolyTri->SetNormal(aNodeIter, theNormals(aNodeIter));
+                }
+
+                if (theFace.Orientation() == TopAbs_REVERSED)
+                {
+                    for (Standard_Integer aNodeIter = 1; aNodeIter <= numNodes; ++aNodeIter)
+                    {
+                        theNormals.ChangeValue(aNodeIter).Reverse();
+                    }
+                }
+            }
+        }
     }
 
     bool BrepLoader::isSupported(const std::string &file)
@@ -77,7 +151,7 @@ namespace ModelViewer
     {
         XSControl_Reader *reader = nullptr;
         FileType type;
-        if(!isSupportedType(file, type))
+        if (!isSupportedType(file, type))
             return nullptr;
         if (type == StepType)
         {
@@ -130,20 +204,20 @@ namespace ModelViewer
         auto edge_geod = new osg::Geode();
         auto face_colors = new osg::Vec4Array();
         auto edge_colors = new osg::Vec4Array();
-        face_colors->push_back(osg::Vec4(220.f/255, 223.f/255, 227.f/255, 1.f));
+        face_colors->push_back(osg::Vec4(220.f / 255, 223.f / 255, 227.f / 255, 1.f));
         edge_colors->push_back(osg::Vec4(0.2f, 0.2f, 0.2f, 1.f));
 
         IMeshTools_Parameters params;
-        params.Angle = 0.1;
+        params.Angle = 0.2;
         params.Deflection = 1;
-        params.MinSize = 1e-2;
+        params.MinSize = 1e-4;
         params.InParallel = true;
         params.Relative = true;
         params.InternalVerticesMode = true;
         params.ControlSurfaceDeflection = true;
-        params.ForceFaceDeflection = true;
+        params.ForceFaceDeflection = false;
         params.CleanModel = true;
-        params.AllowQualityDecrease = true;
+        params.AllowQualityDecrease = false;
         params.AdjustMinSize = true;
 
         BRepMesh_IncrementalMesh im(shape, params);
@@ -158,8 +232,11 @@ namespace ModelViewer
                 continue;
 
             auto vertices = new osg::Vec3Array();
+            auto norms = new osg::Vec3Array();
             auto indices = new osg::DrawElementsUInt(GL_TRIANGLES);
-
+            vertices->reserve(mesh->NbNodes());
+            norms->reserve(mesh->NbNodes());
+            indices->reserve(mesh->NbTriangles() * 3);
             for (auto i = 1; i <= mesh->NbNodes(); i++)
             {
                 auto pnt = mesh->Node(i);
@@ -177,12 +254,18 @@ namespace ModelViewer
                 indices->push_back(v2 - 1);
                 indices->push_back(v3 - 1);
             }
-            
+            TColgp_Array1OfDir occ_norms(1, mesh->NbNodes());
+            getFaceNormals(face, mesh.get(), occ_norms);
+            for(auto& n : occ_norms){
+                norms->push_back(osg::Vec3(n.X(), n.Y(), n.Z()));
+            }
+
             auto face_geom = new osg::Geometry();
             face_geom->setColorArray(face_colors, osg::Array::BIND_OVERALL);
             face_geom->setVertexArray(vertices);
+            face_geom->setNormalArray(norms, osg::Array::BIND_PER_VERTEX);
             face_geom->addPrimitiveSet(indices);
-            osgUtil::SmoothingVisitor().smooth(*face_geom);
+            // osgUtil::SmoothingVisitor().smooth(*face_geom);
             face_geod->addDrawable(face_geom);
 
             TopExp_Explorer exp(face, TopAbs_EDGE);
@@ -220,7 +303,7 @@ namespace ModelViewer
 
                 edge_geom->setVertexArray(vertices);
                 edge_geom->setColorArray(edge_colors, osg::Array::BIND_OVERALL);
-                
+
                 edge_geom->setUseDisplayList(false);
                 edge_geod->addDrawable(edge_geom);
             }

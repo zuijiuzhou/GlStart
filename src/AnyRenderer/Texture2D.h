@@ -28,9 +28,9 @@ namespace AnyRenderer
         bool save(const std::string &path) const;
 
     protected:
-        virtual GLuint onCreate() override;
+        virtual GLuint onCreate(RenderContext& ctx) override;
 
-        virtual bool onUpdate() override;
+        virtual bool onUpdate(RenderContext& ctx) override;
 
     private:
         struct Data;

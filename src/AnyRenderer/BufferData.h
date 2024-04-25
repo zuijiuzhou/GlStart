@@ -5,18 +5,23 @@ namespace AnyRenderer
     class BufferData : public GLObject
     {
     public:
-        bool isDirty() const;
-        void setDirty(bool dirty);
-        void bind();
-        void unbind();
+        BufferData();
+
+    public:
+        bool isDirty(RenderContext &ctx) const;
+        void dirty();
+
+        void bind(RenderContext &ctx);
+        void unbind(RenderContext &ctx);
+        void update(RenderContext &ctx);
 
     protected:
-        void update();
-        virtual bool onUpdate() = 0;
-        virtual void onBind() = 0;
-        virtual void onUnbind() = 0;
+        virtual bool onUpdate(RenderContext &ctx) = 0;
+        virtual void onBind(RenderContext &ctx) = 0;
+        virtual void onUnbind(RenderContext &ctx) = 0;
 
     private:
-        bool is_dirty_ = false;
+        struct Data;
+        Data *const d;
     };
 }

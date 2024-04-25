@@ -156,14 +156,14 @@ namespace AnyRenderer
                     break;
                 auto l = lights_[i];
                 auto prefix = "lights[" + std::to_string(i) + "]";
-                shader->set(prefix + ".a", l->getAmbient());
-                shader->set(prefix + ".d", l->getDiffuse());
-                shader->set(prefix + ".s", l->getSpecular());
-                shader->set(prefix + ".k_c", l->getConstantAttenuation());
-                shader->set(prefix + ".k_l", l->getLinearAttenuation());
-                shader->set(prefix + ".k_q", l->getQuadraticAttenuation());
-                shader->set(prefix + ".expo", l->getExponent());
-                shader->set(prefix + ".co", l->getCutoff());
+                shader->set(ctx, prefix + ".a", l->getAmbient());
+                shader->set(ctx, prefix + ".d", l->getDiffuse());
+                shader->set(ctx, prefix + ".s", l->getSpecular());
+                shader->set(ctx, prefix + ".k_c", l->getConstantAttenuation());
+                shader->set(ctx, prefix + ".k_l", l->getLinearAttenuation());
+                shader->set(ctx, prefix + ".k_q", l->getQuadraticAttenuation());
+                shader->set(ctx, prefix + ".expo", l->getExponent());
+                shader->set(ctx, prefix + ".co", l->getCutoff());
 
                 auto dir = l->getDirection();
                 auto pos = l->getPosition();
@@ -174,10 +174,10 @@ namespace AnyRenderer
                     pos.y = view_pos.y;
                     pos.z = view_pos.z;
                 }
-                shader->set(prefix + ".dir", dir);
-                shader->set(prefix + ".pos", pos);
+                shader->set(ctx, prefix + ".dir", dir);
+                shader->set(ctx, prefix + ".pos", pos);
             }
-            shader->set<int>("lights_count", lights_.size() > max_light ? max_light : lights_.size());
+            shader->set<int>(ctx, "lights_count", lights_.size() > max_light ? max_light : lights_.size());
         }
     }
 

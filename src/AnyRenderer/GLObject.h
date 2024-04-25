@@ -4,6 +4,7 @@
 
 namespace AnyRenderer
 {
+    class RenderContext;
     class GLObject : public Object
     {
     public:
@@ -11,13 +12,14 @@ namespace AnyRenderer
         virtual ~GLObject();
 
     public:
-        GLuint getId() const;
-
-        bool isCreated() const;
+        GLuint getId(RenderContext& ctx) const;
+        bool isCreated(RenderContext& ctx) const;
 
     protected:
-        void create();
-        virtual GLuint onCreate() = 0;
+        void create(RenderContext& ctx);
+        virtual GLuint onCreate(RenderContext& ctx) = 0;
+        void release(RenderContext& ctx);
+        virtual void onRelease(RenderContext& ctx) = 0;
 
     private:
         struct Data;

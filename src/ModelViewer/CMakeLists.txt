@@ -12,4 +12,4 @@ target_include_directories(${CURRENT_TARGET_NAME}
     PRIVATE 
         $<BUILD_INTERFACE:${osgVerse_INCLUDE_DIRS}>
         $<BUILD_INTERFACE:${OPENSCENEGRAPH_INCLUDE_DIRS}>)
-target_link_libraries(${CURRENT_TARGET_NAME} PRIVATE Utilities ${OPENSCENEGRAPH_LIBRARIES} ${osgVerse_LIBRARIES} assimp::assimp TKernel TKXSBase TKMesh TKBRep TKDESTEP TKDEIGES TKMath imm32.lib opengl32.lib)
+target_link_libraries(${CURRENT_TARGET_NAME} PRIVATE Utilities ${OPENSCENEGRAPH_LIBRARIES} ${osgVerse_LIBRARIES} assimp::assimp TKernel TKXSBase TKMesh TKBRep TKDESTEP TKDEIGES TKMath TKGeomBase TKGeomAlgo TKG3d imm32.lib opengl32.lib)

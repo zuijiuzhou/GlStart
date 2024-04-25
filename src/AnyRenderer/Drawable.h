@@ -11,7 +11,7 @@ namespace AnyRenderer
     class Drawable : public Object
     {
     public:
-        virtual void draw(const RenderContext &ctx) = 0;
+        virtual void draw(RenderContext &ctx) = 0;
         
         virtual BoundingBox getBoundingBox() const = 0;
     };

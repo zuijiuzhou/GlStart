@@ -31,13 +31,13 @@ namespace AnyRenderer
     void Texture2D::setWidth(GLsizei w)
     {
         d->w = w;
-        setDirty(true);
+        dirty();
     }
 
     void Texture2D::setHeight(GLsizei h)
     {
         d->h = h;
-        setDirty(true);
+        dirty();
     }
 
     GLsizei Texture2D::getWidth() const
@@ -53,8 +53,7 @@ namespace AnyRenderer
     void Texture2D::setImage(const std::string &img)
     {
         d->img = img;
-        if (isCreated())
-            setDirty(true);
+        dirty();
     }
 
     bool Texture2D::save(const std::string &path) const
@@ -62,7 +61,7 @@ namespace AnyRenderer
         return false;
     }
 
-    GLuint Texture2D::onCreate()
+    GLuint Texture2D::onCreate(RenderContext& ctx)
     {
         GLuint id = 0;
         glGenTextures(1, &id);
@@ -90,7 +89,7 @@ namespace AnyRenderer
         return id;
     }
 
-    bool Texture2D::onUpdate()
+    bool Texture2D::onUpdate(RenderContext& ctx)
     {
         return true;
     }

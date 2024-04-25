@@ -4,7 +4,7 @@
 
 namespace AnyRenderer
 {
-    GLuint ArrayImpl::onCreate()
+    GLuint ArrayImpl::onCreate(RenderContext& ctx)
     {
         GLuint id = 0;
         glGenBuffers(1, &id);
@@ -14,7 +14,7 @@ namespace AnyRenderer
         return id;
     }
 
-    bool ArrayImpl::onUpdate()
+    bool ArrayImpl::onUpdate(RenderContext& ctx)
     {
         return true;
     }

@@ -10,7 +10,7 @@ namespace AnyRenderer
     class Shader;
     class StateSet;
 
-    class RenderContext final : public Object
+    class RenderContext : public Object
     {
         friend class Renderer;
         friend class StateSet;
@@ -25,6 +25,13 @@ namespace AnyRenderer
         Shader *getCurrentShader() const;
         Texture2D *getDefaultTexture() const;
         CubeMap *getDefaultEnvMap() const;
+
+        int getContextId() const;
+
+        virtual void makeCurrent();
+
+    public:
+        static RenderContext *getContextById(int id);
 
     public:
         struct Data;

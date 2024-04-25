@@ -40,7 +40,7 @@ namespace AnyRenderer
 
         void removeCallback(ModelCallback *callback);
 
-        void update(const RenderContext& ctx);
+        void update(RenderContext& ctx);
 
     private:
         struct Data;
@@ -61,7 +61,7 @@ namespace AnyRenderer
         ModelCallback(Type type);
 
     public:
-        virtual void operator()(const RenderContext &ctx, Model *model) = 0;
+        virtual void operator()(RenderContext &ctx, Model *model) = 0;
 
         Type getType() const;
 

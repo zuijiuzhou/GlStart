@@ -13,6 +13,8 @@ namespace AnyRenderer
 
     struct RenderContext::Data
     {
+        static int max_context_id;
+        GLuint context_id;
         RefPtr<Camera> camera;
         RefPtr<Renderer> renderer;
         RefPtr<Shader> current_shader;
@@ -20,7 +22,9 @@ namespace AnyRenderer
         RefPtr<CubeMap> default_env_map;
     };
 
-    extern void RenderContext_set_shader(RenderContext::Data* d, Shader *shader)
+    int RenderContext::Data::max_context_id = 0;
+
+    extern void RenderContext_set_shader(RenderContext::Data *d, Shader *shader)
     {
         d->current_shader = shader;
     }
@@ -31,6 +35,7 @@ namespace AnyRenderer
         d->default_tex = new Texture2D();
         d->default_tex->setImage(__RES("/images/top.jpg"));
         d->default_env_map = ResourceManager::instance()->getInternalCubeMap(ResourceManager::ICM_CubeMap2);
+        d->context_id = ++Data::max_context_id;
     }
 
     RenderContext::~RenderContext()
@@ -61,5 +66,19 @@ namespace AnyRenderer
     CubeMap *RenderContext::getDefaultEnvMap() const
     {
         return d->default_env_map.get();
+    }
+
+    int RenderContext::getContextId() const
+    {
+        return d->context_id;
+    }
+
+    void RenderContext::makeCurrent(){
+        
+    }
+
+    RenderContext *RenderContext::getContextById(int id)
+    {
+        return nullptr;
     }
 }

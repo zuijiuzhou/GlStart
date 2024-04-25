@@ -21,9 +21,10 @@ namespace AnyRenderer
     void CubeMap::setImages(const std::vector<std::string> &imgs)
     {
         imgs_ = imgs;
+        dirty();
     }
 
-    GLuint CubeMap::onCreate()
+    GLuint CubeMap::onCreate(RenderContext &ctx)
     {
         if (imgs_.size() != 6)
             return 0;
@@ -52,7 +53,7 @@ namespace AnyRenderer
         return id;
     }
 
-    bool CubeMap::onUpdate()
+    bool CubeMap::onUpdate(RenderContext &ctx)
     {
         return true;
     }

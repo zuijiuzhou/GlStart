@@ -74,7 +74,7 @@ namespace AnyRenderer
 		d->primitives.push_back(prim);
 	}
 
-	void Geometry::draw(const RenderContext &ctx)
+	void Geometry::draw(RenderContext &ctx)
 	{
 		if (d->vbos.empty())
 			return;
@@ -93,7 +93,7 @@ namespace AnyRenderer
 				auto arr = kv.second;
 				if (arr->getSize() > 1)
 				{
-					arr->bind();
+					arr->bind(ctx);
 					auto size_of_item = arr->getSizeOfItem();
 					glVertexAttribPointer(loc, size_of_item / sizeof(GLfloat), GL_FLOAT, GL_FALSE, size_of_item, 0);
 					glEnableVertexAttribArray(loc);
@@ -133,14 +133,14 @@ namespace AnyRenderer
 			auto tex = kv.second;
 			if (d->texture_locs.contains(unit))
 			{
-				shader->set(d->texture_locs[unit], unit);
+				shader->set(ctx, d->texture_locs[unit], unit);
 			}
 			else
 			{
-				shader->set(d->texture_names_[unit], unit);
+				shader->set(ctx, d->texture_names_[unit], unit);
 			}
 			glActiveTexture(unit);
-			tex->bind();
+			tex->bind(ctx);
 		}
 
 		for (auto priv : d->primitives)
@@ -153,7 +153,7 @@ namespace AnyRenderer
 			auto tex = kv.second;
 			if (!tex)
 				continue;
-			tex->unbind();
+			tex->unbind(ctx);
 		}
 	}
 

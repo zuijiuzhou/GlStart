@@ -41,7 +41,7 @@ void main(){
         struct SkyBoxUpdateCallback : public ModelCallback
         {
             SkyBoxUpdateCallback() : ModelCallback(UPDATE) {}
-            virtual void operator()(const RenderContext &ctx, Model *model) override
+            virtual void operator()(RenderContext &ctx, Model *model) override
             {
                 auto shader = ctx.getCurrentShader();
                 auto cam = ctx.getCamera();
@@ -51,7 +51,7 @@ void main(){
                 m1 = glm::rotate(m1, glm::radians(90.f), glm::vec3(1.f, 0.f, 0.f));
                 auto mat_p = cam->getProjectionMatrix();
 
-                shader->set("matrix_mvp_", mat_p * mat_v * m1);
+                shader->set(ctx, "matrix_mvp_", mat_p * mat_v * m1);
             }
         };
     }

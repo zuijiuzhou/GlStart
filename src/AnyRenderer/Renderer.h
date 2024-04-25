@@ -20,6 +20,7 @@ namespace AnyRenderer
         void frame();
         void addModel(Model *model);
         Camera *getCamera() const;
+        void setContext(RenderContext* ctx);
         void initialize();
 
     private:

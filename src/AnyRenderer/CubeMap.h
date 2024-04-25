@@ -12,14 +12,12 @@ namespace AnyRenderer
         virtual ~CubeMap();
 
     public:
-
         virtual Type getType() const override;
         void setImages(const std::vector<std::string> &imgs);
 
     protected:
-        virtual GLuint onCreate() override;
-
-        virtual bool onUpdate() override;
+        virtual GLuint onCreate(RenderContext &ctx) override;
+        virtual bool onUpdate(RenderContext &ctx) override;
 
     private:
         std::vector<std::string> imgs_;

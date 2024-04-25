@@ -73,11 +73,11 @@ namespace AnyRenderer
         auto shader = ctx.getCurrentShader();
         if (shader)
         {
-            shader->set("mate.a", a_);
-            shader->set("mate.d", d_);
-            shader->set("mate.s", s_);
-            shader->set("mate.e", e_);
-            shader->set("mate.sh", sh_);
+            shader->set(ctx, "mate.a", a_);
+            shader->set(ctx, "mate.d", d_);
+            shader->set(ctx, "mate.s", s_);
+            shader->set(ctx, "mate.e", e_);
+            shader->set(ctx, "mate.sh", sh_);
         }
     }
 

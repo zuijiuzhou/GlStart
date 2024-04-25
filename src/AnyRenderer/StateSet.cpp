@@ -42,7 +42,7 @@ namespace AnyRenderer
         if (d->shader.valid())
         {
             RenderContext_set_shader(ctx.d, d->shader.get());
-            d->shader->use();
+            d->shader->use(ctx);
         }
     }
 

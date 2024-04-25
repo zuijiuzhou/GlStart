@@ -1,36 +1,60 @@
 #include "BufferData.h"
+#include <map>
+#include "RenderContext.h"
 
 namespace AnyRenderer
 {
-    void BufferData::update()
+    struct BufferData::Data
     {
-        is_dirty_ = onUpdate();
+        std::map<int, bool> dirties;
+    };
+
+    BufferData::BufferData() : d(new Data())
+    {
     }
 
-    void BufferData::bind()
+    void BufferData::update(RenderContext &ctx)
     {
-        if (!isCreated())
-            create();
-        if (!isCreated())
+        auto ctx_id = ctx.getContextId();
+        if (isDirty(ctx))
+        {
+            auto status = onUpdate(ctx);
+            d->dirties[ctx_id] = status;
+        }
+    }
+
+    void BufferData::bind(RenderContext &ctx)
+    {
+        if (!isCreated(ctx))
+            create(ctx);
+        if (!isCreated(ctx))
             return;
-        if (isDirty())
-            update();
-        onBind();
+        if (isDirty(ctx))
+            update(ctx);
+        onBind(ctx);
     }
 
-    void BufferData::unbind()
+    void BufferData::unbind(RenderContext &ctx)
     {
-        if (!isCreated())
+        if (!isCreated(ctx))
             return;
-        onUnbind();
+        onUnbind(ctx);
     }
 
-    bool BufferData::isDirty() const
+    bool BufferData::isDirty(RenderContext &ctx) const
     {
-        return is_dirty_;
+        auto ctx_id = ctx.getContextId();
+        if (d->dirties.contains(ctx_id))
+        {
+            return d->dirties[ctx_id];
+        }
+        return false;
     }
-    void BufferData::setDirty(bool dirty)
+    void BufferData::dirty()
     {
-        is_dirty_ = dirty;
+        for (auto &kv : d->dirties)
+        {
+            kv.second = true;
+        }
     }
 }

@@ -22,16 +22,16 @@ namespace AnyRenderer
         virtual ~Array();
 
     public:
-        
         virtual Type getType() const = 0;
         virtual GLsizei getSize() const = 0;
         virtual GLsizei getSizeOfItem() const = 0;
-        virtual void* getData() = 0;
-        virtual void* getAt(GLsizei index) = 0;
+        virtual void *getData() = 0;
+        virtual void *getAt(GLsizei index) = 0;
         bool isEmpty() const;
-    
+
     protected:
-        virtual void onBind() override;
-        virtual void onUnbind() override;
+        virtual void onBind(RenderContext &ctx) override;
+        virtual void onUnbind(RenderContext &ctx) override;
+        virtual void onRelease(RenderContext &ctx) override;
     };
 }
