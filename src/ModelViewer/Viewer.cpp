@@ -1,5 +1,6 @@
 ﻿#include "Viewer.h"
 #include <osgGA/TrackballManipulator>
+#include <osgGA/TerrainManipulator>
 #include <osgGA/StateSetManipulator>
 #include <osgViewer/ViewerEventHandlers>
 #include <osgViewer/Viewer>
@@ -69,7 +70,8 @@ namespace ModelViewer
         cam->setProjectionMatrixAsPerspective(30, (double)traits->width / traits->height, 1, 1000);
         cam->setViewMatrixAsLookAt(osg::Vec3(200, 0, 0), osg::Vec3(), osg::Vec3(0, 1, 0));
 
-        auto camm = new osgGA::TrackballManipulator();
+        auto camm = new osgGA::TerrainManipulator(osgGA::StandardManipulator::DEFAULT_SETTINGS | osgGA::StandardManipulator::SET_CENTER_ON_WHEEL_FORWARD_MOVEMENT);
+        //auto camm = new osgGA::TerrainManipulator();
         camm->setAutoComputeHomePosition(false);
         camm->setByMatrix(cam->getViewMatrix());
 

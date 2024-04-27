@@ -137,7 +137,7 @@ int main(int argc, char **argv)
         lights->addLight(light);
         model->getOrCreateStateSet()->setAttribute(new ar::Material());
         model->getOrCreateStateSet()->setAttribute(lights);
-        model->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Geometry));
+        model->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Base));
         renderer->addModel(model);
     }
     else

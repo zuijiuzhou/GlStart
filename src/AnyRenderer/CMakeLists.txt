@@ -1,8 +1,9 @@
 SET(CURRENT_TARGET_NAME AnyRenderer)
 
-find_package(PCL REQUIRED)
-find_package(opencv REQUIRED)
-find_package(assimp REQUIRED)
+find_package(PCL CONFIG REQUIRED)
+find_package(opencv CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
+find_package(sdl2 CONFIG REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets OpenGL OpenGLWidgets)
 qt_standard_project_setup()
 
@@ -10,7 +11,7 @@ file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
 add_executable(${CURRENT_TARGET_NAME} ${SRC_FILES} ${HEADER_FILES} ${GLAD_SRC_FILES})
-target_link_libraries(${CURRENT_TARGET_NAME} Utilities glfw glm::glm assimp::assimp Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets ${PCL_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(${CURRENT_TARGET_NAME} Utilities glfw glm::glm assimp::assimp SDL2::SDL2 Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets ${PCL_LIBRARIES} ${OpenCV_LIBS})
 target_compile_definitions(${CURRENT_TARGET_NAME} PRIVATE CURRENT_MODULE_NAME="${CURRENT_TARGET_NAME}" CURRENT_RES_DIR="${GLSTART_RES_ROOT_DIR}${CURRENT_TARGET_NAME}")
 
 set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res/)
@@ -26,13 +27,13 @@ add_custom_command(TARGET ${CURRENT_TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMM
 add_custom_command(TARGET ${CURRENT_TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RES_SHADER_FILES} ${RES_SHADER_OUTPUT_DIR})
 add_custom_command(TARGET ${CURRENT_TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${RES_IMAGE_FILES} ${RES_IMAGE_OUTPUT_DIR})
 
-# get_target_property(WINDEPLOYQT_EXE Qt6::windeployqt IMPORTED_LOCATION)
-# message(--------windeployqt=${WINDEPLOYQT_EXE})
-# message(--------VCINSTALLDIR=${VCINSTALLDIR})
-# if(WIN32)
-#     add_custom_command (
-#         TARGET ${CURRENT_TARGET_NAME}
-#         POST_BUILD
-#         COMMAND ${WINDEPLOYQT_EXE} --verbose 0 $<TARGET_FILE:AnyRenderer>
-#         COMMENT "--------Run:windeployqt")
-# endif()
+get_target_property(WINDEPLOYQT_EXE Qt6::windeployqt IMPORTED_LOCATION)
+message(--------windeployqt=${WINDEPLOYQT_EXE})
+message(--------VCINSTALLDIR=${VCINSTALLDIR})
+if(WIN32)
+    add_custom_command (
+        TARGET ${CURRENT_TARGET_NAME}
+        POST_BUILD
+        COMMAND ${WINDEPLOYQT_EXE} --verbose 0 $<TARGET_FILE:AnyRenderer>
+        COMMENT "--------Run:windeployqt")
+endif()
