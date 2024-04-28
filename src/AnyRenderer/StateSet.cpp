@@ -1,16 +1,38 @@
 #include "StateSet.h"
+#include <vector>
 #include "StateAttribute.h"
-#include "RenderContext.h"
-#include "Shader.h"
 #include "RefPtr.h"
+#include "Shader.h"
 
 namespace AnyRenderer
 {
-    extern void RenderContext_set_shader(RenderContext::Data *d, Shader *shader);
+    namespace
+    {
+        struct StateAttr
+        {
+            RefPtr<StateAttribute> attr;
+
+            StateAttr(StateAttribute *sa)
+            {
+                attr = sa;
+            }
+
+            bool operator==(StateAttribute *sa) const
+            {
+                return attr.get() == sa || attr.get()->getType() == sa->getType();
+            }
+
+            bool operator!=(StateAttribute *sa)
+            {
+                return !(*this == sa);
+            }
+        };
+    }
 
     struct StateSet::Data
     {
-        std::map<StateAttribute::Type, RefPtr<StateAttribute>> state_attrs;
+        std::vector<StateAttr> attrs;
+
         RefPtr<Shader> shader;
     };
 
@@ -26,50 +48,34 @@ namespace AnyRenderer
     {
         if (!attr)
             return;
-        auto type = attr->getType();
-        auto found_at = d->state_attrs.find(type);
-        if (found_at != d->state_attrs.end())
+        auto found_at = std::find(d->attrs.begin(), d->attrs.end(), attr);
+        if (found_at == d->attrs.end())
         {
-            if (attr == found_at->second.get())
-                return;
-            d->state_attrs.erase(found_at);
+            d->attrs.emplace_back(attr);
         }
-        d->state_attrs.insert({attr->getType(), attr});
-    }
-
-    void StateSet::applyShader(RenderContext &ctx) const
-    {
-        if (d->shader.valid())
+        else
         {
-            RenderContext_set_shader(ctx.d, d->shader.get());
-            d->shader->use(ctx);
-        }
-    }
-
-    void StateSet::apply(RenderContext &ctx) const
-    {
-        for (auto &kv : d->state_attrs)
-        {
-            kv.second->apply(ctx);
-        }
-    }
-
-    void StateSet::restore(RenderContext &ctx) const
-    {
-        for (auto &kv : d->state_attrs)
-        {
-            kv.second->restore(ctx);
+            found_at->attr = attr;
         }
     }
 
     StateAttribute *StateSet::getAttribute(StateAttribute::Type type) const
     {
-        auto found_at = d->state_attrs.find(type);
-        if (found_at != d->state_attrs.end())
+        auto found_at = std::find_if(d->attrs.begin(), d->attrs.end(), [type](const auto &item) { return type == item.attr.get()->getType(); });
+        if (found_at != d->attrs.end())
         {
-            return found_at->second.get();
+            return found_at->attr.get();
         }
         return nullptr;
+    }
+
+    size_t StateSet::getNbAttributes() const
+    {
+        return d->attrs.size();
+    }
+    StateAttribute *StateSet::getAttributeAt(size_t i)
+    {
+        return (*(d->attrs.begin() + i)).attr.get();
     }
 
     Shader *StateSet::getShader() const

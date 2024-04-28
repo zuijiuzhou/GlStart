@@ -4,24 +4,24 @@
 
 namespace AnyRenderer
 {
-    class RenderContext;
+    class State;
     class GLObject : public Object
     {
-        friend class RenderContext;
+        friend class State;
 
     public:
         GLObject();
         virtual ~GLObject();
 
     public:
-        GLuint getId(RenderContext &ctx) const;
-        bool isCreated(RenderContext &ctx) const;
+        GLuint getId(State &state) const;
+        bool isCreated(State &state) const;
 
     protected:
-        void create(RenderContext &ctx);
-        virtual GLuint onCreate(RenderContext &ctx) = 0;
-        void release(RenderContext &ctx);
-        virtual void onRelease(RenderContext &ctx) = 0;
+        void create(State &state);
+        virtual GLuint onCreate(State &state) = 0;
+        void release(State &state);
+        virtual void onRelease(State &state) = 0;
 
     private:
         struct Data;

@@ -1,5 +1,5 @@
 #include "Material.h"
-#include "RenderContext.h"
+#include "State.h"
 #include "Shader.h"
 
 namespace AnyRenderer
@@ -68,16 +68,16 @@ namespace AnyRenderer
         return ATTR_MATERIAL;
     }
 
-    void Material::apply(RenderContext &ctx) const
+    void Material::apply(State &state) const
     {
-        auto shader = ctx.getCurrentShader();
+        auto shader = state.getCurrentShader();
         if (shader)
         {
-            shader->set(ctx, "mate.a", a_);
-            shader->set(ctx, "mate.d", d_);
-            shader->set(ctx, "mate.s", s_);
-            shader->set(ctx, "mate.e", e_);
-            shader->set(ctx, "mate.sh", sh_);
+            shader->set(state, "mate.a", a_);
+            shader->set(state, "mate.d", d_);
+            shader->set(state, "mate.s", s_);
+            shader->set(state, "mate.e", e_);
+            shader->set(state, "mate.sh", sh_);
         }
     }
 

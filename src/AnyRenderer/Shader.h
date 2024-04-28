@@ -16,25 +16,25 @@ namespace AnyRenderer
           virtual ~Shader();
 
      public:
-          void use(RenderContext& ctx);
-          void unuse(RenderContext& ctx);
+          void use(State& state);
+          void unuse(State& state);
 
           std::string getName() const;
           void setName(const std::string &name);
 
           template <typename T>
-          void set(RenderContext& ctx, const std::string &name, const T &val)
+          void set(State& state, const std::string &name, const T &val)
           {
-               auto id = getId(ctx);
+               auto id = getId(state);
                auto loc = glGetUniformLocation(id, name.data());
                if (loc >= 0)
                {
-                    set<T>(ctx, loc, val);
+                    set<T>(state, loc, val);
                }
           }
 
           template <typename T>
-          void set(RenderContext& ctx, GLuint loc, const T &val)
+          void set(State& state, GLuint loc, const T &val)
           {
                if constexpr (std::is_same<T, bool>::value)
                {
@@ -70,8 +70,8 @@ namespace AnyRenderer
           static Shader *create(const std::string &vs_path, const std::string &gs_path, const std::string &fs_path);
 
      protected:
-          GLuint onCreate(RenderContext& ctx);
-          void onRelease(RenderContext& ctx) override;
+          GLuint onCreate(State& state);
+          void onRelease(State& state) override;
 
      private:
           struct Data;

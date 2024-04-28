@@ -1,0 +1,39 @@
+#pragma once
+#include "Object.h"
+
+namespace AnyRenderer
+{
+    class GLObject;
+    class Shader;
+    class Camera;
+    class GraphicContext;
+    class Renderer;
+    class StateSet;
+    class State : public Object
+    {
+        friend class Renderer;
+
+    public:
+        State(GraphicContext* ctx);
+        virtual ~State();
+
+    public:
+        Shader* getCurrentShader() const;
+        Renderer* getCurrentRenderer() const;
+        Camera* getCurrentCamera() const;
+        GraphicContext* getContext() const;
+
+        void setCurrentCamera(Camera* cam);
+        void applyShader(StateSet* ss);
+        void applyAttributes(StateSet* ss);
+        void restoreAttributes(StateSet* ss);
+
+        void attachGLObject(GLObject *obj);
+        void detachGLObject(GLObject *obj);
+        void releaseGLObjects();
+
+    private:
+        struct Data;
+        Data *const d;
+    };
+}

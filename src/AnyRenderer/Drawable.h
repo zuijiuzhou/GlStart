@@ -5,13 +5,13 @@
 #include "BoundingBox.h"
 namespace AnyRenderer
 {
-    class RenderContext;
-    class StateSet;
     class Shader;
+    class StateSet;
+    class State;
     class Drawable : public Object
     {
     public:
-        virtual void draw(RenderContext &ctx) = 0;
+        virtual void draw(State &ctx) = 0;
         
         virtual BoundingBox getBoundingBox() const = 0;
     };

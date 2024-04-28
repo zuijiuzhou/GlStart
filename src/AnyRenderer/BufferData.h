@@ -8,17 +8,17 @@ namespace AnyRenderer
         BufferData();
 
     public:
-        bool isDirty(RenderContext &ctx) const;
+        bool isDirty(State &state) const;
         void dirty();
 
-        void bind(RenderContext &ctx);
-        void unbind(RenderContext &ctx);
-        void update(RenderContext &ctx);
+        void bind(State &state);
+        void unbind(State &state);
+        void update(State &state);
 
     protected:
-        virtual bool onUpdate(RenderContext &ctx) = 0;
-        virtual void onBind(RenderContext &ctx) = 0;
-        virtual void onUnbind(RenderContext &ctx) = 0;
+        virtual bool onUpdate(State &state) = 0;
+        virtual void onBind(State &state) = 0;
+        virtual void onUnbind(State &state) = 0;
 
     private:
         struct Data;

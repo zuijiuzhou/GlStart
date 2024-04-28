@@ -8,20 +8,20 @@ namespace AnyRenderer
     {
     }
 
-    void Texture::onBind(RenderContext& ctx)
+    void Texture::onBind(State& state)
     {
         auto type = getType();
-        glBindTexture(type, getId(ctx));
+        glBindTexture(type, getId(state));
     }
 
-    void Texture::onUnbind(RenderContext& ctx)
+    void Texture::onUnbind(State& state)
     {
         auto type = getType();
         glBindTexture(type, 0);
     }
 
-    void Texture::onRelease(RenderContext& ctx){
-        auto id = getId(ctx);
+    void Texture::onRelease(State& state){
+        auto id = getId(state);
         glDeleteTextures(1, &id);
     }
 }

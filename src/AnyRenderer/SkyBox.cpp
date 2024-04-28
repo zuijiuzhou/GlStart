@@ -5,7 +5,7 @@
 #include "Model.h"
 #include "StateSet.h"
 #include "RefPtr.h"
-#include "RenderContext.h"
+#include "State.h"
 #include "Camera.h"
 #include "Depth.h"
 
@@ -41,17 +41,17 @@ void main(){
         struct SkyBoxUpdateCallback : public ModelCallback
         {
             SkyBoxUpdateCallback() : ModelCallback(UPDATE) {}
-            virtual void operator()(RenderContext &ctx, Model *model) override
+            virtual void operator()(State &state, Model *model) override
             {
-                auto shader = ctx.getCurrentShader();
-                auto cam = ctx.getCamera();
+                auto shader = state.getCurrentShader();
+                auto cam = state.getCurrentCamera();
                 auto mat_v = cam->getViewMatrix();
                 mat_v[3] = glm::vec4(0.f, 0.f, 0.f, 1.f);
                 glm::mat4 m1(1.);
                 m1 = glm::rotate(m1, glm::radians(90.f), glm::vec3(1.f, 0.f, 0.f));
                 auto mat_p = cam->getProjectionMatrix();
 
-                shader->set(ctx, "matrix_mvp_", mat_p * mat_v * m1);
+                shader->set(state, "matrix_mvp_", mat_p * mat_v * m1);
             }
         };
     }

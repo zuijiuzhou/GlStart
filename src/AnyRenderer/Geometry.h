@@ -18,7 +18,7 @@ namespace AnyRenderer
         virtual ~Geometry();
 
     public:
-        void draw(RenderContext &ctx) override;
+        void draw(State &ctx) override;
         void addVertexAttribArray(GLuint loc, Array *data);
         void addTexture(GLuint unit, GLuint loc, Texture *tex);
         void addTexture(GLuint unit, const std::string& name, Texture *tex);

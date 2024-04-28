@@ -9,16 +9,16 @@
 #include "CameraManipulator.h"
 #include "UIEvent.h"
 #include "RefPtr.h"
-#include "RenderContext.h"
+#include "GraphicContext.h"
 
 namespace AnyRenderer
 {
     namespace
     {
-        class GlfwRenderContext : public RenderContext
+        class GlfwGraphicContext : public GraphicContext
         {
         public:
-            GlfwRenderContext(GLFWwindow *wnd, Camera *cam) : RenderContext(cam), wnd_(wnd)
+            GlfwGraphicContext(GLFWwindow *wnd) : wnd_(wnd)
             {
             }
 
@@ -37,7 +37,7 @@ namespace AnyRenderer
     {
         RefPtr<Renderer> renderer;
         RefPtr<CameraManipulator> cm;
-        RefPtr<RenderContext> ctx;
+        RefPtr<GraphicContext> ctx;
         GLFWwindow *wnd = nullptr;
         glm::vec2 cursor_pt;
         bool is_initialized = false;
@@ -121,7 +121,7 @@ namespace AnyRenderer
         auto renderer = new Renderer();
         auto cam = renderer->getCamera();
         auto cm = new StandardCameraManipulator(cam);
-        auto ctx = new GlfwRenderContext(wnd, cam);
+        auto ctx = new GlfwGraphicContext(wnd);
         renderer->setContext(ctx);
 
         cam->setViewport(0., 0., w, h);

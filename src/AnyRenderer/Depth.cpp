@@ -26,7 +26,7 @@ namespace AnyRenderer
         return ATTR_DEPTH;
     }
 
-    void Depth::apply(RenderContext &ctx) const
+    void Depth::apply(State &state) const
     {
         glGetDoublev(GL_DEPTH_RANGE, d->prev_near_far);
         glGetBooleanv(GL_DEPTH_WRITEMASK, &d->prev_mask);
@@ -37,7 +37,7 @@ namespace AnyRenderer
         glDepthRange(d->near, d->far);
     }
 
-    void Depth::restore(RenderContext &ctx) const
+    void Depth::restore(State &state) const
     {
         if(d->prev_func != GL_LESS){
             int x = 1;

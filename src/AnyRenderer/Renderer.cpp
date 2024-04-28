@@ -7,16 +7,19 @@
 #include "Drawable.h"
 #include "Shader.h"
 #include "StateSet.h"
-#include "RenderContext.h"
+#include "GraphicContext.h"
 #include "Camera.h"
 #include "RefPtr.h"
+#include "State.h"
 
 namespace AnyRenderer
 {
+    extern void state_set_current_camera(void *data, Camera *cam);
+
     struct Renderer::Data
     {
         RefPtr<Camera> camera;
-        RefPtr<RenderContext> ctx;
+        RefPtr<GraphicContext> ctx;
         std::vector<RefPtr<Model>> models;
         std::vector<RefPtr<Shader>> shaders;
         BoundingBox bb;
@@ -26,7 +29,7 @@ namespace AnyRenderer
     Renderer::Renderer() : d(new Data())
     {
         auto cam = new Camera();
-        auto ctx = new RenderContext(cam);
+        auto ctx = new GraphicContext();
 
         d->ctx = ctx;
         d->camera = cam;
@@ -37,7 +40,7 @@ namespace AnyRenderer
         delete d;
     }
 
-    void Renderer::setContext(RenderContext *ctx)
+    void Renderer::setContext(GraphicContext *ctx)
     {
         if (d->is_initialized)
             throw std::exception();
@@ -75,36 +78,38 @@ namespace AnyRenderer
         auto matrix_vp = d->camera->getViewProjectionMatrix();
         auto view_dir = d->camera->getViewDir();
         auto &ctx = *d->ctx;
+        auto &state = *ctx.getState();
         for (auto model : d->models)
         {
+            state_set_current_camera(state.d, d->camera.get());
             auto stateset = model->getStateSet();
             if (stateset)
             {
-                stateset->applyShader(ctx);
+                state.applyShader(stateset);
             }
-            model->update(ctx);
+            model->update(state);
             auto matrix_m = model->getMatrix();
             if (stateset)
             {
-                stateset->apply(ctx);
-                auto shader = ctx.getCurrentShader();
+                state.applyAttributes(stateset);
+                auto shader = state.getCurrentShader();
                 if (shader)
                 {
-                    shader->set(ctx, "matrix_m", matrix_m);
-                    shader->set(ctx, "matrix_v", matrix_v);
-                    shader->set(ctx, "matrix_mv", matrix_v * matrix_m);
-                    shader->set(ctx, "matrix_mvp", matrix_vp * matrix_m);
-                    shader->set(ctx, "view_dir", view_dir);
+                    shader->set(state, "matrix_m", matrix_m);
+                    shader->set(state, "matrix_v", matrix_v);
+                    shader->set(state, "matrix_mv", matrix_v * matrix_m);
+                    shader->set(state, "matrix_mvp", matrix_vp * matrix_m);
+                    shader->set(state, "view_dir", view_dir);
                 }
             }
             for (int i = 0; i < model->getNbDrawables(); i++)
             {
                 auto drawable = model->getDrawableAt(i);
-                drawable->draw(ctx);
+                drawable->draw(state);
             }
             if (stateset)
             {
-                stateset->restore(ctx);
+                state.restoreAttributes(stateset);
             }
         }
     }

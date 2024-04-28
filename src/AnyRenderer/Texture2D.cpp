@@ -61,7 +61,7 @@ namespace AnyRenderer
         return false;
     }
 
-    GLuint Texture2D::onCreate(RenderContext& ctx)
+    GLuint Texture2D::onCreate(State& ctx)
     {
         GLuint id = 0;
         glGenTextures(1, &id);
@@ -89,7 +89,7 @@ namespace AnyRenderer
         return id;
     }
 
-    bool Texture2D::onUpdate(RenderContext& ctx)
+    bool Texture2D::onUpdate(State& ctx)
     {
         return true;
     }

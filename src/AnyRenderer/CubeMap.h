@@ -16,8 +16,8 @@ namespace AnyRenderer
         void setImages(const std::vector<std::string> &imgs);
 
     protected:
-        virtual GLuint onCreate(RenderContext &ctx) override;
-        virtual bool onUpdate(RenderContext &ctx) override;
+        virtual GLuint onCreate(State &ctx) override;
+        virtual bool onUpdate(State &ctx) override;
 
     private:
         std::vector<std::string> imgs_;

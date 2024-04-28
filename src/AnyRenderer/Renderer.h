@@ -9,7 +9,7 @@ namespace AnyRenderer
     class Model;
     class Camera;
     class CameraManipulator;
-    class RenderContext;
+    class GraphicContext;
     class Renderer : public Object
     {
     public:
@@ -20,9 +20,10 @@ namespace AnyRenderer
         void frame();
         void addModel(Model *model);
         Camera *getCamera() const;
-        void setContext(RenderContext* ctx);
+        void setContext(GraphicContext *ctx);
         void initialize();
         bool isInitialized() const;
+
     private:
         struct Data;
         Data *const d;

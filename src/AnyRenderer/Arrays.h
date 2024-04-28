@@ -21,8 +21,8 @@ namespace AnyRenderer
             virtual void *getData() override;\
             virtual void *getAt(GLsizei index) override; \
         protected: \
-            virtual GLuint onCreate(RenderContext& ctx) override; \
-            virtual bool onUpdate(RenderContext& ctx) override; \
+            virtual GLuint onCreate(State& state) override; \
+            virtual bool onUpdate(State& state) override; \
         };
 
     DEF_ARR(Int, int)

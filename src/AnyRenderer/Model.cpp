@@ -107,7 +107,7 @@ namespace AnyRenderer
         }
     }
 
-    void Model::update(RenderContext& ctx){
+    void Model::update(State& ctx){
         for(auto& c : d->callbacks){
             if(c->getType() == ModelCallback::UPDATE){
                 (*c)(ctx, this);

@@ -1,5 +1,5 @@
 #include "Uniform.h"
-#include "RenderContext.h"
+#include "State.h"
 
 namespace AnyRenderer
 {
@@ -25,7 +25,7 @@ namespace AnyRenderer
         delete d;
     }
 
-    void Uniform::apply(RenderContext &ctx) const
+    void Uniform::apply(State &ctx) const
     {
         auto shader = ctx.getCurrentShader();
         if (shader)

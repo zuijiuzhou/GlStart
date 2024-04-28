@@ -19,8 +19,9 @@
 #include "QtViewer.h"
 #include "RefPtr.h"
 #include "CubeMap.h"
-#include "RenderContext.h"
+#include "GraphicContext.h"
 #include "SkyBox.h"
+#include "Shader.h"
 
 namespace ar = AnyRenderer;
 

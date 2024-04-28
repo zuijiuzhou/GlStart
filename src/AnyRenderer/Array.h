@@ -30,8 +30,8 @@ namespace AnyRenderer
         bool isEmpty() const;
 
     protected:
-        virtual void onBind(RenderContext &ctx) override;
-        virtual void onUnbind(RenderContext &ctx) override;
-        virtual void onRelease(RenderContext &ctx) override;
+        virtual void onBind(State &state) override;
+        virtual void onUnbind(State &state) override;
+        virtual void onRelease(State &state) override;
     };
 }

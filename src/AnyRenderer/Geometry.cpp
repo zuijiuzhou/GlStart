@@ -1,6 +1,6 @@
 #include "Geometry.h"
 #include "Shader.h"
-#include "RenderContext.h"
+#include "State.h"
 #include "RefPtr.h"
 #include "Texture.h"
 
@@ -74,14 +74,14 @@ namespace AnyRenderer
 		d->primitives.push_back(prim);
 	}
 
-	void Geometry::draw(RenderContext &ctx)
+	void Geometry::draw(State &state)
 	{
 		if (d->vbos.empty())
 			return;
 		if (d->primitives.empty())
 			return;
 
-		auto shader = ctx.getCurrentShader();
+		auto shader = state.getCurrentShader();
 		if (d->vao == 0)
 		{
 			glGenVertexArrays(1, &d->vao);
@@ -93,7 +93,7 @@ namespace AnyRenderer
 				auto arr = kv.second;
 				if (arr->getSize() > 1)
 				{
-					arr->bind(ctx);
+					arr->bind(state);
 					auto size_of_item = arr->getSizeOfItem();
 					glVertexAttribPointer(loc, size_of_item / sizeof(GLfloat), GL_FLOAT, GL_FALSE, size_of_item, 0);
 					glEnableVertexAttribArray(loc);
@@ -133,14 +133,14 @@ namespace AnyRenderer
 			auto tex = kv.second;
 			if (d->texture_locs.contains(unit))
 			{
-				shader->set(ctx, d->texture_locs[unit], unit);
+				shader->set(state, d->texture_locs[unit], unit);
 			}
 			else
 			{
-				shader->set(ctx, d->texture_names_[unit], unit);
+				shader->set(state, d->texture_names_[unit], unit);
 			}
 			glActiveTexture(unit);
-			tex->bind(ctx);
+			tex->bind(state);
 		}
 
 		for (auto priv : d->primitives)
@@ -153,7 +153,7 @@ namespace AnyRenderer
 			auto tex = kv.second;
 			if (!tex)
 				continue;
-			tex->unbind(ctx);
+			tex->unbind(state);
 		}
 	}
 

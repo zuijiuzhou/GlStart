@@ -10,16 +10,16 @@
 #include "CameraManipulator.h"
 #include "UIEvent.h"
 #include "RefPtr.h"
-#include "RenderContext.h"
+#include "GraphicContext.h"
 
 namespace AnyRenderer
 {
     namespace
     {
-        class SdlRenderContext : public RenderContext
+        class SdlGraphicContext : public GraphicContext
         {
         public:
-            SdlRenderContext(SDL_Window *wnd, SDL_GLContext ctx, Camera *cam) : RenderContext(cam), sdl_wnd_(wnd), sdl_ctx_(ctx)
+            SdlGraphicContext(SDL_Window *wnd, SDL_GLContext ctx) : sdl_wnd_(wnd), sdl_ctx_(ctx)
             {
 
                 sdl_wnd_ = wnd;
@@ -42,7 +42,7 @@ namespace AnyRenderer
     {
         RefPtr<Renderer> renderer;
         RefPtr<CameraManipulator> cm;
-        RefPtr<RenderContext> ctx;
+        RefPtr<GraphicContext> ctx;
         SDL_Window *sdl_wnd = nullptr;
         SDL_GLContext sdl_ctx = nullptr;
         glm::vec2 cursor_pt;
@@ -111,7 +111,7 @@ namespace AnyRenderer
         auto renderer = new Renderer();
         auto cam = renderer->getCamera();
         auto cm = new StandardCameraManipulator(cam);
-        auto ctx = new SdlRenderContext(sdl_wnd, sdl_ctx, cam);
+        auto ctx = new SdlGraphicContext(sdl_wnd, sdl_ctx);
         renderer->setContext(ctx);
 
         cam->setViewport(0., 0., w, h);

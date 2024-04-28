@@ -1,6 +1,7 @@
 #include "BufferData.h"
 #include <map>
-#include "RenderContext.h"
+#include "State.h"
+#include "GraphicContext.h"
 
 namespace AnyRenderer
 {
@@ -13,37 +14,37 @@ namespace AnyRenderer
     {
     }
 
-    void BufferData::update(RenderContext &ctx)
+    void BufferData::update(State &state)
     {
-        auto ctx_id = ctx.getContextId();
-        if (isDirty(ctx))
+        auto ctx_id = state.getContext()->getId();
+        if (isDirty(state))
         {
-            auto status = onUpdate(ctx);
+            auto status = onUpdate(state);
             d->dirties[ctx_id] = status;
         }
     }
 
-    void BufferData::bind(RenderContext &ctx)
+    void BufferData::bind(State &state)
     {
-        if (!isCreated(ctx))
-            create(ctx);
-        if (!isCreated(ctx))
+        if (!isCreated(state))
+            create(state);
+        if (!isCreated(state))
             return;
-        if (isDirty(ctx))
-            update(ctx);
-        onBind(ctx);
+        if (isDirty(state))
+            update(state);
+        onBind(state);
     }
 
-    void BufferData::unbind(RenderContext &ctx)
+    void BufferData::unbind(State &state)
     {
-        if (!isCreated(ctx))
+        if (!isCreated(state))
             return;
-        onUnbind(ctx);
+        onUnbind(state);
     }
 
-    bool BufferData::isDirty(RenderContext &ctx) const
+    bool BufferData::isDirty(State &state) const
     {
-        auto ctx_id = ctx.getContextId();
+        auto ctx_id = state.getContext()->getId();
         if (d->dirties.contains(ctx_id))
         {
             return d->dirties[ctx_id];

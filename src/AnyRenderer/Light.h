@@ -6,7 +6,7 @@
 
 namespace AnyRenderer
 {
-    class RenderContext;
+    class GraphicContext;
     class Light : public Object
     {
     public:
@@ -67,7 +67,7 @@ namespace AnyRenderer
         virtual Type getType() const override;
 
     protected:
-        virtual void apply(RenderContext &ctx) const override;
+        virtual void apply(State &state) const override;
 
     public:
         static int getMaxLight();

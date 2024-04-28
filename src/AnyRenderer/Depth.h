@@ -27,9 +27,9 @@ namespace AnyRenderer
         virtual Type getType() const;
 
     protected:
-        virtual void apply(RenderContext &ctx) const;
+        virtual void apply(State &state) const;
 
-        virtual void restore(RenderContext &ctx) const;
+        virtual void restore(State &state) const;
 
     private:
         struct Data;

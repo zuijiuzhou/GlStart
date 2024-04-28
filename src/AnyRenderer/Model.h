@@ -8,7 +8,7 @@ namespace AnyRenderer
 {
     class Drawable;
     class StateSet;
-    class RenderContext;
+    class State;
     class ModelCallback;
 
     class Model : public Object
@@ -40,7 +40,7 @@ namespace AnyRenderer
 
         void removeCallback(ModelCallback *callback);
 
-        void update(RenderContext& ctx);
+        void update(State& ctx);
 
     private:
         struct Data;
@@ -61,7 +61,7 @@ namespace AnyRenderer
         ModelCallback(Type type);
 
     public:
-        virtual void operator()(RenderContext &ctx, Model *model) = 0;
+        virtual void operator()(State &state, Model *model) = 0;
 
         Type getType() const;
 

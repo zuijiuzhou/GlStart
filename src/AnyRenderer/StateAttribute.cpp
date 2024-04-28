@@ -2,7 +2,7 @@
 
 namespace AnyRenderer
 {
-    void StateAttribute::restore(RenderContext &ctx) const{
+    void StateAttribute::restore(State &state) const{
 
     }
 }

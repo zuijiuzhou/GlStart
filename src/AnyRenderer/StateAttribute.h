@@ -3,10 +3,10 @@
 namespace AnyRenderer
 {
     class StateSet;
-    class RenderContext;
+    class State;
     class StateAttribute : public Object
     {
-        friend class StateSet;
+        friend class State;
 
     public:
         enum Type
@@ -24,8 +24,8 @@ namespace AnyRenderer
         virtual Type getType() const = 0;
 
     protected:
-        virtual void apply(RenderContext &ctx) const = 0;
+        virtual void apply(State &state) const = 0;
 
-        virtual void restore(RenderContext &ctx) const;
+        virtual void restore(State &state) const;
     };
 }

@@ -12,7 +12,7 @@ namespace AnyRenderer
         virtual ~Uniform();
 
     public:
-        virtual void apply(RenderContext &ctx) const override;
+        virtual void apply(State &state) const override;
 
     private:
         struct Data;

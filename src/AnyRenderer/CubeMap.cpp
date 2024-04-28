@@ -24,7 +24,7 @@ namespace AnyRenderer
         dirty();
     }
 
-    GLuint CubeMap::onCreate(RenderContext &ctx)
+    GLuint CubeMap::onCreate(State &state)
     {
         if (imgs_.size() != 6)
             return 0;
@@ -53,7 +53,7 @@ namespace AnyRenderer
         return id;
     }
 
-    bool CubeMap::onUpdate(RenderContext &ctx)
+    bool CubeMap::onUpdate(State &state)
     {
         return true;
     }

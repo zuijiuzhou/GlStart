@@ -71,18 +71,18 @@ namespace AnyRenderer
     {
     }
 
-    void Shader::use(RenderContext& ctx)
+    void Shader::use(State& state)
     {
-        if (!isCreated(ctx))
-            GLObject::create(ctx);
-        if (!isCreated(ctx))
+        if (!isCreated(state))
+            GLObject::create(state);
+        if (!isCreated(state))
             return;
-        glUseProgram(getId(ctx));
+        glUseProgram(getId(state));
     }
 
-    void Shader::unuse(RenderContext& ctx)
+    void Shader::unuse(State& state)
     {
-        auto id = getId(ctx);
+        auto id = getId(state);
         if (id)
         {
             GLint current_prog;
@@ -102,7 +102,7 @@ namespace AnyRenderer
         d->name = name;
     }
 
-    GLuint Shader::onCreate(RenderContext& ctx)
+    GLuint Shader::onCreate(State& state)
     {
         unsigned int vs_id = 0, gs_id = 0, fs_id = 0;
         char msg[512];
@@ -151,8 +151,8 @@ namespace AnyRenderer
         return app_id;
     }
 
-    void Shader::onRelease(RenderContext& ctx){
-        auto id = getId(ctx);
+    void Shader::onRelease(State& state){
+        auto id = getId(state);
         glDeleteProgram(id);
     }
 

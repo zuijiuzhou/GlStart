@@ -1,6 +1,7 @@
 #include "GLObject.h"
 #include <map>
-#include "RenderContext.h"
+#include "State.h"
+#include "GraphicContext.h"
 
 namespace AnyRenderer
 {
@@ -16,9 +17,9 @@ namespace AnyRenderer
     {
         delete d;
     }
-    GLuint GLObject::getId(RenderContext & ctx) const
+    GLuint GLObject::getId(State & state) const
     {
-        auto ctx_id = ctx.getContextId();
+        auto ctx_id = state.getContext()->getId();
         if (d->ids.contains(ctx_id))
         {
             return d->ids[ctx_id];
@@ -26,26 +27,26 @@ namespace AnyRenderer
         return 0;
     }
 
-    bool GLObject::isCreated(RenderContext & ctx) const
+    bool GLObject::isCreated(State & state) const
     {
-        auto ctx_id = ctx.getContextId();
+        auto ctx_id = state.getContext()->getId();
         return d->ids.contains(ctx_id);
     }
 
-    void GLObject::create(RenderContext & ctx)
+    void GLObject::create(State & state)
     {
-        if (isCreated(ctx))
+        if (isCreated(state))
             return;
-        auto id = onCreate(ctx);
-        d->ids.insert({ctx.getContextId(), id});
-        ctx.attachGLObject(this);
+        auto id = onCreate(state);
+        d->ids.insert({state.getContext()->getId(), id});
+        state.attachGLObject(this);
     }
 
-    void GLObject::release(RenderContext& ctx){
-        if(isCreated(ctx)){
-            onRelease(ctx);
-            d->ids.erase(ctx.getContextId());
-            ctx.detachGLObject(this);
+    void GLObject::release(State& state){
+        if(isCreated(state)){
+            onRelease(state);
+            d->ids.erase(state.getContext()->getId());
+            state.detachGLObject(this);
         }
     }
 

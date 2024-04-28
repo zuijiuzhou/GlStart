@@ -1,7 +1,7 @@
 #include "Light.h"
 #include "Shader.h"
-#include "RenderContext.h"
 #include "Camera.h"
+#include "State.h"
 
 namespace AnyRenderer
 {
@@ -144,9 +144,9 @@ namespace AnyRenderer
         return ATTR_LIGHTS;
     }
 
-    void Lights::apply(RenderContext &ctx) const
+    void Lights::apply(State &state) const
     {
-        auto shader = ctx.getCurrentShader();
+        auto shader = state.getCurrentShader();
         if (shader)
         {
             auto max_light = getMaxLight();
@@ -156,28 +156,28 @@ namespace AnyRenderer
                     break;
                 auto l = lights_[i];
                 auto prefix = "lights[" + std::to_string(i) + "]";
-                shader->set(ctx, prefix + ".a", l->getAmbient());
-                shader->set(ctx, prefix + ".d", l->getDiffuse());
-                shader->set(ctx, prefix + ".s", l->getSpecular());
-                shader->set(ctx, prefix + ".k_c", l->getConstantAttenuation());
-                shader->set(ctx, prefix + ".k_l", l->getLinearAttenuation());
-                shader->set(ctx, prefix + ".k_q", l->getQuadraticAttenuation());
-                shader->set(ctx, prefix + ".expo", l->getExponent());
-                shader->set(ctx, prefix + ".co", l->getCutoff());
+                shader->set(state, prefix + ".a", l->getAmbient());
+                shader->set(state, prefix + ".d", l->getDiffuse());
+                shader->set(state, prefix + ".s", l->getSpecular());
+                shader->set(state, prefix + ".k_c", l->getConstantAttenuation());
+                shader->set(state, prefix + ".k_l", l->getLinearAttenuation());
+                shader->set(state, prefix + ".k_q", l->getQuadraticAttenuation());
+                shader->set(state, prefix + ".expo", l->getExponent());
+                shader->set(state, prefix + ".co", l->getCutoff());
 
                 auto dir = l->getDirection();
                 auto pos = l->getPosition();
                 if(l->getIsHead()){
-                    dir = ctx.getCamera()->getViewDir();
-                    auto view_pos = ctx.getCamera()->getViewPos();
+                    dir = state.getCurrentCamera()->getViewDir();
+                    auto view_pos = state.getCurrentCamera()->getViewPos();
                     pos.x = view_pos.x;
                     pos.y = view_pos.y;
                     pos.z = view_pos.z;
                 }
-                shader->set(ctx, prefix + ".dir", dir);
-                shader->set(ctx, prefix + ".pos", pos);
+                shader->set(state, prefix + ".dir", dir);
+                shader->set(state, prefix + ".pos", pos);
             }
-            shader->set<int>(ctx, "lights_count", lights_.size() > max_light ? max_light : lights_.size());
+            shader->set<int>(state, "lights_count", lights_.size() > max_light ? max_light : lights_.size());
         }
     }
 
