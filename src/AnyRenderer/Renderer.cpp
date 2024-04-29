@@ -23,15 +23,12 @@ namespace AnyRenderer
         std::vector<RefPtr<Model>> models;
         std::vector<RefPtr<Shader>> shaders;
         BoundingBox bb;
-        bool is_initialized;
+        bool is_first_frame = true;
     };
 
     Renderer::Renderer() : d(new Data())
     {
         auto cam = new Camera();
-        auto ctx = new GraphicContext();
-
-        d->ctx = ctx;
         d->camera = cam;
     }
 
@@ -40,33 +37,41 @@ namespace AnyRenderer
         delete d;
     }
 
+    void Renderer::addModel(Model *model)
+    {
+        if (std::find(d->models.begin(), d->models.end(), model) == d->models.end())
+        {
+            d->models.push_back(model);
+        }
+    }
+
+    void Renderer::setCamera(Camera* cam){
+        d->camera = cam;
+    }
+
+    Camera *Renderer::getCamera() const
+    {
+        return d->camera.get();
+    }
+
     void Renderer::setContext(GraphicContext *ctx)
     {
-        if (d->is_initialized)
-            throw std::exception();
         d->ctx = ctx;
     }
 
-    void Renderer::initialize()
+    GraphicContext *Renderer::getContext() const
     {
-        if (d->is_initialized)
-        {
-            return;
-        }
-        d->ctx->makeCurrent();
-        glDepthMask(GL_TRUE);
-        d->is_initialized = true;
-    }
-
-    bool Renderer::isInitialized() const
-    {
-        return d->is_initialized;
+        return d->ctx.get();
     }
 
     void Renderer::frame()
     {
-        if (!d->is_initialized)
+        if (!d->ctx)
             return;
+        if (d->is_first_frame)
+        {
+            d->is_first_frame = false;
+        }
         d->ctx->makeCurrent();
         d->camera->apply();
 
@@ -114,16 +119,4 @@ namespace AnyRenderer
         }
     }
 
-    void Renderer::addModel(Model *model)
-    {
-        if (std::find(d->models.begin(), d->models.end(), model) == d->models.end())
-        {
-            d->models.push_back(model);
-        }
-    }
-
-    Camera *Renderer::getCamera() const
-    {
-        return d->camera.get();
-    }
 }

@@ -61,7 +61,6 @@ namespace AnyRenderer
                 throw std::exception("GLAD init faild.");
         }
 
-        d->renderer->initialize();
         auto cam = d->renderer->getCamera();
         cam->setViewport(0, 0, width(), height());
         cam->setClearDepth(1.0);

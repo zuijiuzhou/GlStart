@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "Event.h"
 
 namespace AnyRenderer
 {
@@ -17,6 +18,11 @@ namespace AnyRenderer
         int getId() const;
         State* getState() const;
         virtual void makeCurrent();
+
+        virtual int getWidth() const;
+        virtual int getHeight() const;
+
+        void notify(Event* e);
 
     public:
         static GraphicContext *getContextById(int id);

@@ -19,10 +19,10 @@ namespace AnyRenderer
     public:
         void frame();
         void addModel(Model *model);
+        void setCamera(Camera* cam);
         Camera *getCamera() const;
         void setContext(GraphicContext *ctx);
-        void initialize();
-        bool isInitialized() const;
+        GraphicContext *getContext() const;
 
     private:
         struct Data;

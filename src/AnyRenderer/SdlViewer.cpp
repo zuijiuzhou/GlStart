@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "CameraManipulator.h"
-#include "UIEvent.h"
+#include "Event.h"
 #include "RefPtr.h"
 #include "GraphicContext.h"
 
@@ -130,7 +130,6 @@ namespace AnyRenderer
         glFrontFace(GL_CCW);
         glDepthFunc(GL_LESS);
 
-        renderer->initialize();
 
         d->renderer = renderer;
         d->cm = cm;
