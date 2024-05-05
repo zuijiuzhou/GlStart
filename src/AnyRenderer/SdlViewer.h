@@ -3,7 +3,7 @@
 
 namespace AnyRenderer
 {
-    class Renderer;
+    class Viewer;
 
     class SdlViewer
     {
@@ -12,14 +12,14 @@ namespace AnyRenderer
         virtual ~SdlViewer();
 
     public:
-        Renderer *getRenderer() const;
+        Viewer *getViewer() const;
 
         void initialize();
 
         bool isInitialized() const;
 
         void run();
-        
+    
     private:
         struct Data;
         Data *const d;

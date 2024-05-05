@@ -28,14 +28,42 @@ namespace AnyRenderer
         delete d;
     }
 
-    void StandardCameraManipulator::notifyMouseReleased(MouseButton btn, int x, int y)
+    void StandardCameraManipulator::handleEvent(Event *e)
+    {
+        switch (e->getType())
+        {
+        case EventType::MousePress:
+            handleMousePressed(e->getMouseButton(), e->getMouseX(), e->getMouseY());
+            break;
+
+        case EventType::MouseMove:
+            handleMouseMoved(e->getMouseX(), e->getMouseY());
+            break;
+
+        case EventType::MouseRelease:
+            handleMouseReleased(e->getMouseButton(), e->getMouseX(), e->getMouseY());
+            break;
+
+        case EventType::MouseWheel:
+            handleMouseScrolled(e->getMouseDelta());
+            break;
+
+        case EventType::Resize:
+            handleResized(e->getWidth(), e->getHeight());
+            break;
+        default:
+            break;
+        }
+    }
+
+    void StandardCameraManipulator::handleMouseReleased(MouseButton btn, int x, int y)
     {
         d->is_pan_started = false;
         d->is_rotation_started = false;
         d->is_cursor_move_started = false;
     }
 
-    void StandardCameraManipulator::notifyMousePressed(MouseButton btn, int x, int y)
+    void StandardCameraManipulator::handleMousePressed(MouseButton btn, int x, int y)
     {
         switch (btn)
         {
@@ -58,7 +86,7 @@ namespace AnyRenderer
         }
     }
 
-    void StandardCameraManipulator::notifyMouseMoved(int x, int y)
+    void StandardCameraManipulator::handleMouseMoved(int x, int y)
     {
         auto xx = static_cast<float>(x);
         auto yy = static_cast<float>(y);
@@ -99,7 +127,7 @@ namespace AnyRenderer
         }
     }
 
-    void StandardCameraManipulator::notifyMouseScrolled(int delta)
+    void StandardCameraManipulator::handleMouseScrolled(int delta)
     {
         auto vm = d->camera->getViewMatrix();
         glm::vec3 p, t, u, dir;
@@ -112,7 +140,7 @@ namespace AnyRenderer
         d->camera->setViewMatrix(vm);
     }
 
-    void StandardCameraManipulator::notifyResized(int w, int h)
+    void StandardCameraManipulator::handleResized(int w, int h)
     {
         d->width = w;
         d->height = h;

@@ -11,6 +11,7 @@
 #include "Event.h"
 #include "RefPtr.h"
 #include "GraphicContext.h"
+#include "Viewer.h"
 
 namespace AnyRenderer
 {
@@ -19,11 +20,17 @@ namespace AnyRenderer
         class SdlGraphicContext : public GraphicContext
         {
         public:
-            SdlGraphicContext(SDL_Window *wnd, SDL_GLContext ctx) : sdl_wnd_(wnd), sdl_ctx_(ctx)
+            SdlGraphicContext()
             {
+            }
 
-                sdl_wnd_ = wnd;
-                sdl_ctx_ = ctx;
+            virtual ~SdlGraphicContext()
+            {
+                if (sdl_wnd_)
+                {
+                    SDL_GL_DeleteContext(sdl_ctx_);
+                    SDL_DestroyWindow(sdl_wnd_);
+                }
             }
 
         public:
@@ -32,20 +39,111 @@ namespace AnyRenderer
                 SDL_GL_MakeCurrent(sdl_wnd_, sdl_ctx_);
             }
 
+            virtual void swapBuffers() override
+            {
+                SDL_GL_SwapWindow(sdl_wnd_);
+            }
+
+            virtual void realize() override
+            {
+                if (isRealized())
+                    return;
+
+                if (SDL_Init(SDL_INIT_VIDEO) < 0)
+                {
+                    throw std::exception("SDL init failed");
+                }
+
+                SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+                SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+                SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+                SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+                SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+                SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+                SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+                SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+                auto w = 800, h = 600;
+
+                auto *sdl_wnd = SDL_CreateWindow("SdlViewer", 0, 0, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+                if (sdl_wnd == NULL)
+                {
+                    throw std::exception("Unable to create SDL window");
+                }
+
+                SDL_SysWMinfo sdlInfo;
+                SDL_VERSION(&sdlInfo.version);
+                SDL_GetWindowWMInfo(sdl_wnd, &sdlInfo);
+
+                auto sdl_ctx = SDL_GL_CreateContext(sdl_wnd);
+                if (sdl_ctx == NULL)
+                {
+                    SDL_DestroyWindow(sdl_wnd);
+                    SDL_Quit();
+                    throw std::exception("Unable to create SDL context");
+                }
+
+                SDL_GL_SetSwapInterval(0);
+                SDL_GL_MakeCurrent(sdl_wnd, sdl_ctx);
+
+                if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
+                {
+                    SDL_GL_DeleteContext(sdl_ctx);
+                    SDL_DestroyWindow(sdl_wnd);
+                    SDL_Quit();
+                    throw std::exception("GLAD init failed");
+                }
+
+                SDL_ShowWindow(sdl_wnd);
+                SDL_GL_MakeCurrent(sdl_wnd_, sdl_ctx);
+                sdl_wnd_ = sdl_wnd;
+                sdl_ctx_ = sdl_ctx;
+                GraphicContext::realize();
+            }
+
+            virtual int getWidth() const override
+            {
+                return size_.x;
+            }
+
+            virtual int getHeight() const override
+            {
+                return size_.y;
+            }
+
+            void pollEvents()
+            {
+                SDL_Event event;
+                while (SDL_PollEvent(&event))
+                {
+                    if (event.type == SDL_QUIT)
+                        done_ = true;
+                    if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(sdl_wnd_))
+                        done_ = true;
+
+                    if (done_)
+                        break;
+                }
+            }
+
+            bool isDone()
+            {
+                return done_;
+            }
+
         private:
             SDL_Window *sdl_wnd_;
             SDL_GLContext sdl_ctx_;
+            glm::vec2 size_;
+            bool done_ = false;
         };
     }
 
     struct SdlViewer::Data
     {
+        RefPtr<Viewer> viewer;
         RefPtr<Renderer> renderer;
-        RefPtr<CameraManipulator> cm;
-        RefPtr<GraphicContext> ctx;
-        SDL_Window *sdl_wnd = nullptr;
-        SDL_GLContext sdl_ctx = nullptr;
-        glm::vec2 cursor_pt;
+        RefPtr<SdlGraphicContext> ctx;
         bool is_initialized = false;
     };
 
@@ -62,63 +160,22 @@ namespace AnyRenderer
     {
         if (d->is_initialized)
             return;
-        if (SDL_Init(SDL_INIT_VIDEO) < 0)
-        {
-            throw std::exception("SDL init failed");
-        }
 
-        SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-        auto w = 800, h = 600;
-
-        auto *sdl_wnd = SDL_CreateWindow("SdlViewer", 0, 0, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
-        if (sdl_wnd == NULL)
-        {
-            throw std::exception("Unable to create SDL window");
-        }
-
-        SDL_SysWMinfo sdlInfo;
-        SDL_VERSION(&sdlInfo.version);
-        SDL_GetWindowWMInfo(sdl_wnd, &sdlInfo);
-
-        auto sdl_ctx = SDL_GL_CreateContext(sdl_wnd);
-        if (sdl_ctx == NULL)
-        {
-            SDL_DestroyWindow(sdl_wnd);
-            SDL_Quit();
-            throw std::exception("Unable to create SDL context");
-        }
-
-        SDL_GL_SetSwapInterval(0);
-        SDL_GL_MakeCurrent(sdl_wnd, sdl_ctx);
-
-        if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
-        {
-            SDL_GL_DeleteContext(sdl_ctx);
-            SDL_DestroyWindow(sdl_wnd);
-            SDL_Quit();
-            throw std::exception("GLAD init failed");
-        }
-
-
+        auto viewer = new Viewer();
         auto renderer = new Renderer();
         auto cam = renderer->getCamera();
         auto cm = new StandardCameraManipulator(cam);
-        auto ctx = new SdlGraphicContext(sdl_wnd, sdl_ctx);
+        auto ctx = new SdlGraphicContext();
         renderer->setContext(ctx);
 
-        cam->setViewport(0., 0., w, h);
+        cam->setViewport(0., 0., ctx->getWidth(), ctx->getHeight());
         cam->setClearDepth(1.0);
         cam->setClearStencil(1);
         cam->setClearColor(glm::vec4(0., 0., 0., 1.));
         cam->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        viewer->addRenderer(renderer);
+        ctx->realize();
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_DEPTH_TEST);
@@ -130,11 +187,8 @@ namespace AnyRenderer
         glFrontFace(GL_CCW);
         glDepthFunc(GL_LESS);
 
-
+        d->viewer = viewer;
         d->renderer = renderer;
-        d->cm = cm;
-        d->sdl_wnd = sdl_wnd;
-        d->sdl_ctx = sdl_ctx;
         d->ctx = ctx;
         d->is_initialized = true;
     }
@@ -144,20 +198,23 @@ namespace AnyRenderer
         return d->is_initialized;
     }
 
-    Renderer *SdlViewer::getRenderer() const
+    Viewer *SdlViewer::getViewer() const
     {
-        return d->renderer.get();
+        return d->viewer.get();
     }
 
     void SdlViewer::run()
     {
-        SDL_ShowWindow(d->sdl_wnd);
-        SDL_GL_MakeCurrent(d->sdl_wnd, d->sdl_ctx);
-        while (true)
+        if(!isInitialized()){
+            initialize();
+        }
+        auto &ctx = *d->ctx.get();
+        ctx.makeCurrent();
+        while (!ctx.isDone())
         {
-            d->renderer->frame();
-             
-            SDL_GL_SwapWindow(d->sdl_wnd);
+            ctx.pollEvents();
+            d->viewer->frame();
+            ctx.swapBuffers();
         }
     }
 }

@@ -22,6 +22,7 @@
 #include "GraphicContext.h"
 #include "SkyBox.h"
 #include "Shader.h"
+#include "Viewer.h"
 
 namespace ar = AnyRenderer;
 
@@ -109,18 +110,18 @@ void CreateSampleShapes(ar::Renderer *renderer)
 
 int main(int argc, char **argv)
 {
-#define GLFW_VIEWER
+#define GLFW_VIEWER1
 
 #ifdef GLFW_VIEWER
     ar::GlfwViewer v;
     v.initialize();
-    auto renderer = v.getRenderer();
+    auto renderer = v.getViewer()->getRendererAt(0);
 #else
     // QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setAttribute(Qt::AA_ShareOpenGLContexts, false);
     QApplication app(argc, argv);
     ar::QtMainWindow wnd;
-    auto renderer = wnd.getViewer()->getRenderer();
+    auto renderer = wnd.getViewer()->getViewer()->getRendererAt(0);
 #endif
 
     if (argc > 1)

@@ -3,7 +3,7 @@
 
 namespace AnyRenderer
 {
-    class Renderer;
+    class Viewer;
     class QtViewer : public QOpenGLWidget
     {
     public:
@@ -11,7 +11,7 @@ namespace AnyRenderer
         virtual ~QtViewer();
 
     public:
-        Renderer *getRenderer() const;
+        Viewer *getViewer() const;
 
     protected:
         virtual void initializeGL() override;

@@ -45,7 +45,7 @@ namespace AnyRenderer
         return d->mouse_y;
     }
 
-    int Event::getMouseButton() const
+    MouseButton Event::getMouseButton() const
     {
         return d->mouse_btn;
     }
@@ -60,7 +60,7 @@ namespace AnyRenderer
         return d->ctx;
     }
 
-    Event *Event::CreateMousePressEvent(GraphicContext *ctx, MouseButton button, int x, int y)
+    Event *Event::createMousePressEvent(GraphicContext *ctx, MouseButton button, int x, int y)
     {
         auto e = new Event(ctx, MousePress);
         e->d->mouse_btn = button;
@@ -68,14 +68,14 @@ namespace AnyRenderer
         e->d->mouse_y = y;
         return e;
     }
-    Event *Event::CreateMouseMoveEvent(GraphicContext *ctx, int x, int y)
+    Event *Event::createMouseMoveEvent(GraphicContext *ctx, int x, int y)
     {
         auto e = new Event(ctx, MouseMove);
         e->d->mouse_x = x;
         e->d->mouse_y = y;
         return e;
     }
-    Event *Event::CreateMouseReleaseEvent(GraphicContext *ctx, MouseButton button, int x, int y)
+    Event *Event::createMouseReleaseEvent(GraphicContext *ctx, MouseButton button, int x, int y)
     {
         auto e = new Event(ctx, MouseRelease);
         e->d->mouse_btn = button;
@@ -83,13 +83,13 @@ namespace AnyRenderer
         e->d->mouse_y = y;
         return e;
     }
-    Event *Event::CreateMouseWheelEvent(GraphicContext *ctx, int delta)
+    Event *Event::createMouseWheelEvent(GraphicContext *ctx, int delta)
     {
         auto e = new Event(ctx, MouseWheel);
         e->d->mouse_delta = delta;
         return e;
     }
-    Event *Event::CreateResizeEvent(GraphicContext *ctx, int w, int h)
+    Event *Event::createResizeEvent(GraphicContext *ctx, int w, int h)
     {
         auto e = new Event(ctx, Resize);
         e->d->size_width = w;

@@ -9,7 +9,7 @@ namespace AnyRenderer
 
     public:
         void ref();
-        void unref();
+        void unref(bool release = true);
 
     private:
         unsigned int nb_refs_ = 0;

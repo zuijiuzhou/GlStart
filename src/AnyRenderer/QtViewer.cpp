@@ -7,13 +7,46 @@
 #include "Camera.h"
 #include "CameraManipulator.h"
 #include "RefPtr.h"
+#include "Viewer.h"
+#include "Event.h"
+#include "GraphicContext.h"
 
 namespace AnyRenderer
 {
+    namespace
+    {
+        class GraphicContextQt : public GraphicContext
+        {
+        public:
+            GraphicContextQt(QOpenGLWidget *widget) : widget_(widget)
+            {
+            }
+
+            virtual ~GraphicContextQt()
+            {
+            }
+
+        public:
+            virtual int getWidth() const
+            {
+                return widget_->width();
+            }
+
+            virtual int getHeight() const
+            {
+                return widget_->height();
+            }
+
+        private:
+            QOpenGLWidget *widget_ = nullptr;
+        };
+    }
+
     struct QtViewer::Data
     {
+        RefPtr<Viewer> viewer;
         RefPtr<Renderer> renderer;
-        RefPtr<CameraManipulator> cm;
+        RefPtr<GraphicContext> ctx;
     };
 
     QtViewer::QtViewer()
@@ -31,12 +64,18 @@ namespace AnyRenderer
         format.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
         setFormat(format);
 
+        auto viewer = new Viewer();
         auto renderer = new Renderer();
+        auto ctx = new GraphicContextQt(this);
         auto cam = renderer->getCamera();
         auto cm = new StandardCameraManipulator(cam);
+        renderer->setContext(ctx);
+        renderer->setCameraManipulator(cm);
+        viewer->addRenderer(renderer);
 
+        d->viewer = viewer;
         d->renderer = renderer;
-        d->cm = cm;
+        d->ctx = ctx;
     }
 
     QtViewer::~QtViewer()
@@ -44,9 +83,9 @@ namespace AnyRenderer
         delete d;
     }
 
-    Renderer *QtViewer::getRenderer() const
+    Viewer *QtViewer::getViewer() const
     {
-        return d->renderer.get();
+        return d->viewer.get();
     }
 
     void QtViewer::initializeGL()
@@ -82,12 +121,12 @@ namespace AnyRenderer
     void QtViewer::resizeGL(int w, int h)
     {
         auto ratio = this->screen()->devicePixelRatio();
-        d->cm->notifyResized(w * ratio, h * ratio);
+        d->ctx->notify(Event::createResizeEvent(d->ctx.get(), w * ratio, h * ratio));
     }
 
     void QtViewer::paintGL()
     {
-        d->renderer->frame();
+        d->viewer->frame();
     }
 
     void QtViewer::resizeEvent(QResizeEvent *e)
@@ -111,7 +150,7 @@ namespace AnyRenderer
             btn = ButtonRight;
         }
         auto ratio = this->screen()->devicePixelRatio();
-        d->cm->notifyMousePressed(btn, event->x() * ratio, event->y() * ratio);
+        d->ctx->notify(Event::createMousePressEvent(d->ctx.get(), btn, event->x() * ratio, event->y() * ratio));
         QOpenGLWidget::mousePressEvent(event);
         this->update();
     };
@@ -132,7 +171,7 @@ namespace AnyRenderer
             btn = ButtonRight;
         }
         auto ratio = this->screen()->devicePixelRatio();
-        d->cm->notifyMouseReleased(btn, event->x() * ratio, event->y() * ratio);
+        d->ctx->notify(Event::createMouseReleaseEvent(d->ctx.get(), btn, event->x() * ratio, event->y() * ratio));
         QOpenGLWidget::mouseReleaseEvent(event);
     };
 
@@ -145,14 +184,14 @@ namespace AnyRenderer
     void QtViewer::mouseMoveEvent(QMouseEvent *event)
     {
         auto ratio = this->screen()->devicePixelRatio();
-        d->cm->notifyMouseMoved(event->x() * ratio, event->y() * ratio);
+        d->ctx->notify(Event::createMouseMoveEvent(d->ctx.get(), event->x() * ratio, event->y() * ratio));
         QOpenGLWidget::mouseMoveEvent(event);
         this->update();
     };
 
     void QtViewer::wheelEvent(QWheelEvent *event)
     {
-        d->cm->notifyMouseScrolled(event->angleDelta().y() / 20);
+        d->ctx->notify(Event::createMouseWheelEvent(d->ctx.get(), event->angleDelta().y()));
         QOpenGLWidget::wheelEvent(event);
         this->update();
     };

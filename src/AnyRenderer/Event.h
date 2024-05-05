@@ -37,16 +37,16 @@ namespace AnyRenderer
         int getHeight() const;
         int getMouseX() const;
         int getMouseY() const;
-        int getMouseButton() const;
         int getMouseDelta() const;
+        MouseButton getMouseButton() const;
         GraphicContext *getContext() const;
 
     public:
-        static Event* CreateMousePressEvent(GraphicContext *ctx, MouseButton button, int x, int y);
-        static Event* CreateMouseMoveEvent(GraphicContext *ctx, int x, int y);
-        static Event* CreateMouseReleaseEvent(GraphicContext *ctx, MouseButton button, int x, int y);
-        static Event* CreateMouseWheelEvent(GraphicContext *ctx, int delta);
-        static Event* CreateResizeEvent(GraphicContext *ctx, int w, int h);
+        static Event* createMousePressEvent(GraphicContext *ctx, MouseButton button, int x, int y);
+        static Event* createMouseMoveEvent(GraphicContext *ctx, int x, int y);
+        static Event* createMouseReleaseEvent(GraphicContext *ctx, MouseButton button, int x, int y);
+        static Event* createMouseWheelEvent(GraphicContext *ctx, int delta);
+        static Event* createResizeEvent(GraphicContext *ctx, int w, int h);
 
     private:
         struct Data;

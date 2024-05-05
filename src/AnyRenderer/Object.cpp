@@ -17,10 +17,10 @@ namespace AnyRenderer
         // 单线程
         nb_refs_++;
     }
-    void Object::unref()
+    void Object::unref(bool release)
     {
         nb_refs_--;
-        if (nb_refs_ == 0)
+        if (nb_refs_ == 0 && release)
             delete this;
     }
 }

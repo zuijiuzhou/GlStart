@@ -17,12 +17,14 @@ namespace AnyRenderer
         virtual ~Renderer();
 
     public:
-        void frame();
+        void render();
         void addModel(Model *model);
-        void setCamera(Camera* cam);
         Camera *getCamera() const;
-        void setContext(GraphicContext *ctx);
+        void setCamera(Camera* cam);
         GraphicContext *getContext() const;
+        void setContext(GraphicContext *ctx);
+        CameraManipulator* getCameraManipulator() const;
+        void setCameraManipulator(CameraManipulator* cm);
 
     private:
         struct Data;

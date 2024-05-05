@@ -11,6 +11,7 @@
 #include "Camera.h"
 #include "RefPtr.h"
 #include "State.h"
+#include "CameraManipulator.h"
 
 namespace AnyRenderer
 {
@@ -20,6 +21,7 @@ namespace AnyRenderer
     {
         RefPtr<Camera> camera;
         RefPtr<GraphicContext> ctx;
+        RefPtr<CameraManipulator> cm;
         std::vector<RefPtr<Model>> models;
         std::vector<RefPtr<Shader>> shaders;
         BoundingBox bb;
@@ -45,18 +47,14 @@ namespace AnyRenderer
         }
     }
 
-    void Renderer::setCamera(Camera* cam){
-        d->camera = cam;
-    }
-
     Camera *Renderer::getCamera() const
     {
         return d->camera.get();
     }
 
-    void Renderer::setContext(GraphicContext *ctx)
+    void Renderer::setCamera(Camera *cam)
     {
-        d->ctx = ctx;
+        d->camera = cam;
     }
 
     GraphicContext *Renderer::getContext() const
@@ -64,7 +62,22 @@ namespace AnyRenderer
         return d->ctx.get();
     }
 
-    void Renderer::frame()
+    void Renderer::setContext(GraphicContext *ctx)
+    {
+        d->ctx = ctx;
+    }
+
+    CameraManipulator *Renderer::getCameraManipulator() const
+    {
+        return d->cm.get();
+    }
+
+    void Renderer::setCameraManipulator(CameraManipulator *cm)
+    {
+        d->cm = cm;
+    }
+
+    void Renderer::render()
     {
         if (!d->ctx)
             return;

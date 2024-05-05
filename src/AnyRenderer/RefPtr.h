@@ -78,7 +78,7 @@ namespace AnyRenderer
     public:
         bool operator!()
         {
-            return !!ptr_;
+            return !ptr_;
         }
 
         T *operator->()
