@@ -257,6 +257,7 @@ namespace ModelViewer
             TColgp_Array1OfDir occ_norms(1, mesh->NbNodes());
             getFaceNormals(face, mesh.get(), occ_norms);
             for(auto& n : occ_norms){
+                n.Transform(loc.Transformation());
                 norms->push_back(osg::Vec3(n.X(), n.Y(), n.Z()));
             }
 

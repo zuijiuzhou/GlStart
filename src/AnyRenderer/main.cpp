@@ -108,8 +108,27 @@ void CreateSampleShapes(ar::Renderer *renderer)
     renderer->addModel(skybox);
 }
 
+#pragma pack(push 1)
+struct Data{
+    float x;
+    float y;
+    float z;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+};
+#pragma pop
+
 int main(int argc, char **argv)
 {
+
+    Data datas[1000];
+    std::string path = "d:/1.bin";
+
+    std::vector<int> x;
+    std::vector<int> y = {1, 2};
+    x = {y};
+
 #define GLFW_VIEWER1
 
 #ifdef GLFW_VIEWER
