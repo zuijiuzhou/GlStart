@@ -2,25 +2,5 @@
 #include <iostream>
 namespace AnyRenderer
 {
-
-    Object::~Object()
-    {
-        if (nb_refs_ > 0)
-        {
-
-            printf("Warning:\n");
-        }
-    }
-
-    void Object::ref()
-    {
-        // 单线程
-        nb_refs_++;
-    }
-    void Object::unref(bool release)
-    {
-        nb_refs_--;
-        if (nb_refs_ == 0 && release)
-            delete this;
-    }
+	VI_OBJECT_META_IMPL(Object, vine::Object)
 }

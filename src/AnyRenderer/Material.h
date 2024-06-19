@@ -5,6 +5,8 @@ namespace AnyRenderer
 {
     class Material : public StateAttribute
     {
+        VI_OBJECT_META;
+
     public:
         Material();
 

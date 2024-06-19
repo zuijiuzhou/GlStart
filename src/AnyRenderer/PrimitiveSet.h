@@ -7,6 +7,8 @@ namespace AnyRenderer
 {
     class PrimitiveSet : public Object
     {
+        VI_OBJECT_META;
+
     public:
         enum Mode
         {
@@ -41,6 +43,8 @@ namespace AnyRenderer
 
     class DrawArrays : public PrimitiveSet
     {
+        VI_OBJECT_META;
+
     public:
         DrawArrays();
         DrawArrays(Mode mode, GLint offset, GLsizei count);
@@ -62,6 +66,8 @@ namespace AnyRenderer
 
     class DrawElementsUInt : public PrimitiveSet
     {
+        VI_OBJECT_META;
+
     public:
         DrawElementsUInt();
         DrawElementsUInt(Mode mode);

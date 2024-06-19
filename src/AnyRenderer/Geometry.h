@@ -13,6 +13,8 @@ namespace AnyRenderer
     class CubeMap;
     class Geometry : public Drawable
     {
+        VI_OBJECT_META;
+
     public:
         Geometry();
         virtual ~Geometry();
@@ -29,6 +31,7 @@ namespace AnyRenderer
 
     public:
         static Geometry *createCube(float size, int vertices_loc, int normals_loc = -1, int tex_2d_coords_loc = -1, int cube_map_coords_loc = -1);
+        //static Geometry *createTexturedQuad(int vertices_loc, int norms_loc, int tex_coords_loc, float w, float h, float x = 0, float y = 0, float left = 0, float bottom = 0, float right = 1, float top = 1);
 
     private:
         struct Data;

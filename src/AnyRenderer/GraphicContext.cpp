@@ -1,15 +1,18 @@
 #include "GraphicContext.h"
+
 #include <queue>
+#include <vine/core/Ptr.h>
+
 #include "ResourceManager.h"
-#include "RefPtr.h"
 #include "State.h"
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(GraphicContext, Object);
 
     struct GraphicContext::EventQueue::Data
     {
-        std::queue<RefPtr<Event>> events;
+        std::queue<vine::RefPtr<Event>> events;
     };
 
     GraphicContext::EventQueue::EventQueue() : d(new Data())
@@ -34,7 +37,7 @@ namespace AnyRenderer
 
     void GraphicContext::EventQueue::clear()
     {
-        d->events = std::queue<RefPtr<Event>>();
+        d->events = std::queue<vine::RefPtr<Event>>();
     }
 
     int GraphicContext::EventQueue::size() const{
@@ -46,8 +49,8 @@ namespace AnyRenderer
         static int max_id;
         int id = 0;
         bool is_initialized = false;
-        RefPtr<State> state;
-        RefPtr<EventQueue> events;
+        vine::RefPtr<State> state;
+        vine::RefPtr<EventQueue> events;
     };
 
     int GraphicContext::Data::max_id = 0;

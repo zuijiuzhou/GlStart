@@ -12,6 +12,7 @@ namespace AnyRenderer
 
     #define DEF_ARR(N, T) \
         class N##Array : public Array, public std::vector<T>{ \
+            VI_OBJECT_META \
         public: \
             using item_type = T; \
         public: \

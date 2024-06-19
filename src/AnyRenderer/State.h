@@ -11,6 +11,8 @@ namespace AnyRenderer
     class StateSet;
     class State : public Object
     {
+        VI_OBJECT_META;
+
         friend class Renderer;
 
     public:

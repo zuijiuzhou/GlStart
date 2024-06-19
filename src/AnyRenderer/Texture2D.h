@@ -8,6 +8,8 @@ namespace AnyRenderer
 {
     class Texture2D : public Texture
     {
+        VI_OBJECT_META;
+
     public:
         Texture2D();
         virtual ~Texture2D();

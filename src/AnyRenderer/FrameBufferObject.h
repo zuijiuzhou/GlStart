@@ -5,6 +5,8 @@ namespace AnyRenderer
 {
     class FrameBufferObject : public GLObject
     {
+        VI_OBJECT_META;
+
     public:
         FrameBufferObject();
         virtual ~FrameBufferObject();

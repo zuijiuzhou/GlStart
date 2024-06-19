@@ -13,6 +13,8 @@ namespace AnyRenderer
 
     class Model : public Object
     {
+        VI_OBJECT_META;
+
     public:
         Model();
         virtual ~Model();

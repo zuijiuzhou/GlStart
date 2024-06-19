@@ -8,6 +8,8 @@ namespace AnyRenderer
 {
     class Camera : public Object
     {
+        VI_OBJECT_META;
+
     public:
         Camera();
 

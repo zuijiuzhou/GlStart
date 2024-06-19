@@ -5,6 +5,8 @@ namespace AnyRenderer
 {
     class Texture : public BufferData
     {
+        VI_OBJECT_META;
+
     public:
         enum Type
         {

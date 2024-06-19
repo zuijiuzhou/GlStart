@@ -5,6 +5,8 @@ namespace AnyRenderer
     class Renderer;
     class Viewer : public Object
     {
+        VI_OBJECT_META;
+
     public:
         Viewer();
 

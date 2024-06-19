@@ -4,6 +4,7 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Texture2D, Texture);
 
     struct Texture2D::Data
     {

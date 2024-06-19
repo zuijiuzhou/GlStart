@@ -5,6 +5,8 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(BufferData, GLObject);
+
     struct BufferData::Data
     {
         std::map<int, bool> dirties;

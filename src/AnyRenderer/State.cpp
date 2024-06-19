@@ -1,6 +1,9 @@
 #include "State.h"
+
 #include <set>
-#include "RefPtr.h"
+
+#include <vine/core/Ptr.h>
+
 #include "GLObject.h"
 #include "StateSet.h"
 #include "Shader.h"
@@ -14,14 +17,16 @@ namespace AnyRenderer
     {
         struct StateData
         {
-            RefPtr<GraphicContext> ctx = nullptr;
-            RefPtr<Shader> current_shader = nullptr;
-            RefPtr<Camera> current_camera = nullptr;
-            RefPtr<Renderer> current_renderer = nullptr;
+            vine::RefPtr<GraphicContext> ctx = nullptr;
+            vine::RefPtr<Shader> current_shader = nullptr;
+            vine::RefPtr<Camera> current_camera = nullptr;
+            vine::RefPtr<Renderer> current_renderer = nullptr;
 
-            std::set<RefPtr<GLObject>> gl_objs;
+            std::set<vine::RefPtr<GLObject>> gl_objs;
         };
     }
+
+    VI_OBJECT_META_IMPL(State, Object);
 
     struct State::Data : public StateData
     {

@@ -2,6 +2,9 @@
 #include <iostream>
 #include <functional>
 #include <glad/glad.h>
+
+#include <vine/core/Ptr.h>
+
 #include "Utilities/Resources.h"
 #include "Model.h"
 #include "Drawable.h"
@@ -9,21 +12,22 @@
 #include "StateSet.h"
 #include "GraphicContext.h"
 #include "Camera.h"
-#include "RefPtr.h"
 #include "State.h"
 #include "CameraManipulator.h"
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Renderer, Object);
+
     extern void state_set_current_camera(void *data, Camera *cam);
 
     struct Renderer::Data
     {
-        RefPtr<Camera> camera;
-        RefPtr<GraphicContext> ctx;
-        RefPtr<CameraManipulator> cm;
-        std::vector<RefPtr<Model>> models;
-        std::vector<RefPtr<Shader>> shaders;
+        vine::RefPtr<Camera> camera;
+        vine::RefPtr<GraphicContext> ctx;
+        vine::RefPtr<CameraManipulator> cm;
+        std::vector<vine::RefPtr<Model>> models;
+        std::vector<vine::RefPtr<Shader>> shaders;
         BoundingBox bb;
         bool is_first_frame = true;
     };

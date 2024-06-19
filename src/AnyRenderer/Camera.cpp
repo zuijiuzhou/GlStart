@@ -2,6 +2,8 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Camera, Object);
+
     Camera::Camera()
         : clear_depth_(1.0),
           clear_stencil_(1),

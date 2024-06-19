@@ -5,11 +5,13 @@
 #include <glm/glm.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
+
+#include <vine/core/Ptr.h>
+
 #include "Renderer.h"
 #include "Camera.h"
 #include "CameraManipulator.h"
 #include "Event.h"
-#include "RefPtr.h"
 #include "GraphicContext.h"
 #include "Viewer.h"
 
@@ -141,9 +143,9 @@ namespace AnyRenderer
 
     struct SdlViewer::Data
     {
-        RefPtr<Viewer> viewer;
-        RefPtr<Renderer> renderer;
-        RefPtr<SdlGraphicContext> ctx;
+        vine::RefPtr<Viewer> viewer;
+        vine::RefPtr<Renderer> renderer;
+        vine::RefPtr<SdlGraphicContext> ctx;
         bool is_initialized = false;
     };
 

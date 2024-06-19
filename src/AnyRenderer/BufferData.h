@@ -4,6 +4,8 @@ namespace AnyRenderer
 {
     class BufferData : public GLObject
     {
+        VI_OBJECT_META;
+
     public:
         BufferData();
 

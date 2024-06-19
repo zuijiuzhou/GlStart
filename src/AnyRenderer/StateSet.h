@@ -8,6 +8,8 @@ namespace AnyRenderer
     class Shader;
     class StateSet : public Object
     {
+        VI_OBJECT_META;
+
     public:
         StateSet();
         virtual ~StateSet();

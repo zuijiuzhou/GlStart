@@ -1,10 +1,12 @@
 #include "SkyBox.h"
+
+#include <vine/core/Ptr.h>
+
 #include "CubeMap.h"
 #include "Geometry.h"
 #include "Shader.h"
 #include "Model.h"
 #include "StateSet.h"
-#include "RefPtr.h"
 #include "State.h"
 #include "Camera.h"
 #include "Depth.h"

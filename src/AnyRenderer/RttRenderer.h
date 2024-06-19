@@ -8,6 +8,8 @@ namespace AnyRenderer
     class Texture;
     class RttRenderer : public Renderer
     {
+        VI_OBJECT_META;
+
     public:
         RttRenderer();
         virtual ~RttRenderer();

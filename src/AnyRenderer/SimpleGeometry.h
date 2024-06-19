@@ -4,6 +4,8 @@ namespace AnyRenderer
 {
     class SimpleGeometry : public Geometry
     {
+        VI_OBJECT_META;
+
     public:
         SimpleGeometry();
         virtual ~SimpleGeometry();

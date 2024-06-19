@@ -4,6 +4,8 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Texture, BufferData);
+
     Texture::~Texture()
     {
     }

@@ -5,6 +5,8 @@ namespace AnyRenderer
 {
     class Uniform : StateAttribute
     {
+        VI_OBJECT_META;
+
     public:
         Uniform();
         Uniform(const std::string &name, int val);

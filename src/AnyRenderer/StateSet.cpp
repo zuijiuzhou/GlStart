@@ -1,7 +1,9 @@
 #include "StateSet.h"
 #include <vector>
+
+#include <vine/core/Ptr.h>
+
 #include "StateAttribute.h"
-#include "RefPtr.h"
 #include "Shader.h"
 
 namespace AnyRenderer
@@ -10,7 +12,7 @@ namespace AnyRenderer
     {
         struct StateAttr
         {
-            RefPtr<StateAttribute> attr;
+            vine::RefPtr<StateAttribute> attr;
 
             StateAttr(StateAttribute *sa)
             {
@@ -29,11 +31,13 @@ namespace AnyRenderer
         };
     }
 
+    VI_OBJECT_META_IMPL(StateSet, Object);
+
     struct StateSet::Data
     {
         std::vector<StateAttr> attrs;
 
-        RefPtr<Shader> shader;
+        vine::RefPtr<Shader> shader;
     };
 
     StateSet::StateSet() : d(new Data())

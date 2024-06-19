@@ -1,16 +1,20 @@
 #include "Model.h"
+
+#include <vine/core/Ptr.h>
+
 #include "Drawable.h"
-#include "RefPtr.h"
 #include "StateSet.h"
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Model, Object);
+
     struct Model::Data
     {
-        RefPtr<StateSet> state_set = nullptr;
+        vine::RefPtr<StateSet> state_set = nullptr;
         glm::mat4 matrix = glm::mat4(1.0);
-        std::vector<RefPtr<Drawable>> drawables;
-        std::vector<RefPtr<ModelCallback>> callbacks;
+        std::vector<vine::RefPtr<Drawable>> drawables;
+        std::vector<vine::RefPtr<ModelCallback>> callbacks;
         BoundingBox bb;
         bool bb_is_dirty = true;
     };

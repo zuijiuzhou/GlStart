@@ -1,13 +1,18 @@
 #include "CameraManipulator.h"
+
+#include <vine/core/Ptr.h>
+
 #include <functional>
 #include "Camera.h"
-#include "RefPtr.h"
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(CameraManipulator, Object);
+    VI_OBJECT_META_IMPL(StandardCameraManipulator, CameraManipulator);
+
     struct StandardCameraManipulator::Data
     {
-        RefPtr<Camera> camera;
+        vine::RefPtr<Camera> camera;
         bool is_rotation_started = false;
         bool is_pan_started = false;
         bool is_cursor_move_started = false;

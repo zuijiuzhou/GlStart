@@ -1,14 +1,17 @@
 #include "GlfwViewer.h"
+
 #include <iostream>
 #include <functional>
 #include <memory>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
+
+#include <vine/core/Ptr.h>
+
 #include "Renderer.h"
 #include "Camera.h"
 #include "CameraManipulator.h"
 #include "Event.h"
-#include "RefPtr.h"
 #include "GraphicContext.h"
 #include "Viewer.h"
 
@@ -198,9 +201,9 @@ namespace AnyRenderer
 
     struct GlfwViewer::Data
     {
-        RefPtr<Viewer> viewer;
-        RefPtr<Renderer> renderer;
-        RefPtr<GlfwGraphicContext> ctx;
+        vine::RefPtr<Viewer> viewer;
+        vine::RefPtr<Renderer> renderer;
+        vine::RefPtr<GlfwGraphicContext> ctx;
         bool is_initialized = false;
     };
 

@@ -8,6 +8,8 @@ namespace AnyRenderer
 
     class GraphicContext : public Object
     {
+        VI_OBJECT_META;
+
         friend class Renderer;
 
     public:

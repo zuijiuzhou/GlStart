@@ -4,6 +4,8 @@
 
 namespace AnyRenderer
 {
+	VI_OBJECT_META_IMPL(ArrayImpl, Array);
+
     GLuint ArrayImpl::onCreate(State& state)
     {
         GLuint id = 0;

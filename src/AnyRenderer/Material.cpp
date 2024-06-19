@@ -4,6 +4,8 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Material, StateAttribute);
+
     Material::Material()
         : a_(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f))
         , d_(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f))

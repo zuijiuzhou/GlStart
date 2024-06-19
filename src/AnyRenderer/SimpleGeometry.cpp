@@ -2,6 +2,8 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(SimpleGeometry, Geometry);
+
     SimpleGeometry::SimpleGeometry()
     {
     }

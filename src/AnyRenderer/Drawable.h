@@ -10,6 +10,8 @@ namespace AnyRenderer
     class State;
     class Drawable : public Object
     {
+        VI_OBJECT_META;
+
     public:
         virtual void draw(State &ctx) = 0;
         

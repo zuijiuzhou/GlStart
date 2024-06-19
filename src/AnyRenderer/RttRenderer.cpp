@@ -1,17 +1,21 @@
 #include "RttRenderer.h"
 #include <iostream>
 #include <GLFW/glfw3.h>
+
+#include <vine/core/Ptr.h>
+
 #include "Texture2D.h"
 #include "FrameBufferObject.h"
-#include "RefPtr.h"
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(RttRenderer, Renderer);
+
     struct RttRenderer::Data
     {
         GLFWwindow *wnd = nullptr;
         GLuint fbo_ = 0;
-        RefPtr<Texture2D> color_buffer_;
+        vine::RefPtr<Texture2D> color_buffer_;
         GLsizei w = 640, h = 360;
         bool is_initialized = false;
     };

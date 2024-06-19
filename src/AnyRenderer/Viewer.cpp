@@ -1,17 +1,21 @@
 #include "Viewer.h"
 #include <vector>
 #include <map>
+
+#include <vine/core/Ptr.h>
+
 #include "Renderer.h"
-#include "RefPtr.h"
 #include "GraphicContext.h"
 #include "Camera.h"
 #include "CameraManipulator.h"
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Viewer, Object);
+
     struct Viewer::Data
     {
-        std::vector<RefPtr<Renderer>> renderers;
+        std::vector<vine::RefPtr<Renderer>> renderers;
     };
 
     Viewer::Viewer() : d(new Data())

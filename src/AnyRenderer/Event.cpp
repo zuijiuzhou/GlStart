@@ -3,6 +3,8 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Event, Object);
+
     struct Event::Data
     {
         GraphicContext *ctx;

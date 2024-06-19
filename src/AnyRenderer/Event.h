@@ -28,6 +28,8 @@ namespace AnyRenderer
 
     class Event : public Object
     {
+        VI_OBJECT_META;
+
     private:
         Event(GraphicContext *ctx, EventType type);
 

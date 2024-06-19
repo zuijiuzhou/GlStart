@@ -4,6 +4,10 @@ namespace AnyRenderer
 {
     using Mode = PrimitiveSet::Mode;
 
+    VI_OBJECT_META_IMPL(PrimitiveSet, Object);
+    VI_OBJECT_META_IMPL(DrawArrays, PrimitiveSet);
+    VI_OBJECT_META_IMPL(DrawElementsUInt, PrimitiveSet);
+
     PrimitiveSet::PrimitiveSet()
     {
     }

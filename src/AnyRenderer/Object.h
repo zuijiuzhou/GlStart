@@ -1,17 +1,12 @@
 #pragma once
 
+#include <vine/core/Object.h>
+#include <vine/core/Class.h>
+
 namespace AnyRenderer
 {
-    class Object
+    class Object : public vine::Object
     {
-    public:
-        virtual ~Object();
-
-    public:
-        void ref();
-        void unref(bool release = true);
-
-    private:
-        unsigned int nb_refs_ = 0;
+        VI_OBJECT_META;
     };
 }

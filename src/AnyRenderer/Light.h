@@ -9,6 +9,8 @@ namespace AnyRenderer
     class GraphicContext;
     class Light : public Object
     {
+        VI_OBJECT_META;
+
     public:
         Light();
 

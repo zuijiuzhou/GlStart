@@ -274,7 +274,7 @@ namespace ModelViewer
             {
                 auto edge = TopoDS::Edge(exp.Current());
                 auto edge_index = edge_map.FindIndex(edge);
-                if (!all_edge_indices.contains(edge_index))
+                if (all_edge_indices.find(edge_index) == all_edge_indices.end())
                     continue;
                 all_edge_indices.erase(edge_index);
                 auto polygon = BRep_Tool::PolygonOnTriangulation(edge, mesh, loc);

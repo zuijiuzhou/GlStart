@@ -4,6 +4,8 @@ namespace AnyRenderer
 {
     class Array : public BufferData
     {
+        VI_OBJECT_META;
+
     public:
         enum Type
         {

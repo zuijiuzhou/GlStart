@@ -2,6 +2,7 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(FrameBufferObject, GLObject);
 
     struct FrameBufferObject::Data
     {

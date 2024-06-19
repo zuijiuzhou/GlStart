@@ -3,10 +3,12 @@
 #include <QMouseEvent>
 #include <QOpenGLContext>
 #include <QApplication>
+
+#include <vine/core/Ptr.h>
+
 #include "Renderer.h"
 #include "Camera.h"
 #include "CameraManipulator.h"
-#include "RefPtr.h"
 #include "Viewer.h"
 #include "Event.h"
 #include "GraphicContext.h"
@@ -44,9 +46,9 @@ namespace AnyRenderer
 
     struct QtViewer::Data
     {
-        RefPtr<Viewer> viewer;
-        RefPtr<Renderer> renderer;
-        RefPtr<GraphicContext> ctx;
+        vine::RefPtr<Viewer> viewer;
+        vine::RefPtr<Renderer> renderer;
+        vine::RefPtr<GraphicContext> ctx;
     };
 
     QtViewer::QtViewer()

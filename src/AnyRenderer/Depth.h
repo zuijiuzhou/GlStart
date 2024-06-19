@@ -7,6 +7,8 @@ namespace AnyRenderer
 {
     class Depth : public StateAttribute
     {
+        VI_OBJECT_META;
+
     public:
         enum Func
         {

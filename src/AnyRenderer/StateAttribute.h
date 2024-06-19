@@ -6,6 +6,8 @@ namespace AnyRenderer
     class State;
     class StateAttribute : public Object
     {
+        VI_OBJECT_META;
+
         friend class State;
 
     public:

@@ -1,19 +1,23 @@
 #include "Geometry.h"
+
+#include <vine/core/Ptr.h>
+
 #include "Shader.h"
 #include "State.h"
-#include "RefPtr.h"
 #include "Texture.h"
 
 namespace AnyRenderer
 {
+	VI_OBJECT_META_IMPL(Geometry, Drawable);
+
 	struct Geometry::Data
 	{
 		GLuint vao = 0;
-		std::map<GLuint, RefPtr<Array>> vbos;
-		std::map<GLuint, RefPtr<Texture>> textures;
+		std::map<GLuint, vine::RefPtr<Array>> vbos;
+		std::map<GLuint, vine::RefPtr<Texture>> textures;
 		std::map<GLuint, GLuint> texture_locs;
 		std::map<GLuint, std::string> texture_names_;
-		std::vector<RefPtr<PrimitiveSet>> primitives;
+		std::vector<vine::RefPtr<PrimitiveSet>> primitives;
 		BoundingBox bb;
 	};
 
@@ -313,4 +317,25 @@ namespace AnyRenderer
 		cube->addPrimitive(new DrawArrays(DrawArrays::MODE_TRIANGLES, 0, vertices->size()));
 		return cube;
 	}
+
+	//Geometry *Geometry::createTexturedQuad(int vertices_loc, int norms_loc, int tex_coords_loc, float w, float h, float x = 0, float y = 0, float left = 0, float bottom = 0, float right = 1, float top = 1)
+	//{
+	//	auto vertices = new Vec3fArray();
+	//	vertices->push_back(glm::vec3(x, y, 0));
+	//	vertices->push_back(glm::vec3(x + w, 0, 0));
+	//	vertices->push_back(glm::vec3(x + w, y + h, 0));
+	//	vertices->push_back(glm::vec3(0, y + h, 0));
+
+	//	auto texcoords = new Vec2fArray();
+	//	texcoords->push_back(glm::vec2(left, bottom));
+	//	texcoords->push_back(glm::vec2(right, bottom));
+	//	texcoords->push_back(glm::vec2(right, top));
+	//	texcoords->push_back(glm::vec2(left, top));
+
+	//	auto geom = new Geometry();
+	//	geom->addVertexAttribArray(vertices_loc, vertices);
+	//	geom->addVertexAttribArray(tex_coords_loc, texcoords);
+	//	geom->addPrimitive(new DrawArrays(PrimitiveSet::MODE_QUADS, 0, vertices->size()));
+	//	return geom;
+	//}
 }

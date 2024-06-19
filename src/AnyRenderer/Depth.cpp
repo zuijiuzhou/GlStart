@@ -1,6 +1,8 @@
 #include "Depth.h"
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Depth, StateAttribute);
+
     struct Depth::Data
     {
         GLdouble near = 0.0;

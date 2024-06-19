@@ -7,6 +7,8 @@ namespace AnyRenderer
 {
     class CubeMap : public Texture
     {
+        VI_OBJECT_META;
+
     public:
         CubeMap();
         virtual ~CubeMap();

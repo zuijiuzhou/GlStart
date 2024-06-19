@@ -9,6 +9,9 @@ namespace AnyRenderer
     {
         friend class State;
 
+        VI_OBJECT_META;
+        VI_DISABLE_COPY_MOVE(GLObject);
+
     public:
         GLObject();
         virtual ~GLObject();

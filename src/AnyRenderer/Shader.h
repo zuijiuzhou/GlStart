@@ -11,6 +11,8 @@ namespace AnyRenderer
 {
      class Shader : public GLObject
      {
+         VI_OBJECT_META;
+
      public:
           Shader(const std::string &vs_code, const std::string &gs_code, const std::string &fs_code);
           virtual ~Shader();

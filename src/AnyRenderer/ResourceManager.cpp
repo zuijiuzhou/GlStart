@@ -1,16 +1,18 @@
 #include "ResourceManager.h"
 #include <map>
+
+#include <vine/core/Ptr.h>
+
 #include "Utilities/Resources.h"
 #include "Shader.h"
 #include "CubeMap.h"
-#include "RefPtr.h"
 
 namespace AnyRenderer
 {
 
     namespace
     {
-        std::map<std::string, RefPtr<Shader>> s_shaders;
+        std::map<std::string, vine::RefPtr<Shader>> s_shaders;
     }
 
     ResourceManager::ResourceManager()

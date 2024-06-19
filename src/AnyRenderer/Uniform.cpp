@@ -3,6 +3,7 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(Uniform, StateAttribute);
 
     struct Uniform::Data
     {

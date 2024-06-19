@@ -2,6 +2,9 @@
 #include <Windows.h>
 #include <QApplication>
 #include <glm/glm.hpp>
+
+#include <vine/core/Ptr.h>
+
 #include "Utilities/Resources.h"
 #include "Renderer.h"
 #include "Geometry.h"
@@ -17,7 +20,6 @@
 #include "GlfwViewer.h"
 #include "QtMainWindow.h"
 #include "QtViewer.h"
-#include "RefPtr.h"
 #include "CubeMap.h"
 #include "GraphicContext.h"
 #include "SkyBox.h"
@@ -108,7 +110,7 @@ void CreateSampleShapes(ar::Renderer *renderer)
     renderer->addModel(skybox);
 }
 
-#pragma pack(push 1)
+#pragma pack(push, 1) //Save the current alignment and set a new one
 struct Data{
     float x;
     float y;
@@ -117,18 +119,10 @@ struct Data{
     unsigned char g;
     unsigned char b;
 };
-#pragma pop
+#pragma pack(pop)  // Restore the saved alignment
 
 int main(int argc, char **argv)
 {
-
-    Data datas[1000];
-    std::string path = "d:/1.bin";
-
-    std::vector<int> x;
-    std::vector<int> y = {1, 2};
-    x = {y};
-
 #define GLFW_VIEWER1
 
 #ifdef GLFW_VIEWER
@@ -160,11 +154,17 @@ int main(int argc, char **argv)
         model->getOrCreateStateSet()->setAttribute(lights);
         model->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Base));
         renderer->addModel(model);
+
     }
     else
     {
         CreateSampleShapes(renderer);
     }
+
+    auto x = renderer->isKindOf<vine::Object>();
+    auto y = renderer->toString();
+    std::cout << 1 << std::endl;
+
 #ifdef GLFW_VIEWER
     v.run();
 #else

@@ -5,6 +5,8 @@
 
 namespace AnyRenderer
 {
+    VI_OBJECT_META_IMPL(GLObject, Object);
+
     struct GLObject::Data
     {
         std::map<int, GLuint> ids;

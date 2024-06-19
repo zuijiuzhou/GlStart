@@ -52,6 +52,8 @@ namespace AnyRenderer
         }
     }
 
+    VI_OBJECT_META_IMPL(Shader, GLObject);
+
     struct Shader::Data
     {
         std::string name;

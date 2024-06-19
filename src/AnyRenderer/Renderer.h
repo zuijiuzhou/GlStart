@@ -12,6 +12,8 @@ namespace AnyRenderer
     class GraphicContext;
     class Renderer : public Object
     {
+        VI_OBJECT_META;
+
     public:
         Renderer();
         virtual ~Renderer();

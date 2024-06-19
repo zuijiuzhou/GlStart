@@ -8,6 +8,8 @@ namespace AnyRenderer
     class Camera;
     class CameraManipulator : public Object
     {
+        VI_OBJECT_META;
+
     public:
         enum ProjectionType
         {
@@ -42,7 +44,8 @@ namespace AnyRenderer
 
     class StandardCameraManipulator final : public CameraManipulator
     {
-    public:
+        VI_OBJECT_META;
+
     public:
         StandardCameraManipulator(Camera *cam);
         virtual ~StandardCameraManipulator();
