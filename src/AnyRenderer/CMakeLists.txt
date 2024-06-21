@@ -13,7 +13,7 @@ file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
 add_executable(${CURRENT_TARGET_NAME} ${SRC_FILES} ${HEADER_FILES} ${GLAD_SRC_FILES})
-target_link_libraries(${CURRENT_TARGET_NAME} Utilities vi::Core glfw glm::glm assimp::assimp SDL2::SDL2 Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets ${PCL_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(${CURRENT_TARGET_NAME} Utilities vi::Core vi::Ge glfw glm::glm assimp::assimp SDL2::SDL2 Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGL Qt6::OpenGLWidgets ${PCL_LIBRARIES} ${OpenCV_LIBS})
 target_compile_definitions(${CURRENT_TARGET_NAME} PRIVATE CURRENT_MODULE_NAME="${CURRENT_TARGET_NAME}" CURRENT_RES_DIR="${GLSTART_RES_ROOT_DIR}${CURRENT_TARGET_NAME}")
 
 set(RES_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res/)

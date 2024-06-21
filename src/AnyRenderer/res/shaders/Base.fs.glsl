@@ -35,10 +35,13 @@ uniform Material mate;
 uniform Light lights[MAX_LIGHT];
 uniform int lights_count = 0;
 uniform vec3 view_dir;
+uniform bool use_texture;
+uniform sampler2D tex;
 
 in vec4 frag_color;
 in vec3 frag_world_posi;
 in vec3 frag_world_norm;
+in vec2 frag_tex_coord;
 
 out vec4 FragColor;
 

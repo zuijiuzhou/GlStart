@@ -19,7 +19,8 @@ namespace AnyRenderer
             ATTR_SPOT_LIGHTS,
             ATTR_DIRECTIONAL_LIGHTS,
             ATTR_LIGHTS,
-            ATTR_SHADER
+            ATTR_SHADER,
+            ATTR_UNIFORM
         };
 
     public:

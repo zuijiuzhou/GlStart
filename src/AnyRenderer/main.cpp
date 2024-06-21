@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include <vine/core/Ptr.h>
+#include <vine/ge/Rect2d.h>
 
 #include "Utilities/Resources.h"
 #include "Renderer.h"
@@ -26,6 +27,7 @@
 #include "Shader.h"
 #include "Viewer.h"
 #include "Image.h"
+#include "Uniform.h"
 
 namespace ar = AnyRenderer;
 
@@ -57,6 +59,7 @@ void CreateSampleShapes(ar::Renderer *renderer)
         axis->addDrawable(geom);
         axis->getOrCreateStateSet()->setAttribute(new ar::Material());
         axis->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Base));
+        axis->getOrCreateStateSet()->setAttribute(new ar::Uniform("use_texture", false));
     }
 
     auto cube = new ar::Model();
@@ -107,15 +110,22 @@ void CreateSampleShapes(ar::Renderer *renderer)
     }
 
 
-    //auto img = new ar::Model();
-    //{
-    //    auto geom_img = ar::Geometry::createTexturedQuad();
-    //}
+    auto img = new ar::Model();
+    {
+        auto tex = new ar::Texture2D();
+        tex->setImage("C:\\Users\\sa\\Downloads\\1.jpg");
+        auto geom_img = ar::Geometry::createTexturedQuad(0, 1, 3, vine::ge::Rect2d(0, 0, tex->getWidth(), tex->getHeight()), vine::ge::Rect2d(0, 0, 1, 1));
+        geom_img->addTexture(0, "tex", tex);
+        img->addDrawable(geom_img);
+        img->getOrCreateStateSet()->setAttribute(new ar::Uniform("use_texture", true));
+        img->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Base));
+    }
 
     renderer->addModel(axis);
     renderer->addModel(pc);
     renderer->addModel(cube);
     renderer->addModel(skybox);
+    renderer->addModel(img);
 }
 
 #pragma pack(push, 1) //Save the current alignment and set a new one
@@ -160,6 +170,7 @@ int main(int argc, char **argv)
         lights->addLight(light);
         model->getOrCreateStateSet()->setAttribute(new ar::Material());
         model->getOrCreateStateSet()->setAttribute(lights);
+        model->getOrCreateStateSet()->setAttribute(new ar::Uniform("use_texture", false));
         model->getOrCreateStateSet()->setShader(ar::ResourceManager::instance()->getInternalShader(ar::ResourceManager::IS_Base));
         renderer->addModel(model);
 
