@@ -75,8 +75,7 @@ namespace AnyRenderer
         void handleResized(int w, int h);
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 
 } // namespace AnyRenderer

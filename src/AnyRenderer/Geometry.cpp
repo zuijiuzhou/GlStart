@@ -1,6 +1,7 @@
 #include "Geometry.h"
 
 #include <vine/core/Ptr.h>
+#include <vine/ge/Rect2d.h>
 
 #include "Shader.h"
 #include "State.h"
@@ -318,24 +319,24 @@ namespace AnyRenderer
 		return cube;
 	}
 
-	//Geometry *Geometry::createTexturedQuad(int vertices_loc, int norms_loc, int tex_coords_loc, float w, float h, float x = 0, float y = 0, float left = 0, float bottom = 0, float right = 1, float top = 1)
-	//{
-	//	auto vertices = new Vec3fArray();
-	//	vertices->push_back(glm::vec3(x, y, 0));
-	//	vertices->push_back(glm::vec3(x + w, 0, 0));
-	//	vertices->push_back(glm::vec3(x + w, y + h, 0));
-	//	vertices->push_back(glm::vec3(0, y + h, 0));
+	Geometry *Geometry::createTexturedQuad(int vertices_loc, int norms_loc, int tex_coords_loc, const vine::ge::Rect2d& rect, const vine::ge::Rect2d& uv_rect)
+	{
+		auto vertices = new Vec3fArray();
+		vertices->push_back(glm::vec3(rect.x, rect.y, 0));
+		vertices->push_back(glm::vec3(rect.x + rect.w, 0, 0));
+		vertices->push_back(glm::vec3(rect.x + rect.w, rect.y + rect.h, 0));
+		vertices->push_back(glm::vec3(0, rect.y + rect.h, 0));
 
-	//	auto texcoords = new Vec2fArray();
-	//	texcoords->push_back(glm::vec2(left, bottom));
-	//	texcoords->push_back(glm::vec2(right, bottom));
-	//	texcoords->push_back(glm::vec2(right, top));
-	//	texcoords->push_back(glm::vec2(left, top));
+		auto texcoords = new Vec2fArray();
+		texcoords->push_back(glm::vec3(uv_rect.x, uv_rect.y, 0));
+		texcoords->push_back(glm::vec3(uv_rect.x + uv_rect.w, 0, 0));
+		texcoords->push_back(glm::vec3(uv_rect.x + uv_rect.w, uv_rect.y + uv_rect.h, 0));
+		texcoords->push_back(glm::vec3(0, uv_rect.y + uv_rect.h, 0));
 
-	//	auto geom = new Geometry();
-	//	geom->addVertexAttribArray(vertices_loc, vertices);
-	//	geom->addVertexAttribArray(tex_coords_loc, texcoords);
-	//	geom->addPrimitive(new DrawArrays(PrimitiveSet::MODE_QUADS, 0, vertices->size()));
-	//	return geom;
-	//}
+		auto geom = new Geometry();
+		geom->addVertexAttribArray(vertices_loc, vertices);
+		geom->addVertexAttribArray(tex_coords_loc, texcoords);
+		geom->addPrimitive(new DrawArrays(PrimitiveSet::MODE_QUADS, 0, vertices->size()));
+		return geom;
+	}
 }

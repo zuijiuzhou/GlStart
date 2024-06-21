@@ -27,7 +27,6 @@ namespace AnyRenderer
         virtual void onRelease(State &state) = 0;
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }

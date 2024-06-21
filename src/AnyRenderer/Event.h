@@ -51,7 +51,6 @@ namespace AnyRenderer
         static Event* createResizeEvent(GraphicContext *ctx, int w, int h);
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }

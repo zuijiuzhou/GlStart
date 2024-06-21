@@ -4,13 +4,21 @@
 #include <map>
 #include <set>
 #include <string>
+
+#include <vine/ge/ge_global.h>
+
 #include "Arrays.h"
 #include "PrimitiveSet.h"
+
+VI_GE_NS_BEGIN
+class Rect2d;
+VI_GE_NS_END
 
 namespace AnyRenderer
 {
     class Texture;
     class CubeMap;
+
     class Geometry : public Drawable
     {
         VI_OBJECT_META;
@@ -31,10 +39,9 @@ namespace AnyRenderer
 
     public:
         static Geometry *createCube(float size, int vertices_loc, int normals_loc = -1, int tex_2d_coords_loc = -1, int cube_map_coords_loc = -1);
-        //static Geometry *createTexturedQuad(int vertices_loc, int norms_loc, int tex_coords_loc, float w, float h, float x = 0, float y = 0, float left = 0, float bottom = 0, float right = 1, float top = 1);
+        static Geometry *createTexturedQuad(int vertices_loc, int norms_loc, int tex_coords_loc, const vine::ge::Rect2d& rect, const vine::ge::Rect2d& uv_rect);
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }

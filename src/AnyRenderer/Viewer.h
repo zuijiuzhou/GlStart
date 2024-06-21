@@ -17,7 +17,6 @@ namespace AnyRenderer
         Renderer* getRendererAt(int idx) const;
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }

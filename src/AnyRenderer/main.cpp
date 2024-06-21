@@ -25,6 +25,7 @@
 #include "SkyBox.h"
 #include "Shader.h"
 #include "Viewer.h"
+#include "Image.h"
 
 namespace ar = AnyRenderer;
 
@@ -104,6 +105,13 @@ void CreateSampleShapes(ar::Renderer *renderer)
         geom->addPrimitive(new ar::DrawArrays(ar::DrawArrays::MODE_POINTS, 0, vertices->size()));
         pc->addDrawable(geom);
     }
+
+
+    //auto img = new ar::Model();
+    //{
+    //    auto geom_img = ar::Geometry::createTexturedQuad();
+    //}
+
     renderer->addModel(axis);
     renderer->addModel(pc);
     renderer->addModel(cube);

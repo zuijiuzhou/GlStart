@@ -29,8 +29,7 @@ namespace AnyRenderer
         void setCameraManipulator(CameraManipulator* cm);
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 
 } // namespace AnyRenderer

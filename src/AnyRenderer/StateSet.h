@@ -27,7 +27,6 @@ namespace AnyRenderer
         void setShader(Shader *shader);
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }

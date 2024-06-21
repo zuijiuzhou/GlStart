@@ -3,35 +3,45 @@
 
 #include "Object.h"
 
-namespace AnyRenderer
-{
-    class Image : public Object
-    {
-        VI_OBJECT_META;
+namespace AnyRenderer {
+	class Image : public Object {
+		VI_OBJECT_META;
+		VI_DISABLE_COPY_MOVE(Image);
 
-    public:
-        enum Format{
-            RGB,
-            RGBA,
-        };
+	public:
+		enum Format {
+			EMPTY,
+			R8,
+			G8,
+			B8,
+			RGB888,
+			RGBA8888,
+		};
 
-    public:
-        Image();
+	public:
+		Image();
 
-    public:
-        void loadFile(const std::string &file);
+	public:
+		void setImage(int w, int h, Format format, const unsigned char* data);
 
-        Format getFormat() const;
+		void setImage(int w, int h, Format format, const unsigned char* data, int stride, int offset);
 
-        unsigned char* data() const;
+		Format getFormat() const;
 
-        bool isNull() const;
+		int getGLFormat() const;
 
-    public:
-        static bool isSupported(const std::string &file);
+		int getWidth() const;
 
-    private:
-        struct Data;
-        Data* const d;
-    };
-}
+		int getHeight() const;
+
+		int getChannels() const;
+
+		unsigned char* data() const;
+
+		bool isNull() const;
+
+	private:
+		struct Data;
+		Data* const d;
+	};
+} // namespace AnyRenderer

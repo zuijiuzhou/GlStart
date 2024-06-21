@@ -6,6 +6,8 @@
 
 namespace AnyRenderer
 {
+    class Image;
+
     class Texture2D : public Texture
     {
         VI_OBJECT_META;
@@ -27,6 +29,8 @@ namespace AnyRenderer
 
         void setImage(const std::string &img);
 
+        void setImage(Image* image);
+
         bool save(const std::string &path) const;
 
     protected:
@@ -35,7 +39,6 @@ namespace AnyRenderer
         virtual bool onUpdate(State& state) override;
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }

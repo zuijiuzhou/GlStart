@@ -17,7 +17,6 @@ namespace AnyRenderer
         virtual void apply(State &state) const override;
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }

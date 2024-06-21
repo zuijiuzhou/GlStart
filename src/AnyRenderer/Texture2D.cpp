@@ -1,6 +1,10 @@
 #include "Texture2D.h"
+
 #include <stb_image.h>
-#include "anyrenderer_global.h"
+#include <vine/core/Ptr.h>
+
+#include "ImageLoader.h"
+#include "Image.h"
 
 namespace AnyRenderer
 {
@@ -8,11 +12,10 @@ namespace AnyRenderer
 
     struct Texture2D::Data
     {
-        std::string img;
         GLsizei w = 0;
         GLsizei h = 0;
-        GLint format = 0;
-        GLint informat = 0;
+        GLint in_format = GL_RGB;
+        vine::RefPtr<Image> img = nullptr;
     };
 
     Texture2D::Texture2D() : d(new Data())
@@ -51,10 +54,26 @@ namespace AnyRenderer
         return d->h;
     }
 
-    void Texture2D::setImage(const std::string &img)
+    void Texture2D::setImage(const std::string &img_file)
     {
-        d->img = img;
+        auto img = ImageLoader().loadFile(img_file);
+        setImage(img);
+    }
+
+    void Texture2D::setImage(Image* image)
+    {
+        if (image == d->img)
+            return;
+
+        d->img = image;
+        d->w = 0;
+        d->h = 0;
+        if (image) {
+            d->w = image->getWidth();
+            d->h = image->getHeight();
+        }
         dirty();
+        
     }
 
     bool Texture2D::save(const std::string &path) const
@@ -67,26 +86,33 @@ namespace AnyRenderer
         GLuint id = 0;
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
-        stbi_set_flip_vertically_on_load(true);
-        if (d->img.size() > 0)
-        {
-            int w, h, channels;
-            auto data = stbi_load(d->img.data(), &w, &h, &channels, 0);
-            if (data)
-            {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-                stbi_image_free(data);
-            }
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+
+        void* img_data = nullptr;
+        GLint w, h, fmt, in_format;
+        
+        if (d->img.get()) {
+            img_data = d->img->data();
+            w = d->img->getWidth();
+            h = d->img->getHeight();
+            fmt = d->img->getGLFormat();
+            in_format = fmt;
         }
-        else if (d->w != 0 && d->h != 0 && d->informat != 0)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, d->informat, d->w, d->h, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        else {
+            w = d->w;
+            h = d->h;
+            fmt = GL_RGB;
+            in_format = d->in_format;
         }
+
+        if (w && h) {
+            glTexImage2D(GL_TEXTURE_2D, 0, in_format, w, h, 0, fmt, GL_UNSIGNED_BYTE, img_data);
+        }
+
         return id;
     }
 

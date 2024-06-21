@@ -35,7 +35,6 @@ namespace AnyRenderer
         void releaseGLObjects();
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }

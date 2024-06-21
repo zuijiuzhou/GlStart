@@ -45,8 +45,7 @@ namespace AnyRenderer
         void update(State& ctx);
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 
     class ModelCallback : public Object
@@ -68,7 +67,6 @@ namespace AnyRenderer
         Type getType() const;
 
     private:
-        struct Data;
-        Data *const d;
+        VI_OBJECT_DATA;
     };
 }
