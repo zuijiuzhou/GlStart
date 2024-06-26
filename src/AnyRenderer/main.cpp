@@ -114,7 +114,12 @@ void CreateSampleShapes(ar::Renderer *renderer)
     {
         auto tex = new ar::Texture2D();
         tex->setImage("C:\\Users\\sa\\Downloads\\1.jpg");
-        auto geom_img = ar::Geometry::createTexturedQuad(0, 1, 3, vine::ge::Rect2d(0, 0, tex->getWidth(), tex->getHeight()), vine::ge::Rect2d(0, 0, 1, 1));
+        auto geom_img = ar::Geometry::createTexturedQuad(0, 1, 3, vine::ge::Rect2d(0, 0, tex->getWidth() / 100., tex->getHeight() / 100.), vine::ge::Rect2d(0, 0, 1, 1));
+        
+        // auto colors = new ar::Vec4fArray();
+        // colors->push_back(glm::vec4(0,1,0,1));
+        // geom_img->addVertexAttribArray(2, colors);
+
         geom_img->addTexture(0, "tex", tex);
         img->addDrawable(geom_img);
         img->getOrCreateStateSet()->setAttribute(new ar::Uniform("use_texture", true));

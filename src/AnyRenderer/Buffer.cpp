@@ -1,22 +1,23 @@
-#include "BufferData.h"
+
+#include "Buffer.h"
 #include <map>
 #include "State.h"
 #include "GraphicContext.h"
 
 namespace AnyRenderer
 {
-    VI_OBJECT_META_IMPL(BufferData, GLObject);
+    VI_OBJECT_META_IMPL(Buffer, GLObject);
 
-    struct BufferData::Data
+    struct Buffer::Data
     {
         std::map<int, bool> dirties;
     };
 
-    BufferData::BufferData() : d(new Data())
+    Buffer::Buffer() : d(new Data())
     {
     }
 
-    void BufferData::update(State &state)
+    void Buffer::update(State &state)
     {
         auto ctx_id = state.getContext()->getId();
         if (isDirty(state))
@@ -26,7 +27,7 @@ namespace AnyRenderer
         }
     }
 
-    void BufferData::bind(State &state)
+    void Buffer::bind(State &state)
     {
         if (!isCreated(state))
             create(state);
@@ -37,14 +38,14 @@ namespace AnyRenderer
         onBind(state);
     }
 
-    void BufferData::unbind(State &state)
+    void Buffer::unbind(State &state)
     {
         if (!isCreated(state))
             return;
         onUnbind(state);
     }
 
-    bool BufferData::isDirty(State &state) const
+    bool Buffer::isDirty(State &state) const
     {
         auto ctx_id = state.getContext()->getId();
         if (d->dirties.contains(ctx_id))
@@ -53,7 +54,8 @@ namespace AnyRenderer
         }
         return false;
     }
-    void BufferData::dirty()
+
+    void Buffer::dirty()
     {
         for (auto &kv : d->dirties)
         {

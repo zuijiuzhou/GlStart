@@ -13,6 +13,10 @@ namespace AnyRenderer
     class Renderer : public Object
     {
         VI_OBJECT_META;
+    public:
+        enum RenderOrder{
+            
+        };
 
     public:
         Renderer();

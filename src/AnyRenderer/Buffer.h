@@ -1,13 +1,15 @@
 #pragma once
+
 #include "GLObject.h"
+
 namespace AnyRenderer
 {
-    class BufferData : public GLObject
+    class Buffer : public GLObject
     {
         VI_OBJECT_META;
 
     public:
-        BufferData();
+        Buffer();
 
     public:
         bool isDirty(State &state) const;

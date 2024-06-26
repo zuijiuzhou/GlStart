@@ -26,9 +26,16 @@ namespace AnyRenderer
             virtual bool onUpdate(State& state) override; \
         };
 
-    DEF_ARR(Int, int)
-    DEF_ARR(Float, float)
-    DEF_ARR(Vec2f, glm::vec2)
-    DEF_ARR(Vec3f, glm::vec3)
-    DEF_ARR(Vec4f, glm::vec4)
+    DEF_ARR(Int8, int8_t);
+    DEF_ARR(Int16, int16_t);
+    DEF_ARR(Int32, int32_t);
+
+    DEF_ARR(UInt8, uint8_t);
+    DEF_ARR(UInt16, uint16_t);
+    DEF_ARR(UInt32, uint32_t);
+
+    DEF_ARR(Float, float);
+    DEF_ARR(Vec2f, glm::vec2);
+    DEF_ARR(Vec3f, glm::vec3);
+    DEF_ARR(Vec4f, glm::vec4);
 } // namespace AnyRenderer

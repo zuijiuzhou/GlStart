@@ -25,7 +25,6 @@ namespace AnyRenderer
         Camera* getCurrentCamera() const;
         GraphicContext* getContext() const;
 
-        void setCurrentCamera(Camera* cam);
         void applyShader(StateSet* ss);
         void applyAttributes(StateSet* ss);
         void restoreAttributes(StateSet* ss);

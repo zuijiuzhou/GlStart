@@ -19,6 +19,7 @@ namespace AnyRenderer
     public:
         GLuint getId(State &state) const;
         bool isCreated(State &state) const;
+        GLuint getNbInstances() const;
 
     protected:
         void create(State &state);

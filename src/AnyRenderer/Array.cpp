@@ -4,7 +4,7 @@
 
 namespace AnyRenderer {
 
-	VI_OBJECT_META_IMPL(Array, BufferData);
+	VI_OBJECT_META_IMPL(Array, DataBuffer);
 
 	Array::~Array() {
 
@@ -24,6 +24,16 @@ namespace AnyRenderer {
 	void Array::onRelease(State& state) {
 		auto id = getId(state);
 		glDeleteBuffers(1, &id);
+	}
+
+	DataBuffer::Target Array::getTarget() const
+	{
+		return TARGET_ARRAY_BUFFER;
+	}
+
+	DataBuffer::Usage Array::getUsage() const
+	{
+		return USAGE_STREAM_DRAW;
 	}
 
 	bool Array::isEmpty() const {

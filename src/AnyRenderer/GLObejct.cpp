@@ -35,6 +35,11 @@ namespace AnyRenderer
         return d->ids.contains(ctx_id);
     }
 
+    GLuint GLObject::getNbInstances() const
+    {
+        return d->ids.size();
+    }
+
     void GLObject::create(State & state)
     {
         if (isCreated(state))

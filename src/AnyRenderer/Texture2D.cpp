@@ -85,12 +85,11 @@ namespace AnyRenderer
     {
         GLuint id = 0;
         glGenTextures(1, &id);
-        glBindTexture(GL_TEXTURE_2D, id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+        glBindTexture(getType(), id);
+        glTexParameteri(getType(), GL_TEXTURE_MIN_FILTER, getFilter(MIN_FILTER));
+        glTexParameteri(getType(), GL_TEXTURE_MAG_FILTER, getFilter(MAX_FILTER));
+        glTexParameteri(getType(), GL_TEXTURE_WRAP_S, getWrap(WRAP_S));
+        glTexParameteri(getType(), GL_TEXTURE_WRAP_T, getWrap(WRAP_T));
 
         void* img_data = nullptr;
         GLint w, h, fmt, in_format;

@@ -49,7 +49,13 @@ vec3 get_directional_light_contribution(Light l, Material m, vec3 view_dir, vec3
     vec3 l_dir = l.dir;
     vec3 reflect_dir = reflect(l.dir, frag_norm);
     vec3 a = l.a.rgb * m.a.rgb;
-    vec3 d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * mate.d.rgb;
+    vec3 d;
+    if(use_texture){
+        d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * texture(tex, frag_tex_coord).rgb;
+    }
+    else{
+        d = l.d.rgb * max(dot(-l_dir, frag_norm), 0) * mate.d.rgb;
+    }
     // Phong
     // vec3 s = l.s.rgb * pow(max(dot(view_dir, reflect_dir), 0.0), mate.sh) * mate.s.rgb;
     // Blinn_Phong
@@ -69,7 +75,12 @@ vec3 get_spot_light_contribution(Light l, Material m, vec3 view_dir, vec3 frag_p
 
 void main(){
     vec4 color = frag_color;
-    if(lights_count > 0){
+
+    if(use_texture){
+        color = texture(tex, frag_tex_coord);
+    }
+    
+    if(lights_count > 0 && !use_texture){
         vec3 c = vec3(0, 0, 0);
         for(int i = 0; i < lights_count; i++){
             if(i >= MAX_LIGHT)

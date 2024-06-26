@@ -34,6 +34,7 @@ namespace AnyRenderer
 
     extern void state_set_current_camera(void* data, Camera *cam)
     {
+        // State::Data 无成员，因此可以强转
         auto d = (StateData*)(data);
         d->current_camera = cam;
     }

@@ -19,6 +19,7 @@ namespace AnyRenderer
             MODE_TRIANGLES = GL_TRIANGLES,
             MODE_TRIANGLE_TRIP = GL_TRIANGLE_STRIP,
             MODE_TRIANGLE_FAN = GL_TRIANGLE_FAN,
+            // no support in gl 3
             MODE_QUADS = GL_QUADS
         };
 

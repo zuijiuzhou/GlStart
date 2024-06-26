@@ -1,8 +1,10 @@
 #pragma once
-#include "BufferData.h"
+
+#include "DataBuffer.h"
+
 namespace AnyRenderer
 {
-    class Array : public BufferData
+    class Array : public DataBuffer
     {
         VI_OBJECT_META;
 
@@ -10,11 +12,17 @@ namespace AnyRenderer
         enum Type
         {
             ARRAY_UNKNOW = 0,
-            ARRAY_INT,
-            ARRAY_UBYTE,
-            ARRAY_USHORT,
-            ARRAY_UINT,
+
+            ARRAY_INT8,
+            ARRAY_INT16,
+            ARRAY_INT32,
+
+            ARRAY_UINT8,
+            ARRAY_UINT16,
+            ARRAY_UINT32,
+
             ARRAY_FLOAT,
+
             ARRAY_VEC2F,
             ARRAY_VEC3F,
             ARRAY_VEC4F
@@ -29,6 +37,10 @@ namespace AnyRenderer
         virtual GLsizei getSizeOfItem() const = 0;
         virtual void *getData() = 0;
         virtual void *getAt(GLsizei index) = 0;
+
+        virtual Target getTarget() const override;
+        virtual Usage getUsage() const override;
+
         bool isEmpty() const;
 
     protected:

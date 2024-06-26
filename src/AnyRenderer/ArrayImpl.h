@@ -10,8 +10,8 @@ namespace AnyRenderer
     {
         GLuint id = 0;
         glGenBuffers(1, &id);
-        glBindBuffer(GL_ARRAY_BUFFER, id);
-        glBufferData(GL_ARRAY_BUFFER, size() * getSizeOfItem(), (void*)data(), GL_STATIC_DRAW);
+        glBindBuffer(getTarget(), id);
+        glBufferData(getTarget(), size() * getSizeOfItem(), (void*)data(), getUsage());
         // glBindBuffer(GL_ARRAY_BUFFER, 0);
         return id;
     }
@@ -27,10 +27,33 @@ namespace AnyRenderer
         {
             return Array::ARRAY_FLOAT;
         }
-        else if constexpr (std::is_same<int, item_type>::value)
+
+        else if constexpr (std::is_same<int8_t, item_type>::value)
         {
-            return Array::ARRAY_INT;
+            return Array::ARRAY_INT8;
         }
+        else if constexpr (std::is_same<int16_t, item_type>::value)
+        {
+            return Array::ARRAY_INT16;
+        }
+        else if constexpr (std::is_same<int32_t, item_type>::value)
+        {
+            return Array::ARRAY_INT32;
+        }
+
+        else if constexpr (std::is_same<uint8_t, item_type>::value)
+        {
+            return Array::ARRAY_UINT8;
+        }
+        else if constexpr (std::is_same<uint16_t, item_type>::value)
+        {
+            return Array::ARRAY_UINT16;
+        }
+        else if constexpr (std::is_same<uint32_t, item_type>::value)
+        {
+            return Array::ARRAY_UINT32;
+        }
+
         else if constexpr (std::is_same<glm::vec2, item_type>::value)
         {
             return Array::ARRAY_VEC2F;

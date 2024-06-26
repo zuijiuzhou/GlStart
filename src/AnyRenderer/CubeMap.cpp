@@ -57,12 +57,12 @@ namespace AnyRenderer
 
 		GLuint id = 0;
 		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(getType(), id);
+		glTexParameteri(getType(), GL_TEXTURE_MIN_FILTER, getFilter(MIN_FILTER));
+		glTexParameteri(getType(), GL_TEXTURE_MAG_FILTER, getFilter(MAX_FILTER));
+		glTexParameteri(getType(), GL_TEXTURE_WRAP_S, getWrap(WRAP_S));
+		glTexParameteri(getType(), GL_TEXTURE_WRAP_T, getWrap(WRAP_T));
+		glTexParameteri(getType(), GL_TEXTURE_WRAP_R, getWrap(WRAP_R));
 
 		for (int i = 0; i < 6; i++)
 		{
