@@ -33,7 +33,7 @@ namespace AnyRenderer {
 
 	DataBuffer::Usage Array::getUsage() const
 	{
-		return USAGE_STREAM_DRAW;
+		return USAGE_STATIC_DRAW;
 	}
 
 	bool Array::isEmpty() const {

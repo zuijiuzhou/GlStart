@@ -146,7 +146,7 @@ struct Data{
 
 int main(int argc, char **argv)
 {
-#define GLFW_VIEWER1
+#define GLFW_VIEWER
 
 #ifdef GLFW_VIEWER
     ar::GlfwViewer v;

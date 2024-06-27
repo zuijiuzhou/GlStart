@@ -1,12 +1,12 @@
 #pragma once
 
-#include "PixelBuffer.h"
+#include "RenderBufferBase.h"
 
 namespace AnyRenderer {
 
 	class FrameBufferObject;
 
-	class RenderBuffer : public PixelBuffer {
+	class RenderBuffer : public RenderBufferBase {
 
 		VI_OBJECT_META;
 

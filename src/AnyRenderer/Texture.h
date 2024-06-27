@@ -1,10 +1,10 @@
 #pragma once
 
-#include "PixelBuffer.h"
+#include "RenderBufferBase.h"
 
 namespace AnyRenderer
 {
-    class Texture : public PixelBuffer
+    class Texture : public RenderBufferBase
     {
         VI_OBJECT_META;
 

@@ -11,11 +11,11 @@
 
 namespace AnyRenderer
 {
-    VI_OBJECT_META_IMPL(FrameBufferObject, GLObject);
+    VI_OBJECT_META_IMPL(FrameBufferObject, Buffer);
 
     struct FrameBufferObject::Data
     {
-        std::map<BufferComponent, vine::RefPtr<PixelBuffer>> components;
+        std::map<BufferComponent, vine::RefPtr<RenderBufferBase>> components;
     };
 
     FrameBufferObject::FrameBufferObject() : d(new Data())
@@ -58,7 +58,7 @@ namespace AnyRenderer
 
         for (auto&& kv : d->components) {
             auto& buffer = kv.second;
-            // È·±£´´½¨
+            // È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             buffer->bind(state);
             if (buffer->isKindOf<Texture2D>()) {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, kv.first, GL_TEXTURE_2D, buffer->getId(state), 0);
@@ -75,5 +75,21 @@ namespace AnyRenderer
     {
         auto id = getId(state);
         glDeleteFramebuffers(1, &id);
+    }
+
+    bool FrameBufferObject::onUpdate(State& state)
+    {
+        return false;
+    }
+
+    void FrameBufferObject::onBind(State& state)
+    {
+        auto id = getId(state);
+        glBindFramebuffer(GL_FRAMEBUFFER, id);
+    }
+
+    void FrameBufferObject::onUnbind(State& state)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }

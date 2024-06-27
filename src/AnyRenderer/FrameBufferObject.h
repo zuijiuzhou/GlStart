@@ -1,12 +1,13 @@
 #pragma once
 #include "GLObject.h"
+#include "Buffer.h"
 
 namespace AnyRenderer
 {
     class RenderBuffer;
     class Texture;
 
-    class FrameBufferObject : public GLObject
+    class FrameBufferObject : public Buffer
     {
         VI_OBJECT_META;
 
@@ -34,8 +35,13 @@ namespace AnyRenderer
         void attachTexture(BufferComponent comp, Texture* tex);
 
     protected:
-        virtual GLuint onCreate(State& state);
-        virtual void onRelease(State& state);
+        virtual GLuint onCreate(State& state) override;
+        virtual void onRelease(State& state) override;
+        virtual bool onUpdate(State& state) override;
+        virtual void onBind(State& state) override;
+        virtual void onUnbind(State& state) override;
+
+
 
     private:
         VI_OBJECT_DATA;

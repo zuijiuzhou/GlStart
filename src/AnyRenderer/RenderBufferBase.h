@@ -4,7 +4,7 @@
 
 namespace AnyRenderer
 {
-    class PixelBuffer : public Buffer
+    class RenderBufferBase : public Buffer
     {
         VI_OBJECT_META;
 
@@ -75,16 +75,16 @@ namespace AnyRenderer
 
             // STENCIL
             IF_STENCIL_INDEX = GL_STENCIL_INDEX,
-            IF_STENCIL_INDEX = GL_STENCIL_INDEX8,
-            IF_STENCIL_INDEX = GL_STENCIL_INDEX16,
+            IF_STENCIL_INDEX8 = GL_STENCIL_INDEX8,
+            IF_STENCIL_INDEX16 = GL_STENCIL_INDEX16,
 
-            // STENCIL
+            // DEPTH_STENCIL
             IF_DEPTH24_STENCIL8 = GL_DEPTH24_STENCIL8,
             IF_DEPTH32F_STENCIL8 = GL_DEPTH32F_STENCIL8
         };
 
     public:
-        PixelBuffer();
+        RenderBufferBase();
 
     private:
         VI_OBJECT_DATA;

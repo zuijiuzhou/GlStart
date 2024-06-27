@@ -95,14 +95,14 @@ namespace AnyRenderer
 			for (auto& kv : d->vbos)
 			{
 				auto loc = kv.first;
-				auto arr = kv.second;
+				auto& arr = kv.second;
 				if (arr->getSize() > 1)
 				{
 					arr->bind(state);
 					auto size_of_item = arr->getSizeOfItem();
 					glVertexAttribPointer(loc, size_of_item / sizeof(GLfloat), GL_FLOAT, GL_FALSE, size_of_item, 0);
 					glEnableVertexAttribArray(loc);
-					// arr->unbind();
+					arr->unbind(state);
 				}
 				else
 				{
@@ -135,7 +135,7 @@ namespace AnyRenderer
 		for (auto& kv : d->textures)
 		{
 			auto unit = kv.first;
-			auto tex = kv.second;
+			auto& tex = kv.second;
 			if (d->texture_locs.contains(unit))
 			{
 				shader->set(state, d->texture_locs[unit], unit);
@@ -155,9 +155,11 @@ namespace AnyRenderer
 		glBindVertexArray(0);
 		for (auto& kv : d->textures)
 		{
-			auto tex = kv.second;
+			auto unit = kv.first;
+			auto& tex = kv.second;
 			if (!tex)
 				continue;
+			glActiveTexture(unit);
 			tex->unbind(state);
 		}
 	}

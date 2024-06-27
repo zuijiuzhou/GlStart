@@ -4,7 +4,7 @@
 
 namespace AnyRenderer
 {
-    VI_OBJECT_META_IMPL(Texture, PixelBuffer);
+    VI_OBJECT_META_IMPL(Texture, RenderBufferBase);
 
     struct Texture::Data {
         WrapMode wrap_s = CLAMP_TO_EDGE;
