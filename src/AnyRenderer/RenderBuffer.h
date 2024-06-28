@@ -24,6 +24,10 @@ namespace AnyRenderer {
 
 		virtual void onUnbind(State& state) override;
 
+		virtual GLuint onCreate(State& state) override;
+
+		virtual void onRelease(State& state) override;
+
 	private:
 		VI_OBJECT_DATA;
 	};

@@ -58,12 +58,11 @@ namespace AnyRenderer
 
         for (auto&& kv : d->components) {
             auto& buffer = kv.second;
-            // ȷ������
             buffer->bind(state);
             if (buffer->isKindOf<Texture2D>()) {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, kv.first, GL_TEXTURE_2D, buffer->getId(state), 0);
             }
-            else {
+            else if(buffer->isKindOf<RenderBuffer>()){
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, kv.first, GL_RENDERBUFFER, buffer->getId(state));
             }
             buffer->unbind(state);
